@@ -1,0 +1,70 @@
+jumpbox-os: OSX # default is Linux; other values: OSX
+azure:
+  resource_group: tap
+  location: centralus
+  aks_cluster_name: aks-tap-cluster
+  acr_name: # set an acr name or one will be set by the azure object script
+  acr_sku: standard
+tap_install:
+  bundle: "registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:ab0a3539da241a6ea59c75c0743e9058511d7c56312ea3906178ec0f3491f51d"
+  dev_namespace: default
+  registry:
+    hostname: "registry.tanzu.vmware.com"
+    username: # set
+    password: # set
+tap_values:
+  profile: full
+  ceip_policy_disclosed: true # Installation fails if this is set to 'false'
+  buildservice:
+    kp_default_repository: # optional if registry is being created via script with a repo path of /tap/build-service
+    kp_default_repository_username: # will be automatically set with admin username
+    kp_default_repository_password: # will be automatically set with admin password
+    tanzunet_username: # set
+    tanzunet_password: # set
+    descriptor_name: "lite" # for full install, use "full"
+    enable_automatic_dependency_updates: true
+  supply_chain: basic
+
+  cnrs:
+    provider: local
+    domain_name: # set (i.e. apps.DOMAIN-NAME)
+
+  ootb_supply_chain_basic:
+    registry:
+      server: # optional if registry is being created via script with a domain of azurecr.io
+      repository: "tap/supply-chain"
+    gitops:
+      ssh_secret: ""
+
+  learningcenter:
+    ingressDomain: # set (i.e. learningcenter.DOMAIN-NAME)
+
+  tap_gui:
+    service_type: ClusterIP
+    ingressEnabled: "true"
+    ingressDomain: # set (i.e. "INGRESS-DOMAIN")
+    app_config:
+      app:
+        baseUrl: # set (i.e. http://tap-gui.INGRESS-DOMAIN)
+      catalog:
+        locations:
+          - type: url
+            target: # set (i.e. https://GIT-CATALOG-URL/catalog-info.yaml)
+      #integrations:
+      #  github:
+      #    - host: github.com
+      backend:
+        baseUrl: # set (i.e. http://tap-gui.INGRESS-DOMAIN)
+        cors:
+          origin: # set (i.e. http://tap-gui.INGRESS-DOMAIN)
+
+  metadata_store:
+    app_service_type: LoadBalancer # (optional) Defaults to LoadBalancer. Change to NodePort for distributions that don't support LoadBalancer
+
+  grype:
+    namespace: # set (i.e. "MY-DEV-NAMESPACE" (optional) Defaults to default namespace.)
+    targetImagePullSecret: # set (i.e. "TARGET-REGISTRY-CREDENTIALS-SECRET")
+  contour:
+    envoy:
+      service:
+        type: LoadBalancer
