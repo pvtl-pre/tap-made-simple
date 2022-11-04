@@ -65,6 +65,12 @@ tap_values:
   scanning:
     metadataStore:
       url: "" # Configuration is moved, so set this string to empty.
+    source:
+      policy: scan-policy
+      template: blob-source-scan-template
+    image:
+      policy: scan-policy
+      template: blob-source-scan-template
 
   grype:
     namespace: # will be automatically set with dev namespace
