@@ -57,6 +57,14 @@ tap_values:
         locations:
           - type: url
             target: # set (i.e. https://GIT-CATALOG-URL/catalog-info.yaml)
+      proxy:
+        /metadata-store:
+          target: https://metadata-store-app.metadata-store:8443/api/v1
+          changeOrigin: true
+          secure: false
+          headers:
+            Authorization: # will be automatically set with metadata store access token
+            X-Custom-Source: project-star
 
   metadata_store:
     ns_for_export_app_cert: # will be automatically set with dev namespace
