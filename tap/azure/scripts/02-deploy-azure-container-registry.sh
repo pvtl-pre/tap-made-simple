@@ -41,11 +41,11 @@ if [[ "$CREATE_ACR" == 'true' ]]; then
 
   yq e -i '.tap_values.buildservice.kp_default_repository = env(ACR_TBS_REPO)' "$PARAMS_YAML"
 
-  export ACR_SUPPLY_CHAIN_SERVER="$ACR_NAME.azurecr.io"
+  export ACR_SUPPLY_CHAIN_REPO="$ACR_NAME.azurecr.io/tap/supply-chain"
 
-  echo "## Supply chain server will be $ACR_SUPPLY_CHAIN_SERVER"
+  echo "## Supply chain server will be $ACR_SUPPLY_CHAIN_REPO"
 
-  yq e -i '.tap_values.ootb_supply_chain_basic.registry.server = env(ACR_SUPPLY_CHAIN_SERVER)' "$PARAMS_YAML"
+  yq e -i '.tap_values.shared.image_registry.project_path = env(ACR_SUPPLY_CHAIN_REPO)' "$PARAMS_YAML"
 else
   echo "## Azure Container Registry named $ACR_NAME already exists"
 fi
@@ -63,6 +63,9 @@ RETURNED_ACR_CREDS_JSON=$(az acr credential show --name $ACR_NAME -o json)
 
 export ACR_USERNAME=$(echo "$RETURNED_ACR_CREDS_JSON" | jq -r '.username')
 export ACR_PASSWORD=$(echo "$RETURNED_ACR_CREDS_JSON" | jq -r '.passwords[0].value')
+
+yq e -i '.tap_values.shared.image_registry.username = env(ACR_USERNAME)' "$PARAMS_YAML"
+yq e -i '.tap_values.shared.image_registry.password = env(ACR_PASSWORD)' "$PARAMS_YAML"
 
 yq e -i '.tap_values.buildservice.kp_default_repository_username = env(ACR_USERNAME)' "$PARAMS_YAML"
 yq e -i '.tap_values.buildservice.kp_default_repository_password = env(ACR_PASSWORD)' "$PARAMS_YAML"
