@@ -6,10 +6,6 @@ TAP_VERSION=$(yq e .tap_version $PARAMS_YAML)
 JUMPBOX_OS=$(yq e .jumpbox-os $PARAMS_YAML)
 CLUSTER_NAME=$(yq e .azure.aks_cluster_name $PARAMS_YAML)
 KUBECONFIG=$(yq e .azure.kubeconfig $PARAMS_YAML)
-export INSTALL_BUNDLE=$(yq e .tap_install.bundle $PARAMS_YAML)
-export INSTALL_REGISTRY_HOSTNAME=$(yq e .tap_install.registry.hostname $PARAMS_YAML)
-export INSTALL_REGISTRY_USERNAME=$(yq e .tap_install.registry.username $PARAMS_YAML)
-export INSTALL_REGISTRY_PASSWORD=$(yq e .tap_install.registry.password $PARAMS_YAML)
 
 echo "## Downloading and extracting 'tanzu-cluster-essentials' from Tanzu Network"
 
