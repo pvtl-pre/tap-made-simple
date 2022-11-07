@@ -7,6 +7,7 @@ export KUBECONFIG=$(yq e .azure.kubeconfig $PARAMS_YAML)
 echo "## Create an read-write service account for the metadata store"
 
 KUBE_VERSION=$(kubectl version -o yaml | yq e '.serverVersion.minor')
+
 if [[ "$KUBE_VERSION" -ge "24" ]]; then
 
 cat <<EOF | kubectl apply -f -
