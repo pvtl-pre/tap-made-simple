@@ -5,15 +5,13 @@ azure:
   location: centralus
   aks_cluster_name: aks-tap-cluster
   acr_name: # set an acr name or one will be set by the azure object script
+  acr_username: # will be automatically set with admin username
+  acr_password: # will be automatically set with admin password
   acr_sku: standard
 tap_install:
   bundle: "registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:54bf611711923dccd7c7f10603c846782b90644d48f1cb570b43a082d18e23b9"
   dev_namespace: default
-  registry:
-    hostname: "registry.tanzu.vmware.com"
-    username: # set
-    password: # set
-    secret: tap-registry
+  registry_secret: tap-registry
 tap_values:
   shared:
     ingress_domain: # set (i.e. "INGRESS-DOMAIN")

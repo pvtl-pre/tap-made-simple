@@ -33,15 +33,15 @@ if [[ "$CREATE_ACR" == 'true' ]]; then
 
   echo "## Creating Azure Container Registry named $ACR_NAME"
   az acr create --name $ACR_NAME --resource-group $RESOURCE_GROUP --sku $ACR_SKU
-  yq e -i '.azure.acr_name = env(ACR_NAME)' "$PARAMS_YAML"
+  yq e -i '.azure.acr_name = env(ACR_NAME) + ".azurecr.io"' "$PARAMS_YAML"
 
-  export ACR_TBS_REPO="$ACR_NAME.azurecr.io/tap/build-service"
+  export ACR_TBS_REPO="$ACR_NAME/tap/build-service"
 
   echo "## Build service repo path will be $ACR_TBS_REPO"
 
   yq e -i '.tap_values.buildservice.kp_default_repository = env(ACR_TBS_REPO)' "$PARAMS_YAML"
 
-  export ACR_SUPPLY_CHAIN_REPO="$ACR_NAME.azurecr.io/tap/supply-chain"
+  export ACR_SUPPLY_CHAIN_REPO="$ACR_NAME/tap/supply-chain"
 
   echo "## Supply chain server will be $ACR_SUPPLY_CHAIN_REPO"
 
@@ -63,6 +63,9 @@ RETURNED_ACR_CREDS_JSON=$(az acr credential show --name $ACR_NAME -o json)
 
 export ACR_USERNAME=$(echo "$RETURNED_ACR_CREDS_JSON" | jq -r '.username')
 export ACR_PASSWORD=$(echo "$RETURNED_ACR_CREDS_JSON" | jq -r '.passwords[0].value')
+
+yq e -i '.azure.acr_username = env(ACR_USERNAME)' "$PARAMS_YAML"
+yq e -i '.azure.acr_password = env(ACR_PASSWORD)' "$PARAMS_YAML"
 
 yq e -i '.tap_values.shared.image_registry.username = env(ACR_USERNAME)' "$PARAMS_YAML"
 yq e -i '.tap_values.shared.image_registry.password = env(ACR_PASSWORD)' "$PARAMS_YAML"
