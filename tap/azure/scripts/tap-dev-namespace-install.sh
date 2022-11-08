@@ -170,7 +170,7 @@ cat <<EOF | kubectl -n $INSTALL_DEV_NAMESPACE apply -f -
 apiVersion: tekton.dev/v1beta1
 kind: Pipeline
 metadata:
-  name: developer-defined-tekton-pipeline
+  name: java-pipeline
   labels:
     apps.tanzu.vmware.com/pipeline: test      # (!) required
 spec:
