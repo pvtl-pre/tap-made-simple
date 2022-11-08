@@ -8,6 +8,7 @@ INSTALL_REGISTRY_USERNAME=$(yq e .azure.acr_username $PARAMS_YAML)
 INSTALL_REGISTRY_PASSWORD=$(yq e .azure.acr_password $PARAMS_YAML)
 INSTALL_DEV_NAMESPACE=$(yq e .tap_install.dev_namespace $PARAMS_YAML)
 TAP_REGISTRY_SECRET_NAME=$(yq e .tap_install.registry_secret $PARAMS_YAML)
+IGNORE_CVES=$(yq e .tap_install.ignoreCves $PARAMS_YAML)
 SCAN_POLICY=$(yq e .tap_values.scanning.source.policy $PARAMS_YAML)
 
 echo "## Add read/write registry credentials to the developer namespace"
@@ -133,7 +134,7 @@ spec:
 
     # Accepted Values: "Critical", "High", "Medium", "Low", "Negligible", "UnknownSeverity"
     notAllowedSeverities := ["Critical", "High", "UnknownSeverity"]
-    ignoreCves := []
+    ignoreCves := [$IGNORE_CVES]
 
     contains(array, elem) = true {
       array[_] = elem
