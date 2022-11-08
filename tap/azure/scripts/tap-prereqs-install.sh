@@ -37,6 +37,11 @@ fi
 tar -xvf generated/$CLUSTER_ESSENTIALS_FILE -C generated/tanzu-cluster-essentials
 
 (
+export INSTALL_BUNDLE=$(yq e .tap_install.tanzu_registry.bundle $PARAMS_YAML)
+export INSTALL_REGISTRY_HOSTNAME=$(yq e .tap_install.tanzu_registry.hostname $PARAMS_YAML)
+export INSTALL_REGISTRY_USERNAME=$(yq e .tap_install.tanzu_registry.username $PARAMS_YAML)
+export INSTALL_REGISTRY_PASSWORD=$(yq e .tap_install.tanzu_registry.password $PARAMS_YAML)
+
 cd generated/tanzu-cluster-essentials
 KUBECONFIG=../../$KUBECONFIG ./install.sh --yes
 )
@@ -51,7 +56,6 @@ if [[ ! -f "generated/$TAP_FILE" ]]; then
 fi
 
 tar -xvf generated/$TAP_FILE -C generated/tanzu
-
 
 echo "## Installing Tanzu CLI"
 

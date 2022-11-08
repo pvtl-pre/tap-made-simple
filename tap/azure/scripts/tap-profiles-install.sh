@@ -5,16 +5,17 @@ shopt -s nocasematch;
 TAP_VERSION=$(yq e .tap_version $PARAMS_YAML)
 CLUSTER_NAME=$(yq e .azure.aks_cluster_name $PARAMS_YAML)
 export KUBECONFIG=$(yq e .azure.kubeconfig $PARAMS_YAML)
-INSTALL_REGISTRY_HOSTNAME=$(yq e .azure.acr_name $PARAMS_YAML)
-INSTALL_REGISTRY_USERNAME=$(yq e .azure.acr_username $PARAMS_YAML)
-INSTALL_REGISTRY_PASSWORD=$(yq e .azure.acr_password $PARAMS_YAML)
+INSTALL_REGISTRY_HOSTNAME=$(yq e .tap_install.tanzu_registry.hostname $PARAMS_YAML)
+INSTALL_REGISTRY_USERNAME=$(yq e .tap_install.tanzu_registry.username $PARAMS_YAML)
+INSTALL_REGISTRY_PASSWORD=$(yq e .tap_install.tanzu_registry.password $PARAMS_YAML)
 export INSTALL_DEV_NAMESPACE=$(yq e .tap_install.dev_namespace $PARAMS_YAML)
-export TAP_REGISTRY_SECRET_NAME=$(yq e .tap_install.registry_secret $PARAMS_YAML)
+TAP_REGISTRY_SECRET_NAME=$(yq e .tap_install.tap_registry_secret $PARAMS_YAML)
+export SC_REGISTRY_SECRET_NAME=$(yq e .tap_install.supply_chain_registry_secret $PARAMS_YAML)
 TAP_VALUES_FILE='generated/tap-values.yaml'
 
 yq e -i '.tap_values.metadata_store.ns_for_export_app_cert = env(INSTALL_DEV_NAMESPACE)' "$PARAMS_YAML"
 yq e -i '.tap_values.grype.namespace = env(INSTALL_DEV_NAMESPACE)' "$PARAMS_YAML"
-yq e -i '.tap_values.grype.targetImagePullSecret = env(TAP_REGISTRY_SECRET_NAME)' "$PARAMS_YAML"
+yq e -i '.tap_values.grype.targetImagePullSecret = env(SC_REGISTRY_SECRET_NAME)' "$PARAMS_YAML"
 
 rm -f $TAP_VALUES_FILE
 yq e .tap_values $PARAMS_YAML > $TAP_VALUES_FILE
@@ -38,7 +39,7 @@ echo "## Skipping image relocation"
 echo "## Adding the TAP package repository"
 
 tanzu package repository add tanzu-tap-repository \
-  --url registry.tanzu.vmware.com/tanzu-application-platform/tap-packages:$TAP_VERSION \
+  --url $INSTALL_REGISTRY_HOSTNAME/tanzu-application-platform/tap-packages:$TAP_VERSION \
   --namespace tap-install
 
 tanzu package repository get tanzu-tap-repository --namespace tap-install

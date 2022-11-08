@@ -3,6 +3,10 @@ set -e -o pipefail
 shopt -s nocasematch;
 
 export KUBECONFIG=$(yq e .azure.kubeconfig $PARAMS_YAML)
+TAP_VERSION=$(yq e .tap_version $PARAMS_YAML)
+TAP_VALUES_FILE='generated/tap-values.yaml'
+
+kubectl create ns tap-install --dry-run=client -o yaml | kubectl apply -f -
 
 echo "## Create an read-write service account for the metadata store"
 

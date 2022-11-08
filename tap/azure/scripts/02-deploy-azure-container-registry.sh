@@ -6,6 +6,7 @@ TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
 export ACR_NAME=$(yq e .azure.acr_name $PARAMS_YAML)
+export ACR_HOSTNAME=$(yq e .azure.acr_hostname $PARAMS_YAML)
 
 RESOURCE_GROUP=$(yq e .azure.resource_group $PARAMS_YAML)
 ACR_SKU=$(yq e .azure.acr_sku $PARAMS_YAML)
@@ -13,6 +14,7 @@ CREATE_ACR=false
 
 if [[ -z "$ACR_NAME" || "$ACR_NAME" == "null" ]]; then
   export ACR_NAME=tapregistry$(date +%Y%m%d%H%M%S)
+  export ACR_HOSTNAME="$ACR_NAME.azurecr.io"
 
   CREATE_ACR=true
 else
@@ -33,15 +35,16 @@ if [[ "$CREATE_ACR" == 'true' ]]; then
 
   echo "## Creating Azure Container Registry named $ACR_NAME"
   az acr create --name $ACR_NAME --resource-group $RESOURCE_GROUP --sku $ACR_SKU
-  yq e -i '.azure.acr_name = env(ACR_NAME) + ".azurecr.io"' "$PARAMS_YAML"
+  yq e -i '.azure.acr_name = env(ACR_NAME)' "$PARAMS_YAML"
+  yq e -i '.azure.acr_hostname = env(ACR_HOSTNAME)' "$PARAMS_YAML"
 
-  export ACR_TBS_REPO="$ACR_NAME/tap/build-service"
+  export ACR_TBS_REPO="$ACR_HOSTNAME/tap/build-service"
 
   echo "## Build service repo path will be $ACR_TBS_REPO"
 
   yq e -i '.tap_values.buildservice.kp_default_repository = env(ACR_TBS_REPO)' "$PARAMS_YAML"
 
-  export ACR_SUPPLY_CHAIN_REPO="$ACR_NAME/tap/supply-chain"
+  export ACR_SUPPLY_CHAIN_REPO="$ACR_HOSTNAME/tap/supply-chain"
 
   echo "## Supply chain server will be $ACR_SUPPLY_CHAIN_REPO"
 

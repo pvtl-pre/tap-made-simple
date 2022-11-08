@@ -3,17 +3,21 @@ set -e -o pipefail
 shopt -s nocasematch;
 
 export KUBECONFIG=$(yq e .azure.kubeconfig $PARAMS_YAML)
-INSTALL_REGISTRY_HOSTNAME=$(yq e .azure.acr_name $PARAMS_YAML)
+INSTALL_REGISTRY_HOSTNAME=$(yq e .azure.acr_hostname $PARAMS_YAML)
 INSTALL_REGISTRY_USERNAME=$(yq e .azure.acr_username $PARAMS_YAML)
 INSTALL_REGISTRY_PASSWORD=$(yq e .azure.acr_password $PARAMS_YAML)
 INSTALL_DEV_NAMESPACE=$(yq e .tap_install.dev_namespace $PARAMS_YAML)
-TAP_REGISTRY_SECRET_NAME=$(yq e .tap_install.registry_secret $PARAMS_YAML)
-IGNORE_CVES=$(yq e .tap_install.ignoreCves $PARAMS_YAML)
+TAP_REGISTRY_SECRET_NAME=$(yq e .tap_install.tap_registry_secret $PARAMS_YAML)
+SC_REGISTRY_SECRET_NAME=$(yq e .tap_install.supply_chain_registry_secret $PARAMS_YAML)
+IGNORE_CVES=$(yq e -o=json '.tap_install.ignoreCves' $PARAMS_YAML)
 SCAN_POLICY=$(yq e .tap_values.scanning.source.policy $PARAMS_YAML)
+
+# HACK: remove new lines so string array is yaml compatible
+IGNORE_CVES=$(echo $IGNORE_CVES|tr -d '\n')
 
 echo "## Add read/write registry credentials to the developer namespace"
 
-tanzu secret registry add registry-credentials --server $INSTALL_REGISTRY_HOSTNAME --username $INSTALL_REGISTRY_USERNAME --password $INSTALL_REGISTRY_PASSWORD --namespace $INSTALL_DEV_NAMESPACE
+tanzu secret registry add $SC_REGISTRY_SECRET_NAME --server $INSTALL_REGISTRY_HOSTNAME --username $INSTALL_REGISTRY_USERNAME --password $INSTALL_REGISTRY_PASSWORD --namespace $INSTALL_DEV_NAMESPACE
 
 echo "## Authorize the service account to the developer namespace ($INSTALL_DEV_NAMESPACE)"
 
@@ -33,9 +37,9 @@ kind: ServiceAccount
 metadata:
   name: default
 secrets:
-  - name: registry-credentials
+  - name: $SC_REGISTRY_SECRET_NAME
 imagePullSecrets:
-  - name: registry-credentials
+  - name: $SC_REGISTRY_SECRET_NAME
   - name: $TAP_REGISTRY_SECRET_NAME
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -134,7 +138,7 @@ spec:
 
     # Accepted Values: "Critical", "High", "Medium", "Low", "Negligible", "UnknownSeverity"
     notAllowedSeverities := ["Critical", "High", "UnknownSeverity"]
-    ignoreCves := [$IGNORE_CVES]
+    ignoreCves := $IGNORE_CVES
 
     contains(array, elem) = true {
       array[_] = elem
