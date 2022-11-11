@@ -169,7 +169,7 @@ spec:
     }
 EOF
 
-echo "## Create an ootb_supply_chain_testing_scanning pipeline ($INSTALL_DEV_NAMESPACE)"
+echo "## Create an ootb_supply_chain_testing_scanning Java pipeline ($INSTALL_DEV_NAMESPACE)"
 
 cat <<EOF | kubectl -n $INSTALL_DEV_NAMESPACE apply -f -
 apiVersion: tekton.dev/v1beta1
@@ -177,6 +177,7 @@ kind: Pipeline
 metadata:
   name: java-pipeline
   labels:
+    apps.tanzu.vmware.com/language: java      # (!) required
     apps.tanzu.vmware.com/pipeline: test      # (!) required
 spec:
   params:
@@ -200,4 +201,39 @@ spec:
               cd \`mktemp -d\`
               wget -qO- \$(params.source-url) | tar xvz -m
               ./mvnw test
+EOF
+
+
+echo "## Create an ootb_supply_chain_testing_scanning Python pipeline ($INSTALL_DEV_NAMESPACE)"
+
+cat <<EOF | kubectl -n $INSTALL_DEV_NAMESPACE apply -f -
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: python-pipeline
+  labels:
+    apps.tanzu.vmware.com/language: python    # (!) required
+    apps.tanzu.vmware.com/pipeline: test      # (!) required
+spec:
+  params:
+    - name: source-url                        # (!) required
+    - name: source-revision                   # (!) required
+  tasks:
+    - name: test
+      params:
+        - name: source-url
+          value: \$(params.source-url)
+        - name: source-revision
+          value: \$(params.source-revision)
+      taskSpec:
+        params:
+          - name: source-url
+          - name: source-revision
+        steps:
+          - name: test
+            image: python
+            script: |-
+              cd \`mktemp -d\`
+              wget -qO- \$(params.source-url) | tar xvz -m
+              python -m unittest
 EOF
