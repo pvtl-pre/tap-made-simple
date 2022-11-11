@@ -9,11 +9,7 @@ INSTALL_REGISTRY_PASSWORD=$(yq e .azure.acr_password $PARAMS_YAML)
 INSTALL_DEV_NAMESPACE=$(yq e .tap_install.dev_namespace $PARAMS_YAML)
 TAP_REGISTRY_SECRET_NAME=$(yq e .tap_install.tap_registry_secret $PARAMS_YAML)
 SC_REGISTRY_SECRET_NAME=$(yq e .tap_install.supply_chain_registry_secret $PARAMS_YAML)
-IGNORE_CVES=$(yq e -o=json '.tap_install.ignoreCves' $PARAMS_YAML)
 SCAN_POLICY=$(yq e .tap_values.scanning.source.policy $PARAMS_YAML)
-
-# HACK: remove new lines so string array is yaml compatible
-IGNORE_CVES=$(echo $IGNORE_CVES|tr -d '\n')
 
 echo "## Add read/write registry credentials to the developer namespace"
 
@@ -137,8 +133,9 @@ spec:
     package main
 
     # Accepted Values: "Critical", "High", "Medium", "Low", "Negligible", "UnknownSeverity"
-    notAllowedSeverities := ["Critical", "High", "UnknownSeverity"]
-    ignoreCves := $IGNORE_CVES
+    # notAllowedSeverities := ["Critical", "High", "UnknownSeverity"]
+    notAllowedSeverities := []
+    ignoreCves := []]
 
     contains(array, elem) = true {
       array[_] = elem

@@ -11,7 +11,6 @@ azure:
   acr_sku: standard
 tap_install:
   dev_namespace: default
-  ignoreCves: # (optional) set
   tap_registry_secret: tap-registry
   supply_chain_registry_secret: registry-credentials
   tanzu_registry:
