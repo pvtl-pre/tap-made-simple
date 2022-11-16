@@ -25,7 +25,7 @@ NOTE: The Tanzu CLI (v0.10.0) and associated plugins will be installed as part o
 
 ## Setup Environment Variable for params.yaml
 
-Set the PARAMS_YAML environment variable to the path of your `params.yaml` file. If you followed the recommendation, the value would be `local-config/params.yaml`, however you may choose otherwise. A sample `REDACTED-params.yaml` file is included in this directory, named REDACTED-params.yaml. It is recommended you copy this file and rename it to params.yaml and place it in the `local-config/` directory, and then start making your adjustments.  `local-config/` is included in the `.gitignore` so your version won't be included in an any future commits you have to the repo.
+Set the PARAMS_YAML environment variable to the path of your `params.yaml` file. If you followed the recommendation, the value would be `local-config/params.yaml`, however you may choose otherwise. A sample `REDACTED-params.yaml` file is included in this directory, named REDACTED-params.yaml. It is recommended you copy this file and rename it to params.yaml and place it in the `local-config/` directory, and then start making your adjustments. `local-config/` is included in the `.gitignore` so your version won't be included in an any future commits you have to the repo.
 
 ```bash
 # Update the the path from the default if you have a different params.yaml file name or location.
@@ -54,21 +54,11 @@ Now you can execute the following script to perform all of those tasks:
 ./scripts/deploy-all.sh
 ```
 
-## DNS Records
-
-There are some optional but recommended DNS records you should allocate if you decide to use these particular components:
-
-- Cloud Native Runtimes (knative) - Allocate a wildcard subdomain for your developer’s applications. This is specified in the cnrs.domain_name key of the tap-values.yml configuration file that you input with the installation. This wildcard should be pointed at the external IP address of the tanzu-system-ingress’s envoy service. See Ingress Method for more information about tanzu-system-ingress.
-- Tanzu Learning Center - Similar to Cloud Native Runtimes, allocate a wildcard subdomain for your workshops and content. This is specified in the learningcenter.ingressDomain key of the tap-values.yml configuration file that you input with the installation. This wildcard should be pointed at the external IP address of the tanzu-system-ingress’s envoy service.
-- Tanzu Application Platform GUI - Should you decide to implement the shared ingress and include the Tanzu Application Platform GUI, allocate a fully Qualified Domain Name (FQDN) that can be pointed at the tanzu-system-ingress service. The default hostname consists of tap-gui plus an IngressDomain of your choice. For example, tap-gui.example.com.
-
 ### A Record Examples
 
 In the namespace, tanzu-system-ingress, point A records to the service named envoy which will be of type LoadBalancer.
 
-- *.cnrs.DOMAIN
-- *.learningcenter.DOMAIN
-- tap-gui.DOMAIN
+- *.tap-gui.DOMAIN
 
 ## Tear Down
 
