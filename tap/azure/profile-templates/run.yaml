@@ -1,0 +1,27 @@
+#@ load("@ytt:data","data")
+#@ load("@ytt:base64","base64")
+---
+profile: run
+ceip_policy_disclosed: true
+supply_chain: testing_scanning
+
+cnrs:
+  domain_name: #@ data.values.clusters.run_clusters[data.values.index].ingressDomain
+  domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
+
+contour:
+  envoy:
+    service:
+      type: LoadBalancer
+
+appliveview_connector:
+  backend:
+    sslDisabled: "true"
+    host: #@ "appliveview.{}".format(data.values.clusters.view_cluster.ingressDomain)
+
+shared:
+  ingress_domain: #@ data.values.clusters.run_clusters[data.values.index].ingressDomain
+
+#! NOTE: this is a workaround to disable cosign as it needs to be updated
+excluded_packages:
+  - policy.apps.tanzu.vmware.com

@@ -2,58 +2,81 @@
 set -e -o pipefail
 shopt -s nocasematch;
 
+TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source "$TKG_LAB_SCRIPTS/set-env.sh"
+
+# export INSTALL_DEV_NAMESPACE=$(yq e .tap_install.dev_namespace $PARAMS_YAML)
+# export SC_REGISTRY_SECRET_NAME=$(yq e .tap_install.supply_chain_registry_secret $PARAMS_YAML)
+
+# yq e -i '.tap_values.metadata_store.ns_for_export_app_cert = env(INSTALL_DEV_NAMESPACE)' "$PARAMS_YAML"
+# yq e -i '.tap_values.grype.namespace = env(INSTALL_DEV_NAMESPACE)' "$PARAMS_YAML"
+# yq e -i '.tap_values.grype.targetImagePullSecret = env(SC_REGISTRY_SECRET_NAME)' "$PARAMS_YAML"
+
 TAP_VERSION=$(yq e .tap_version $PARAMS_YAML)
-CLUSTER_NAME=$(yq e .azure.aks_cluster_name $PARAMS_YAML)
-export KUBECONFIG=$(yq e .azure.kubeconfig $PARAMS_YAML)
-INSTALL_REGISTRY_HOSTNAME=$(yq e .tap_install.tanzu_registry.hostname $PARAMS_YAML)
-INSTALL_REGISTRY_USERNAME=$(yq e .tap_install.tanzu_registry.username $PARAMS_YAML)
-INSTALL_REGISTRY_PASSWORD=$(yq e .tap_install.tanzu_registry.password $PARAMS_YAML)
-export INSTALL_DEV_NAMESPACE=$(yq e .tap_install.dev_namespace $PARAMS_YAML)
-TAP_REGISTRY_SECRET_NAME=$(yq e .tap_install.tap_registry_secret $PARAMS_YAML)
-export SC_REGISTRY_SECRET_NAME=$(yq e .tap_install.supply_chain_registry_secret $PARAMS_YAML)
-TAP_VALUES_FILE='generated/tap-values.yaml'
 
-yq e -i '.tap_values.metadata_store.ns_for_export_app_cert = env(INSTALL_DEV_NAMESPACE)' "$PARAMS_YAML"
-yq e -i '.tap_values.grype.namespace = env(INSTALL_DEV_NAMESPACE)' "$PARAMS_YAML"
-yq e -i '.tap_values.grype.targetImagePullSecret = env(SC_REGISTRY_SECRET_NAME)' "$PARAMS_YAML"
+information "Installing base TAP components on view cluster"
 
-rm -f $TAP_VALUES_FILE
-yq e .tap_values $PARAMS_YAML > $TAP_VALUES_FILE
+VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 
-echo "## Creating tap-install namespace"
+KUBECONFIG=$VIEW_CLUSTER_KUBECONFIG \
+IS_VIEW_CLUSTER=true \
+$TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 
-kubectl create ns tap-install --dry-run=client -o yaml | kubectl apply -f -
+information "Installing base TAP components on build cluster"
 
-echo "## Adding image registry secret"
+BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+SA_TOKEN_PATH=".clusters.build_cluster.k8s_info.saToken"
 
-tanzu secret registry add $TAP_REGISTRY_SECRET_NAME \
-  --username $INSTALL_REGISTRY_USERNAME \
-  --password $INSTALL_REGISTRY_PASSWORD \
-  --server $INSTALL_REGISTRY_HOSTNAME \
-  --export-to-all-namespaces \
-  --yes \
-  --namespace tap-install
+KUBECONFIG=$BUILD_CLUSTER_KUBECONFIG \
+SA_TOKEN_PATH=$SA_TOKEN_PATH \
+IS_VIEW_CLUSTER=false \
+$TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 
-echo "## Skipping image relocation"
+information "Installing base TAP components on run clusters"
 
-echo "## Adding the TAP package repository"
+declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
 
-tanzu package repository add tanzu-tap-repository \
-  --url $INSTALL_REGISTRY_HOSTNAME/tanzu-application-platform/tap-packages:$TAP_VERSION \
-  --namespace tap-install
+for ((i=0;i<${#run_clusters[@]};i++)); 
+do
+  RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
+  SA_TOKEN_PATH=".clusters.run_clusters[$i].k8s_info.saToken"
 
-tanzu package repository get tanzu-tap-repository --namespace tap-install
+  KUBECONFIG=$RUN_CLUSTER_KUBECONFIG \
+  SA_TOKEN_PATH=$SA_TOKEN_PATH \
+  IS_VIEW_CLUSTER=false \
+  $TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
+done
 
-tanzu package available list --namespace tap-install
+information "Installing view profile"
 
-if [[ -z $(tanzu package installed list -n tap-install -o yaml | yq '.[] | select(.name == "tap")') ]]; then
-  echo "## Installing a Tanzu Application Platform profile"
-  tanzu package install tap -p tap.tanzu.vmware.com -v $TAP_VERSION --values-file $TAP_VALUES_FILE -n tap-install
-else
-  echo "## Updating a Tanzu Application Platform profile"
-  tanzu package installed update tap -p tap.tanzu.vmware.com -v $TAP_VERSION --values-file $TAP_VALUES_FILE -n tap-install
-fi
+$TKG_LAB_SCRIPTS/tap-view-profile-install.sh
 
-tanzu package installed get tap -n tap-install
+information "Installing build profile"
 
-tanzu package installed list -A
+VIEW_CLUSTER_KUBECONFIG=$VIEW_CLUSTER_KUBECONFIG $TKG_LAB_SCRIPTS/tap-build-profile-install.sh
+
+information "Installing run profiles"
+
+$TKG_LAB_SCRIPTS/tap-run-profiles-install.sh
+
+information "Waiting for reconciliation of TAP clusters"
+
+kubectl wait pkgi --for condition=ReconcileSucceeded=True \
+  -n tap-install tap \
+  --kubeconfig $VIEW_CLUSTER_KUBECONFIG \
+  --timeout=15m
+
+kubectl wait pkgi --for condition=ReconcileSucceeded=True \
+  -n tap-install tap \
+  --kubeconfig $BUILD_CLUSTER_KUBECONFIG \
+  --timeout=15m
+
+for ((i=0;i<${#run_clusters[@]};i++)); 
+do
+  RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
+
+  kubectl wait pkgi --for condition=ReconcileSucceeded=True \
+    -n tap-install tap \
+    --kubeconfig $RUN_CLUSTER_KUBECONFIG \
+    --timeout=15m
+done

@@ -5,3 +5,12 @@ set -e -o pipefail
 
 # Give some information timestamps to know how long things take
 echo $(date)
+
+information () {
+  RED='\033[0;31m'
+  NO_COLOR='\033[0m'
+
+  echo -e "${RED}##############################################################################"
+  echo -e "## $@"
+  echo -e "##############################################################################${NO_COLOR}"
+}

@@ -2,235 +2,26 @@
 set -e -o pipefail
 shopt -s nocasematch;
 
-export KUBECONFIG=$(yq e .azure.kubeconfig $PARAMS_YAML)
-INSTALL_REGISTRY_HOSTNAME=$(yq e .azure.acr_hostname $PARAMS_YAML)
-INSTALL_REGISTRY_USERNAME=$(yq e .azure.acr_username $PARAMS_YAML)
-INSTALL_REGISTRY_PASSWORD=$(yq e .azure.acr_password $PARAMS_YAML)
-INSTALL_DEV_NAMESPACE=$(yq e .tap_install.dev_namespace $PARAMS_YAML)
-TAP_REGISTRY_SECRET_NAME=$(yq e .tap_install.tap_registry_secret $PARAMS_YAML)
-SC_REGISTRY_SECRET_NAME=$(yq e .tap_install.supply_chain_registry_secret $PARAMS_YAML)
-SCAN_POLICY=$(yq e .tap_values.scanning.source.policy $PARAMS_YAML)
+TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-echo "## Add read/write registry credentials to the developer namespace"
+information "Setting up developer namespace on the build cluster"
 
-tanzu secret registry add $SC_REGISTRY_SECRET_NAME --server $INSTALL_REGISTRY_HOSTNAME --username $INSTALL_REGISTRY_USERNAME --password $INSTALL_REGISTRY_PASSWORD --namespace $INSTALL_DEV_NAMESPACE
+BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 
-echo "## Authorize the service account to the developer namespace ($INSTALL_DEV_NAMESPACE)"
+KUBECONFIG=$BUILD_CLUSTER_KUBECONFIG \
+IS_BUILD_CLUSTER=true \
+$TKG_LAB_SCRIPTS/tap-dev-namespace-base-install.sh
 
-cat <<EOF | kubectl -n $INSTALL_DEV_NAMESPACE apply -f -
-apiVersion: v1
-kind: Secret
-metadata:
-  name: $TAP_REGISTRY_SECRET_NAME
-  annotations:
-    secretgen.carvel.dev/image-pull-secret: ""
-type: kubernetes.io/dockerconfigjson
-data:
-  .dockerconfigjson: e30K
----
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: default
-secrets:
-  - name: $SC_REGISTRY_SECRET_NAME
-imagePullSecrets:
-  - name: $SC_REGISTRY_SECRET_NAME
-  - name: $TAP_REGISTRY_SECRET_NAME
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: default-permit-deliverable
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: deliverable
-subjects:
-  - kind: ServiceAccount
-    name: default
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: default-permit-workload
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: workload
-subjects:
-  - kind: ServiceAccount
-    name: default
-EOF
+information "Setting up developer namespace on the run clusters"
 
-echo "## Authorize the all users (system:authenticated) to the developer namespace ($INSTALL_DEV_NAMESPACE)"
+declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
+  
+for ((i=0;i<${#run_clusters[@]};i++)); 
+do
+  RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
 
-cat <<EOF | kubectl -n $INSTALL_DEV_NAMESPACE apply -f -
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: dev-permit-app-viewer
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: app-viewer
-subjects:
-  - kind: Group
-    name: GROUP-FOR-APP-VIEWER
-    apiGroup: rbac.authorization.k8s.io
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: YOUR-NAMESPACE-permit-app-viewer
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: app-viewer-cluster-access
-subjects:
-  - kind: Group
-    name: GROUP-FOR-APP-VIEWER
-    apiGroup: rbac.authorization.k8s.io
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: RoleBinding
-metadata:
-  name: dev-permit-app-editor
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: app-editor
-subjects:
-  - kind: Group
-    name: GROUP-FOR-APP-EDITOR
-    apiGroup: rbac.authorization.k8s.io
----
-apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
-metadata:
-  name: YOUR-NAMESPACE-permit-app-editor
-roleRef:
-  apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
-  name: app-editor-cluster-access
-subjects:
-  - kind: Group
-    name: GROUP-FOR-APP-EDITOR
-    apiGroup: rbac.authorization.k8s.io
-EOF
-
-echo "## Create a scan policy to the developer namespace ($INSTALL_DEV_NAMESPACE)"
-
-cat <<EOF | kubectl -n $INSTALL_DEV_NAMESPACE apply -f -
-apiVersion: scanning.apps.tanzu.vmware.com/v1beta1
-kind: ScanPolicy
-metadata:
-  name: $SCAN_POLICY
-  labels:
-    'app.kubernetes.io/part-of': 'enable-in-gui'
-spec:
-  regoFile: |
-    package main
-
-    # Accepted Values: "Critical", "High", "Medium", "Low", "Negligible", "UnknownSeverity"
-    # notAllowedSeverities := ["Critical", "High", "UnknownSeverity"]
-    notAllowedSeverities := []
-    ignoreCves := []]
-
-    contains(array, elem) = true {
-      array[_] = elem
-    } else = false { true }
-
-    isSafe(match) {
-      severities := { e | e := match.ratings.rating.severity } | { e | e := match.ratings.rating[_].severity }
-      some i
-      fails := contains(notAllowedSeverities, severities[i])
-      not fails
-    }
-
-    isSafe(match) {
-      ignore := contains(ignoreCves, match.id)
-      ignore
-    }
-
-    deny[msg] {
-      comps := { e | e := input.bom.components.component } | { e | e := input.bom.components.component[_] }
-      some i
-      comp := comps[i]
-      vulns := { e | e := comp.vulnerabilities.vulnerability } | { e | e := comp.vulnerabilities.vulnerability[_] }
-      some j
-      vuln := vulns[j]
-      ratings := { e | e := vuln.ratings.rating.severity } | { e | e := vuln.ratings.rating[_].severity }
-      not isSafe(vuln)
-      msg = sprintf("CVE %s %s %s", [comp.name, vuln.id, ratings])
-    }
-EOF
-
-echo "## Create an ootb_supply_chain_testing_scanning Java pipeline ($INSTALL_DEV_NAMESPACE)"
-
-cat <<EOF | kubectl -n $INSTALL_DEV_NAMESPACE apply -f -
-apiVersion: tekton.dev/v1beta1
-kind: Pipeline
-metadata:
-  name: java-pipeline
-  labels:
-    apps.tanzu.vmware.com/language: java      # (!) required
-    apps.tanzu.vmware.com/pipeline: test      # (!) required
-spec:
-  params:
-    - name: source-url                        # (!) required
-    - name: source-revision                   # (!) required
-  tasks:
-    - name: test
-      params:
-        - name: source-url
-          value: \$(params.source-url)
-        - name: source-revision
-          value: \$(params.source-revision)
-      taskSpec:
-        params:
-          - name: source-url
-          - name: source-revision
-        steps:
-          - name: test
-            image: gradle
-            script: |-
-              cd \`mktemp -d\`
-              wget -qO- \$(params.source-url) | tar xvz -m
-              ./mvnw test
-EOF
-
-
-echo "## Create an ootb_supply_chain_testing_scanning Python pipeline ($INSTALL_DEV_NAMESPACE)"
-
-cat <<EOF | kubectl -n $INSTALL_DEV_NAMESPACE apply -f -
-apiVersion: tekton.dev/v1beta1
-kind: Pipeline
-metadata:
-  name: python-pipeline
-  labels:
-    apps.tanzu.vmware.com/language: python    # (!) required
-    apps.tanzu.vmware.com/pipeline: test      # (!) required
-spec:
-  params:
-    - name: source-url                        # (!) required
-    - name: source-revision                   # (!) required
-  tasks:
-    - name: test
-      params:
-        - name: source-url
-          value: \$(params.source-url)
-        - name: source-revision
-          value: \$(params.source-revision)
-      taskSpec:
-        params:
-          - name: source-url
-          - name: source-revision
-        steps:
-          - name: test
-            image: python
-            script: |-
-              cd \`mktemp -d\`
-              wget -qO- \$(params.source-url) | tar xvz -m
-              python -m unittest
-EOF
+  KUBECONFIG=$RUN_CLUSTER_KUBECONFIG \
+  IS_BUILD_CLUSTER=false \
+  $TKG_LAB_SCRIPTS/tap-dev-namespace-base-install.sh
+done

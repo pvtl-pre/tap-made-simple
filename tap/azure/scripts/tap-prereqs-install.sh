@@ -2,12 +2,13 @@
 set -e -o pipefail
 shopt -s nocasematch;
 
+TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+source "$TKG_LAB_SCRIPTS/set-env.sh"
+
 TAP_VERSION=$(yq e .tap_version $PARAMS_YAML)
 JUMPBOX_OS=$(yq e .jumpbox-os $PARAMS_YAML)
-CLUSTER_NAME=$(yq e .azure.aks_cluster_name $PARAMS_YAML)
-KUBECONFIG=$(yq e .azure.kubeconfig $PARAMS_YAML)
 
-echo "## Downloading and extracting 'tanzu-cluster-essentials' from Tanzu Network"
+information "Downloading and extracting 'tanzu-cluster-essentials' from Tanzu Network"
 
 if [[ "$JUMPBOX_OS" == 'OSX' ]]; then
   CLUSTER_ESSENTIALS_FILE="tanzu-cluster-essentials-darwin-amd64-$TAP_VERSION.tgz"
@@ -37,16 +38,43 @@ fi
 tar -xvf generated/$CLUSTER_ESSENTIALS_FILE -C generated/tanzu-cluster-essentials
 
 (
-export INSTALL_BUNDLE=$(yq e .tap_install.tanzu_registry.bundle $PARAMS_YAML)
-export INSTALL_REGISTRY_HOSTNAME=$(yq e .tap_install.tanzu_registry.hostname $PARAMS_YAML)
-export INSTALL_REGISTRY_USERNAME=$(yq e .tap_install.tanzu_registry.username $PARAMS_YAML)
-export INSTALL_REGISTRY_PASSWORD=$(yq e .tap_install.tanzu_registry.password $PARAMS_YAML)
+  export INSTALL_BUNDLE=$(yq e .tanzu_registry.bundle $PARAMS_YAML)
+  export INSTALL_REGISTRY_HOSTNAME=$(yq e .tanzu_registry.hostname $PARAMS_YAML)
+  export INSTALL_REGISTRY_USERNAME=$(yq e .tanzu_registry.username $PARAMS_YAML)
+  export INSTALL_REGISTRY_PASSWORD=$(yq e .tanzu_registry.password $PARAMS_YAML)
 
-cd generated/tanzu-cluster-essentials
-KUBECONFIG=../../$KUBECONFIG ./install.sh --yes
+  VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+  BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+
+  RUN_CLUSTERS_INSTALL_COMMAND=""
+
+  declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
+
+  for ((i=0;i<${#run_clusters[@]};i++)); 
+  do
+    RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)  
+
+    current_cluster_command="KUBECONFIG=../../$RUN_CLUSTER_KUBECONFIG ./install.sh --yes"
+
+    if [[ "$i" -eq "0" ]]; then
+      RUN_CLUSTERS_INSTALL_COMMAND="$current_cluster_command"
+    else
+      RUN_CLUSTERS_INSTALL_COMMAND="$RUN_CLUSTERS_INSTALL_COMMAND & $current_cluster_command"
+    fi
+  done
+
+  cd generated/tanzu-cluster-essentials
+
+  KUBECONFIG=../../$VIEW_CLUSTER_KUBECONFIG ./install.sh --yes \
+  & \
+  KUBECONFIG=../../$BUILD_CLUSTER_KUBECONFIG ./install.sh --yes \
+  & \
+  eval $RUN_CLUSTERS_INSTALL_COMMAND
+
+  wait
 )
 
-echo "## Downloading and extracting 'tanzu-framework-bundle' from Tanzu Network"
+information "Downloading and extracting 'tanzu-framework-bundle' from Tanzu Network"
 
 rm -rf generated/tanzu
 mkdir -p generated/tanzu
@@ -57,14 +85,14 @@ fi
 
 tar -xvf generated/$TAP_FILE -C generated/tanzu
 
-echo "## Installing Tanzu CLI"
+information "Installing Tanzu CLI"
 
 export TANZU_CLI_NO_INIT=true
 sudo install generated/tanzu/cli/core/v*/$TANZU_CLI /usr/local/bin/tanzu
 
 tanzu version
 
-echo "## Installing Tanzu CLI plug-ins"
+information "Installing Tanzu CLI plug-ins"
 
 tanzu plugin install --local generated/tanzu/cli all
 

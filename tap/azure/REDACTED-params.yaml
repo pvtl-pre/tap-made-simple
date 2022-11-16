@@ -1,89 +1,38 @@
+#@data/values
+---
+jumpbox-os: OSX #! default is Linux; other values: OSX
 tap_version: 1.3.0
-jumpbox-os: OSX # default is Linux; other values: OSX
+tanzu_registry:
+  bundle: "registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:54bf611711923dccd7c7f10603c846782b90644d48f1cb570b43a082d18e23b9"
+  hostname: "registry.tanzu.vmware.com"
+  username: #! set
+  password: #! set
 azure:
   resource_group: tap
   location: centralus
-  aks_cluster_name: aks-tap-cluster
-  acr_name: # set an acr name or one will be set by the azure object script
-  acr_hostname: # set an acr host name or one will be set by the azure object script
-  acr_username: # will be automatically set with admin username
-  acr_password: # will be automatically set with admin password
   acr_sku: standard
-tap_install:
-  dev_namespace: default
-  tap_registry_secret: tap-registry
-  supply_chain_registry_secret: registry-credentials
-  tanzu_registry:
-    bundle: "registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:54bf611711923dccd7c7f10603c846782b90644d48f1cb570b43a082d18e23b9"
-    hostname: "registry.tanzu.vmware.com"
-    username: # set
-    password: # set
-tap_values:
-  shared:
-    ingress_domain: # set (i.e. "INGRESS-DOMAIN")
-    image_registry:
-      project_path: # optional if registry is being created via script with a repo path of /tap/supply-chain
-      username: # will be automatically set with admin username
-      password: # will be automatically set with admin password
-    kubernetes_distribution: ""
-
-  ceip_policy_disclosed: TRUE
-
-  #The above keys are minimum numbers of entries needed in tap-values.yaml to get a functioning TAP Full profile installation.
-
-  #Below are the keys which may have default values set, but can be overridden.
-
-  profile: full # Can take iterate, build, run, view.
-
-  excluded_packages:
-  - policy.apps.tanzu.vmware.com
-
-  supply_chain: testing_scanning # Can take testing, testing_scanning.
-
-  ootb_supply_chain_testing_scanning: # Based on supply_chain set above, can be changed to ootb_supply_chain_testing, ootb_supply_chain_testing_scanning.
-    gitops:
-      ssh_secret: "" # Takes "" as value by default; but can be overridden by setting a different value.
-
-  contour:
-    envoy:
-      service:
-        type: LoadBalancer # (optional) Defaults to LoadBalancer. Change to NodePort for distributions that don't support LoadBalancer
-
-  buildservice:
-    kp_default_repository: # optional if registry is being created via script with a repo path of /tap/supply-chain
-    kp_default_repository_username: # will be automatically set with admin username
-    kp_default_repository_password: # will be automatically set with admin password
-
-  tap_gui:
-    service_type: ClusterIP # If the shared.ingress_domain is set as above, this must be set to ClusterIP.
-    app_config:
-      catalog:
-        locations:
-          - type: url
-            target: # set (i.e. https://GIT-CATALOG-URL/catalog-info.yaml)
-      proxy:
-        /metadata-store:
-          target: https://metadata-store-app.metadata-store:8443/api/v1
-          changeOrigin: true
-          secure: false
-          headers:
-            Authorization: # will be automatically set with metadata store access token
-            X-Custom-Source: project-star
-
-  metadata_store:
-    ns_for_export_app_cert: # will be automatically set with dev namespace
-    app_service_type: ClusterIP # Defaults to `LoadBalancer`. If `shared.ingress_domain` is set as above, this must be set to `ClusterIP`.
-
-  scanning:
-    metadataStore:
-      url: "" # Configuration is moved, so set this string to empty.
-    source:
-      policy: scan-policy
-      template: blob-source-scan-template
-    image:
-      policy: scan-policy
-      template: blob-source-scan-template
-
-  grype:
-    namespace: # will be automatically set with dev namespace
-    targetImagePullSecret: # will be automatically set with secret to the registry to pull images from
+  acr_name: #! will be automatically set
+registry:
+  fqdn: #! will be automatically set
+  username: #! will be automatically set
+  password: #! will be automatically set
+  system_project: "tap" #! Project for all TAP and TBS Packages
+clusters:
+  ssh_key_path: #! will be automatically set
+  view_cluster:
+    ingressDomain: #! set to the ingress Domain for View Cluster components
+    k8s_info:
+      name: view-cluster #! name of the cluster to create
+    tap_gui:
+      catalogUrl: #! set (i.e. https://GIT-CATALOG-URL/catalog-info.yaml)
+      authSettings: {} #! when empty only Guest auth is enabled. can be changed later
+  build_cluster:
+    k8s_info:
+      name: build-cluster #! name of the cluster to create
+  run_clusters:
+    - ingressDomain: dev.example.com #! Set to the ingress Domain for prod ingress objects
+      k8s_info:
+        name: dev-cluster #! name of the cluster to create
+    - ingressDomain: prod.example.com #! Set to the ingress Domain for prod ingress objects
+      k8s_info:
+        name: prod-cluster #! name of the cluster to create
