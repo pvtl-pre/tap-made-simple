@@ -1,0 +1,8 @@
+# Ignore localconfigs folders
+.vscode/*
+
+# Ignore localconfigs folders
+local-config/*
+
+# Ignore generated folders
+generated/*
