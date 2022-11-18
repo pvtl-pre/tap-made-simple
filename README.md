@@ -11,7 +11,7 @@ This repo is for Tanzu field team members to see how various components of Tanzu
 Tanzu Application Platform GUI Blank Catalog from the Tanzu Application section of [Tanzu Network](https://network.tanzu.vmware.com/products/tanzu-application-platform/).
 To install, navigate to Tanzu Network. Under the list of available files to download, there is a folder titled tap-gui-catalogs-latest. Inside that folder is a compressed archive titled Tanzu Application Platform GUI Blank Catalog. You must extract that catalog to the preceding Git repository of choice. This serves as the configuration location for your Organization’s Catalog inside Tanzu Application Platform GUI.
 
-Example: https://github.com/pvtl-pre/tap-gui-catalogs
+Example: https://github.com/pvtl-pre/tap-catalogs
 
 ## Required CLIs and plugin-ins
 
