@@ -30,13 +30,19 @@ until [ -n "$(kubectl get svc -n tanzu-system-ingress envoy --kubeconfig $VIEW_C
   sleep 10
 done
 
-information "To Proceed you must register the View Cluster Wildcard DNS record with the following details:"
-
 VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingressDomain $PARAMS_YAML)
 VIEW_CLUSTER_INGRESS_IP=$(kubectl get service -n tanzu-system-ingress envoy --kubeconfig $VIEW_CLUSTER_KUBECONFIG -o json | jq -r .status.loadBalancer.ingress[0].ip)
 
-information "Domain Name: *.$VIEW_CLUSTER_INGRESS_DOMAIN"
-information "IP Address: $VIEW_CLUSTER_INGRESS_IP"
+message=$(cat <<END
+To proceed you must register the View Cluster Wildcard DNS record with the following details:
+
+Domain Name: *.$VIEW_CLUSTER_INGRESS_DOMAIN
+IP Address: $VIEW_CLUSTER_INGRESS_IP
+END
+)
+
+information "$message"
+
 read -p "Press any key to continue once the record is created" -n1 -s
 echo ""
 
