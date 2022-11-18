@@ -12,6 +12,3 @@ information () {
   echo -e "##############################################################################${NO_COLOR}"
   echo ""
 }
-
-# Give some information timestamps to know how long things take
-information $(date)
