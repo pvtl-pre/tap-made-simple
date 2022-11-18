@@ -13,15 +13,16 @@ declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAM
 
 for ((i=0;i<${#run_clusters[@]};i++)); 
 do
-  information "Generating run profile"
-
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
 
   RUN_PROFILE="generated/profile-templates/$RUN_CLUSTER_NAME.yaml"
+
+  information "Generating run profile for cluster $RUN_CLUSTER_NAME"
+
   ytt --data-value-yaml index=$i -f "$PARAMS_YAML" -f profile-templates/run.yaml > $RUN_PROFILE
 
-  information "Installing run profile"
+  information "Installing run profile on cluster $RUN_CLUSTER_NAME"
 
   tanzu package install tap \
     -n tap-install \

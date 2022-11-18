@@ -26,7 +26,7 @@ tanzu package install tap \
   --wait=false
 
 until [ -n "$(kubectl get svc -n tanzu-system-ingress envoy --kubeconfig $VIEW_CLUSTER_KUBECONFIG -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)" ]; do
-  information "Waiting for Contour to be given an IP"
+  information "Waiting for Contour to be given an IP on view cluster"
   sleep 10
 done
 

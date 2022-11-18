@@ -16,17 +16,21 @@ TAP_VERSION=$(yq e .tap_version $PARAMS_YAML)
 
 information "Installing base TAP components on view cluster"
 
+VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.k8s_info.name $PARAMS_YAML)
 VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 
+CLUSTER_NAME=$VIEW_CLUSTER_NAME \
 KUBECONFIG=$VIEW_CLUSTER_KUBECONFIG \
 IS_VIEW_CLUSTER=true \
 $TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 
 information "Installing base TAP components on build cluster"
 
+BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.k8s_info.name $PARAMS_YAML)
 BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 SA_TOKEN_PATH=".clusters.build_cluster.k8s_info.saToken"
 
+CLUSTER_NAME=$BUILD_CLUSTER_NAME \
 KUBECONFIG=$BUILD_CLUSTER_KUBECONFIG \
 SA_TOKEN_PATH=$SA_TOKEN_PATH \
 IS_VIEW_CLUSTER=false \
@@ -38,9 +42,11 @@ declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAM
 
 for ((i=0;i<${#run_clusters[@]};i++)); 
 do
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
   SA_TOKEN_PATH=".clusters.run_clusters[$i].k8s_info.saToken"
 
+  CLUSTER_NAME=$RUN_CLUSTER_NAME \
   KUBECONFIG=$RUN_CLUSTER_KUBECONFIG \
   SA_TOKEN_PATH=$SA_TOKEN_PATH \
   IS_VIEW_CLUSTER=false \

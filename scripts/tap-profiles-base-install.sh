@@ -10,12 +10,12 @@ INSTALL_REGISTRY_HOSTNAME=$(yq e .tanzu_registry.hostname $PARAMS_YAML)
 INSTALL_REGISTRY_USERNAME=$(yq e .tanzu_registry.username $PARAMS_YAML)
 INSTALL_REGISTRY_PASSWORD=$(yq e .tanzu_registry.password $PARAMS_YAML)
 
-information "Creating tap-install and tap-gui namespaces"
+information "Creating tap-install and tap-gui namespaces on cluster $CLUSTER_NAME"
 
 kubectl create ns tap-install --dry-run=client -o yaml | kubectl --kubeconfig $KUBECONFIG apply -f -
 kubectl create ns tap-gui --dry-run=client -o yaml | kubectl --kubeconfig $KUBECONFIG apply -f -
 
-information "Adding image registry secret"
+information "Adding image registry secret on cluster $CLUSTER_NAME"
 
 tanzu secret registry add tap-registry \
   --username $INSTALL_REGISTRY_USERNAME \
@@ -26,7 +26,7 @@ tanzu secret registry add tap-registry \
   --namespace tap-install \
   --kubeconfig $KUBECONFIG
 
-information "Adding the TAP package repository"
+information "Adding the TAP package repository on cluster $CLUSTER_NAME"
 
 tanzu package repository add tanzu-tap-repository \
   --url $INSTALL_REGISTRY_HOSTNAME/tanzu-application-platform/tap-packages:$TAP_VERSION \
@@ -34,12 +34,12 @@ tanzu package repository add tanzu-tap-repository \
   --wait=false \
   --kubeconfig $KUBECONFIG
 
-information "Adding TAP GUI multi-cluster RBAC"
+information "Adding TAP GUI multi-cluster RBAC on cluster $CLUSTER_NAME"
 
 kubectl apply -f tap-declarative-yaml/tap-gui-viewer-service-account-rbac.yaml --kubeconfig $KUBECONFIG
 
 if [[ $IS_VIEW_CLUSTER == false ]]; then
-  information "Get service account token"
+  information "Get service account token on cluster $CLUSTER_NAME"
 
   SA_NAME=$(kubectl -n tap-gui get sa tap-gui-viewer -o yaml --kubeconfig $KUBECONFIG | yq -r '.secrets[0].name')
   export SA_TOKEN=$(kubectl -n tap-gui get secret $SA_NAME -o yaml --kubeconfig $KUBECONFIG | yq -r '.data["token"]' | base64 --decode)
