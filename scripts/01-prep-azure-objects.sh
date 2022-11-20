@@ -14,7 +14,7 @@ fi
 RESOURCE_GROUP=$(yq e .azure.resource_group $PARAMS_YAML)
 LOCATION=$(yq e .azure.location $PARAMS_YAML)
 
-if [[ "$(az group exists --name $RESOURCE_GROUP -o json)" == 'false' ]]; then
+if [[ "$(az group exists --name $RESOURCE_GROUP -o json)" == false ]]; then
   information "Creating resource group '$RESOURCE_GROUP' in location '$LOCATION'"
   az group create --name $RESOURCE_GROUP --location $LOCATION
 else
