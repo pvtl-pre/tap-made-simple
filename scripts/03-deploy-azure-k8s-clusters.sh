@@ -35,7 +35,7 @@ RUN_CLUSTERS_DEPLOY_COMMAND=""
 
 declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
 
-for ((i=0;i<${#run_clusters[@]};i++)); 
+for ((i=0;i<${#run_clusters[@]};i++));
 do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   export RUN_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$RUN_CLUSTER_NAME.yaml"
