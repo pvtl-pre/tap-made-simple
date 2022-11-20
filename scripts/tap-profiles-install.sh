@@ -5,13 +5,6 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-# export INSTALL_DEV_NAMESPACE=$(yq e .tap_install.dev_namespace $PARAMS_YAML)
-# export SC_REGISTRY_SECRET_NAME=$(yq e .tap_install.supply_chain_registry_secret $PARAMS_YAML)
-
-# yq e -i '.tap_values.metadata_store.ns_for_export_app_cert = env(INSTALL_DEV_NAMESPACE)' "$PARAMS_YAML"
-# yq e -i '.tap_values.grype.namespace = env(INSTALL_DEV_NAMESPACE)' "$PARAMS_YAML"
-# yq e -i '.tap_values.grype.targetImagePullSecret = env(SC_REGISTRY_SECRET_NAME)' "$PARAMS_YAML"
-
 TAP_VERSION=$(yq e .tap_version $PARAMS_YAML)
 
 information "Installing base TAP components on view cluster"
