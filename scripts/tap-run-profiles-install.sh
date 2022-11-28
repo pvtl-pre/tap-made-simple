@@ -5,7 +5,7 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-TAP_VERSION=$(yq e .tap_version $PARAMS_YAML)
+TAP_VERSION=$(yq e .tap.version tap-version.yaml)
 
 mkdir -p generated/profile-templates
 

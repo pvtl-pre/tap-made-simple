@@ -5,7 +5,7 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-TAP_VERSION=$(yq e .tap_version $PARAMS_YAML)
+TAP_VERSION=$(yq e .tap.version tap-version.yaml)
 INSTALL_REGISTRY_HOSTNAME=$(yq e .tanzu_registry.hostname $PARAMS_YAML)
 INSTALL_REGISTRY_USERNAME=$(yq e .tanzu_registry.username $PARAMS_YAML)
 INSTALL_REGISTRY_PASSWORD=$(yq e .tanzu_registry.password $PARAMS_YAML)
