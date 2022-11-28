@@ -46,32 +46,20 @@ tar -xvf generated/$CLUSTER_ESSENTIALS_FILE -C generated/tanzu-cluster-essential
   VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
   BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 
-  RUN_CLUSTERS_INSTALL_COMMAND=""
-
-  declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
-
-  for ((i=0;i<${#run_clusters[@]};i++)); 
-  do
-    RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)  
-
-    current_cluster_command="KUBECONFIG=../../$RUN_CLUSTER_KUBECONFIG ./install.sh --yes"
-
-    if [[ "$i" -eq "0" ]]; then
-      RUN_CLUSTERS_INSTALL_COMMAND="$current_cluster_command"
-    else
-      RUN_CLUSTERS_INSTALL_COMMAND="$RUN_CLUSTERS_INSTALL_COMMAND & $current_cluster_command"
-    fi
-  done
-
   cd generated/tanzu-cluster-essentials
 
-  KUBECONFIG=../../$VIEW_CLUSTER_KUBECONFIG ./install.sh --yes \
-  & \
-  KUBECONFIG=../../$BUILD_CLUSTER_KUBECONFIG ./install.sh --yes \
-  & \
-  eval $RUN_CLUSTERS_INSTALL_COMMAND
+  KUBECONFIG=../../$VIEW_CLUSTER_KUBECONFIG ./install.sh --yes
 
-  wait
+  KUBECONFIG=../../$BUILD_CLUSTER_KUBECONFIG ./install.sh --yes
+
+  declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' ../../$PARAMS_YAML))
+
+  for ((i=0;i<${#run_clusters[@]};i++));
+  do
+    RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig ../../$PARAMS_YAML)  
+
+    KUBECONFIG=../../$RUN_CLUSTER_KUBECONFIG ./install.sh --yes
+  done
 )
 
 information "Downloading and extracting 'tanzu-framework-bundle' from Tanzu Network"
