@@ -6,7 +6,7 @@ ceip_policy_disclosed: true
 supply_chain: testing_scanning
 
 cnrs:
-  domain_name: #@ data.values.clusters.run_clusters[data.values.index].ingressDomain
+  domain_name: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
 
 contour:
@@ -17,10 +17,10 @@ contour:
 appliveview_connector:
   backend:
     sslDisabled: "true"
-    host: #@ "appliveview.{}".format(data.values.clusters.view_cluster.ingressDomain)
+    host: #@ "appliveview.{}".format(data.values.clusters.view_cluster.ingress_domain)
 
 shared:
-  ingress_domain: #@ data.values.clusters.run_clusters[data.values.index].ingressDomain
+  ingress_domain: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
 
 #! NOTE: this is a workaround to disable cosign as it needs to be updated
 excluded_packages:

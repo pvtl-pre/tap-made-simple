@@ -1,6 +1,10 @@
 #@data/values
 ---
-jumpbox-os: OSX #! default is Linux; other values: OSX
+jumpbox_os: OSX #! default is Linux; other values: OSX
+tls:
+  generate: true #! a self signed cert will be automatically generated
+  cert_data: #! cert data for wildcard cert that covers all clusters ingress domains
+  key_data: #! key data for wildcard cert that covers all clusters ingress domains
 tanzu_registry:
   hostname: "registry.tanzu.vmware.com"
   username: #! set
@@ -14,23 +18,23 @@ registry:
   fqdn: #! will be automatically set
   username: #! will be automatically set
   password: #! will be automatically set
-  system_project: "tap" #! Project for all TAP and TBS Packages
+  system_project: "tap" #! project for all TAP and TBS Packages
 clusters:
   ssh_key_path: #! will be automatically set
   view_cluster:
-    ingressDomain: #! set to the ingress Domain for View Cluster components
+    ingress_domain: #! set to the ingress domain for View Cluster components
     k8s_info:
       name: view-cluster #! name of the cluster to create
     tap_gui:
-      catalogUrl: #! set (i.e. https://GIT-CATALOG-URL/catalog-info.yaml)
-      authSettings: {} #! when empty only Guest auth is enabled. can be changed later
+      catalog_url: #! set (i.e. https://GIT-CATALOG-URL/catalog-info.yaml)
+      auth_settings: {} #! when empty only Guest auth is enabled. can be changed later
   build_cluster:
     k8s_info:
       name: build-cluster #! name of the cluster to create
   run_clusters:
-    - ingressDomain: dev.example.com #! Set to the ingress Domain for prod ingress objects
+    - ingress_domain: dev.example.com #! set to the ingress domain for dev ingress objects
       k8s_info:
         name: dev-cluster #! name of the cluster to create
-    - ingressDomain: prod.example.com #! Set to the ingress Domain for prod ingress objects
+    - ingress_domain: prod.example.com #! set to the ingress domain for prod ingress objects
       k8s_info:
         name: prod-cluster #! name of the cluster to create

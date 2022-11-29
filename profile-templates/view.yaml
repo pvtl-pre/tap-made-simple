@@ -14,18 +14,18 @@ tap_gui:
   app_config:
     title: TAP Multi Cluster Demo Environment
     app:
-      baseUrl: #@ "http://tap-gui.{}".format(data.values.clusters.view_cluster.ingressDomain)
-    #@ if data.values.clusters.view_cluster.tap_gui.authSettings:
-    auth: #@ data.values.clusters.view_cluster.tap_gui.authSettings
+      baseUrl: #@ "http://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
+    #@ if data.values.clusters.view_cluster.tap_gui.auth_settings:
+    auth: #@ data.values.clusters.view_cluster.tap_gui.auth_settings
     #@ end
     catalog:
       locations:
         - type: url
-          target: #@ data.values.clusters.view_cluster.tap_gui.catalogUrl
+          target: #@ data.values.clusters.view_cluster.tap_gui.catalog_url
     backend:
-      baseUrl: #@ "http://tap-gui.{}".format(data.values.clusters.view_cluster.ingressDomain)
+      baseUrl: #@ "http://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
       cors:
-        origin: #@ "http://tap-gui.{}".format(data.values.clusters.view_cluster.ingressDomain)
+        origin: #@ "http://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
     proxy:
       /metadata-store:
         target: https://metadata-store-app.metadata-store:8443/api/v1
@@ -53,7 +53,7 @@ tap_gui:
           #@ end 
 
 accelerator:
-  domain: #@ data.values.clusters.view_cluster.ingressDomain
+  domain: #@ data.values.clusters.view_cluster.ingress_domain
   ingress:
     include: true
     enable_tls: false
@@ -63,4 +63,4 @@ appliveview:
   sslDisabled: true
 
 shared:
-  ingress_domain: #@ data.values.clusters.view_cluster.ingressDomain
+  ingress_domain: #@ data.values.clusters.view_cluster.ingress_domain

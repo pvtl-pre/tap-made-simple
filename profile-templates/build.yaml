@@ -20,7 +20,7 @@ ootb_supply_chain_testing_scanning:
 grype:
   targetImagePullSecret: "registry-credentials"
   metadataStore:
-    url: #@ "https://metadata-store.{}".format(data.values.clusters.view_cluster.ingressDomain)
+    url: #@ "https://metadata-store.{}".format(data.values.clusters.view_cluster.ingress_domain)
     caSecret:
       name: store-ca-cert
       importFromNamespace: metadata-store-secrets

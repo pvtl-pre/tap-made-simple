@@ -30,7 +30,7 @@ until [ -n "$(kubectl get svc -n tanzu-system-ingress envoy --kubeconfig $VIEW_C
   sleep 10
 done
 
-VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingressDomain $PARAMS_YAML)
+VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingress_domain $PARAMS_YAML)
 VIEW_CLUSTER_INGRESS_IP=$(kubectl get service -n tanzu-system-ingress envoy --kubeconfig $VIEW_CLUSTER_KUBECONFIG -o json | jq -r .status.loadBalancer.ingress[0].ip)
 
 message=$(cat <<END

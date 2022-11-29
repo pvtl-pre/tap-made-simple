@@ -8,7 +8,7 @@ source "$TKG_LAB_SCRIPTS/set-env.sh"
 TAP_VERSION_YAML="tap-version.yaml"
 CLUSTER_ESSENTIALS_VERSION=$(yq e .cluster_essentials.version $TAP_VERSION_YAML)
 TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
-JUMPBOX_OS=$(yq e .jumpbox-os $PARAMS_YAML)
+JUMPBOX_OS=$(yq e .jumpbox_os $PARAMS_YAML)
 
 information "Downloading and extracting 'tanzu-cluster-essentials' from Tanzu Network"
 
