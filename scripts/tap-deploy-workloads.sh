@@ -42,8 +42,6 @@ until [ -n "$(kubectl get configmap tanzu-java-web-app -o yaml --kubeconfig $BUI
   sleep 2
 done
 
-i=0
-
 until [ -n "$(kubectl get configmap python-function -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG 2>/dev/null)" ]; do
   information "Waiting 2 secs for configmap python-function to be created"
   sleep 2
