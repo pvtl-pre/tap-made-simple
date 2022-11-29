@@ -20,7 +20,6 @@ Example: https://github.com/pvtl-pre/tap-catalogs
 - [jq v1.6+](https://github.com/stedolan/jq) (to install use `brew` for Mac and `apt-get` for Linux)
 - [pivnet](https://github.com/pivotal-cf/pivnet-cli)
 - [yq v4.12+](https://github.com/mikefarah/yq) (to install use `brew` for Mac and `apt-get` for Linux)
-- [kubectl-neat](https://github.com/itaysk/kubectl-neat)
 
 NOTE: The Tanzu CLI (v0.10.0) and associated plugins will be installed as part of the deployment process.
 

@@ -37,20 +37,22 @@ tanzu apps workload apply python-function \
 
 information "Creating deliverables tanzu-java-web-app and python-function"
 
-until [ -n "$(kubectl get deliverable tanzu-java-web-app -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG 2>/dev/null)" ]; do
-  information "Waiting for deliverable tanzu-java-web-app to be created"
+until [ -n "$(kubectl get configmap tanzu-java-web-app -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG 2>/dev/null)" ]; do
+  information "Waiting 2 secs for configmap tanzu-java-web-app to be created"
   sleep 2
 done
 
-until [ -n "$(kubectl get deliverable python-function -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG 2>/dev/null)" ]; do
-  information "Waiting for deliverable python-function to be created"
+i=0
+
+until [ -n "$(kubectl get configmap python-function -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG 2>/dev/null)" ]; do
+  information "Waiting 2 secs for configmap python-function to be created"
   sleep 2
 done
 
 mkdir -p $DELIVERABLES_DIR
 
-kubectl get deliverable tanzu-java-web-app -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG | kubectl neat > $DELIVERABLES_DIR/tanzu-java-web-app.yaml
-kubectl get deliverable python-function -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG | kubectl neat > $DELIVERABLES_DIR/python-function.yaml
+kubectl get configmap tanzu-java-web-app -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/tanzu-java-web-app.yaml
+kubectl get configmap python-function -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/python-function.yaml
 
 declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
 
