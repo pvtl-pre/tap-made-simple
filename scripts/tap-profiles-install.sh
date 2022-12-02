@@ -21,7 +21,7 @@ information "Installing base TAP components on build cluster"
 
 BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.k8s_info.name $PARAMS_YAML)
 BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
-SA_TOKEN_PATH=".clusters.build_cluster.k8s_info.saToken"
+SA_TOKEN_PATH=".clusters.build_cluster.k8s_info.sa_token"
 
 CLUSTER_NAME=$BUILD_CLUSTER_NAME \
 KUBECONFIG=$BUILD_CLUSTER_KUBECONFIG \
@@ -37,7 +37,7 @@ for ((i=0;i<${#run_clusters[@]};i++));
 do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
-  SA_TOKEN_PATH=".clusters.run_clusters[$i].k8s_info.saToken"
+  SA_TOKEN_PATH=".clusters.run_clusters[$i].k8s_info.sa_token"
 
   CLUSTER_NAME=$RUN_CLUSTER_NAME \
   KUBECONFIG=$RUN_CLUSTER_KUBECONFIG \
@@ -89,7 +89,7 @@ do
   RUN_CLUSTER_INGRESS_IP=$(kubectl get service -n tanzu-system-ingress envoy --kubeconfig $RUN_CLUSTER_KUBECONFIG -o json | jq -r .status.loadBalancer.ingress[0].ip)
 
   message=$(cat <<END
-To proceed you must register the Run Cluster ($RUN_CLUSTER_NAME) Wildcard DNS record with the following details:
+To proceed you must register the run cluster ($RUN_CLUSTER_NAME) Wildcard DNS record with the following details:
 
 Domain Name: *.$RUN_CLUSTER_INGRESS_DOMAIN
 IP Address: $RUN_CLUSTER_INGRESS_IP
