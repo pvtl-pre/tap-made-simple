@@ -8,6 +8,8 @@ source "$TKG_LAB_SCRIPTS/set-env.sh"
 DELIVERABLES_DIR="generated/deliverables"
 BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 
+mkdir -p $DELIVERABLES_DIR
+
 information "Creating workload tanzu-java-web-app to the build cluster"
 
 tanzu apps workload apply tanzu-java-web-app \
@@ -47,7 +49,6 @@ until [ -n "$(kubectl get configmap python-function -o yaml --kubeconfig $BUILD_
   sleep 2
 done
 
-mkdir -p $DELIVERABLES_DIR
 
 kubectl get configmap tanzu-java-web-app -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/tanzu-java-web-app.yaml
 kubectl get configmap python-function -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/python-function.yaml
