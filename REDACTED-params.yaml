@@ -1,6 +1,6 @@
 #@data/values
 ---
-jumpbox_os: OSX #! default is Linux; other values: OSX
+jumpbox_os: Linux #! default is Linux; other values: OSX
 tls:
   generate: true #! a self signed cert will be automatically generated
   cert_data: #! cert data for wildcard cert that covers all clusters ingress domains
