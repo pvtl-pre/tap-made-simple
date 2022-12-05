@@ -37,18 +37,13 @@ tanzu apps workload apply python-function \
   --yes \
   --kubeconfig $BUILD_CLUSTER_KUBECONFIG
 
-information "Creating deliverables tanzu-java-web-app and python-function"
+information "Waiting for deliverable tanzu-java-web-app"
 
-until [ -n "$(kubectl get configmap tanzu-java-web-app -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG 2>/dev/null)" ]; do
-  information "Waiting 2 secs for configmap tanzu-java-web-app to be created"
-  sleep 2
-done
+while ! kubectl get configmap tanzu-java-web-app -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done
 
-until [ -n "$(kubectl get configmap python-function -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG 2>/dev/null)" ]; do
-  information "Waiting 2 secs for configmap python-function to be created"
-  sleep 2
-done
+information "Waiting for deliverable python-function"
 
+while ! kubectl get configmap python-function -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done
 
 kubectl get configmap tanzu-java-web-app -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/tanzu-java-web-app.yaml
 kubectl get configmap python-function -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/python-function.yaml

@@ -25,10 +25,9 @@ tanzu package install tap \
   --kubeconfig $VIEW_CLUSTER_KUBECONFIG \
   --wait=false
 
-until [ -n "$(kubectl get svc -n tanzu-system-ingress envoy --kubeconfig $VIEW_CLUSTER_KUBECONFIG -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null)" ]; do
-  information "Waiting for Contour to be given an IP on view cluster"
-  sleep 10
-done
+information "Waiting for Contour to be given an IP on view cluster"
+
+while ! kubectl get svc -n tanzu-system-ingress envoy --kubeconfig $VIEW_CLUSTER_KUBECONFIG -o jsonpath='{.status.loadBalancer.ingress[0].ip}' >/dev/null 2>&1; do sleep 2; done
 
 VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingress_domain $PARAMS_YAML)
 VIEW_CLUSTER_INGRESS_IP=$(kubectl get service -n tanzu-system-ingress envoy --kubeconfig $VIEW_CLUSTER_KUBECONFIG -o json | jq -r .status.loadBalancer.ingress[0].ip)
@@ -46,9 +45,9 @@ information "$message"
 read -p "Press any key to continue once the record is created" -n1 -s
 echo ""
 
-information "Wait for the metadata-store namespace to be created"
+information "Waiting for the metadata-store namespace to be created"
 
-while ! kubectl get namespace metadata-store --kubeconfig $VIEW_CLUSTER_KUBECONFIG; do sleep 10; done
+while ! kubectl get namespace metadata-store --kubeconfig $VIEW_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done
 
 information "Create a service account for the metadata store"
 
