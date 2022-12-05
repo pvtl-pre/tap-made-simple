@@ -18,11 +18,11 @@ do
 
   RUN_PROFILE="generated/profile-templates/$RUN_CLUSTER_NAME.yaml"
 
-  information "Generating run profile for cluster $RUN_CLUSTER_NAME"
+  information "Generating run profile for cluster '$RUN_CLUSTER_NAME'"
 
   ytt --data-value-yaml index=$i -f "$PARAMS_YAML" -f profile-templates/run.yaml > $RUN_PROFILE
 
-  information "Installing run profile on cluster $RUN_CLUSTER_NAME"
+  information "Installing run profile on cluster '$RUN_CLUSTER_NAME'"
 
   tanzu package install tap \
     -n tap-install \

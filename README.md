@@ -56,9 +56,23 @@ Now you can execute the following script to perform all of those tasks:
 
 ### A Record Examples
 
-In the namespace, tanzu-system-ingress, point A records to the service named envoy which will be of type LoadBalancer.
+The output of the deploy-all script will prompt for A record creation for the view cluster and each run cluster.
 
-- *.tap-gui.DOMAIN
+```shell
+##############################################################################
+To proceed, you must register the View Cluster Wildcard DNS record with the following details:
+
+Domain Name: *.subdomain.example.com
+IP Address: 240.1.1.1
+##############################################################################
+
+##############################################################################
+To proceed, you must register Run Cluster 'run-cluster-name' Wildcard DNS record with the following details:
+
+Domain Name: *.subdomain.example.com
+IP Address: 240.1.1.2
+##############################################################################
+```
 
 ## Tear Down
 

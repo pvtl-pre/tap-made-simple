@@ -10,7 +10,7 @@ BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PAR
 
 mkdir -p $DELIVERABLES_DIR
 
-information "Creating workload tanzu-java-web-app to the build cluster"
+information "Creating workload tanzu-java-web-app on the Build Cluster"
 
 tanzu apps workload apply tanzu-java-web-app \
   --git-repo https://github.com/pvtl-pre/tanzu-java-web-app.git \
@@ -23,7 +23,7 @@ tanzu apps workload apply tanzu-java-web-app \
   --yes \
   --kubeconfig $BUILD_CLUSTER_KUBECONFIG
 
-information "Creating workload python-function to the build cluster"
+information "Creating workload python-function on the Build Cluster"
 
 tanzu apps workload apply python-function \
   --git-repo https://github.com/pvtl-pre/python-function.git \
@@ -55,7 +55,8 @@ do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
 
-  information "Deploying deliverables to cluster $RUN_CLUSTER_NAME"
+  information "Deploying deliverables on Run Cluster '$RUN_CLUSTER_NAME'"
+
   kubectl apply -f $DELIVERABLES_DIR/tanzu-java-web-app.yaml --kubeconfig $RUN_CLUSTER_KUBECONFIG
   kubectl apply -f $DELIVERABLES_DIR/python-function.yaml --kubeconfig $RUN_CLUSTER_KUBECONFIG
 done

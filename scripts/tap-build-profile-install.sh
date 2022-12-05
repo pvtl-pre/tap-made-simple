@@ -15,7 +15,7 @@ information "Generating build profile"
 mkdir -p generated/profile-templates
 ytt -f "$PARAMS_YAML" -f profile-templates/build.yaml > $BUILD_PROFILE
 
-information "Add metadata store creds to build clusters"
+information "Add metadata store creds on the Build Cluster"
 
 CA_CERT=$(kubectl get secret -n metadata-store ingress-cert -o yaml --kubeconfig $VIEW_CLUSTER_KUBECONFIG | yq -r '.data."ca.crt"')
 METADATA_STORE_AUTH_TOKEN=$(kubectl get secrets metadata-store-read-write-client -n metadata-store -o yaml --kubeconfig $VIEW_CLUSTER_KUBECONFIG | yq ".data.token" | base64 -d)
