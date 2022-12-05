@@ -1,7 +1,12 @@
 #@ load("@ytt:data","data")
+#@ load("@ytt:base64","base64")
 ---
 profile: view
 ceip_policy_disclosed: true
+
+shared:
+  ingress_domain: #@ data.values.clusters.view_cluster.ingress_domain
+  ca_cert_data: #@ base64.decode(data.values.tls.cert_data)
 
 contour:
   envoy:
@@ -9,12 +14,14 @@ contour:
       type: LoadBalancer
 
 tap_gui:
+  tls:
+    secretName: wildcard
+    namespace: tap-install
   service_type: ClusterIP
-  ingressEnabled: "true"
   app_config:
     title: TAP Multi Cluster Demo Environment
     app:
-      baseUrl: #@ "http://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
+      baseUrl: #@ "https://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
     #@ if data.values.clusters.view_cluster.tap_gui.auth_settings:
     auth: #@ data.values.clusters.view_cluster.tap_gui.auth_settings
     #@ end
@@ -23,9 +30,9 @@ tap_gui:
         - type: url
           target: #@ data.values.clusters.view_cluster.tap_gui.catalog_url
     backend:
-      baseUrl: #@ "http://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
+      baseUrl: #@ "https://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
       cors:
-        origin: #@ "http://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
+        origin: #@ "https://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
     proxy:
       /metadata-store:
         target: https://metadata-store-app.metadata-store:8443/api/v1
@@ -56,11 +63,11 @@ accelerator:
   domain: #@ data.values.clusters.view_cluster.ingress_domain
   ingress:
     include: true
-    enable_tls: false
+    enable_tls: true
+  tls:
+    secret_name: wildcard
+    namespace: tap-install
 
 appliveview:
   ingressEnabled: true
-  sslDisabled: true
-
-shared:
-  ingress_domain: #@ data.values.clusters.view_cluster.ingress_domain
+  sslDisabled: false

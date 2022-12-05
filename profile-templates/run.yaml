@@ -3,11 +3,17 @@
 ---
 profile: run
 ceip_policy_disclosed: true
+
+shared:
+  ingress_domain: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
+  ca_cert_data: #@ base64.decode(data.values.tls.cert_data)
+
 supply_chain: testing_scanning
 
 cnrs:
   domain_name: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
+  default_tls_secret: "tap-install/wildcard"
 
 contour:
   envoy:
@@ -16,11 +22,8 @@ contour:
 
 appliveview_connector:
   backend:
-    sslDisabled: "true"
+    sslDisabled: false
     host: #@ "appliveview.{}".format(data.values.clusters.view_cluster.ingress_domain)
-
-shared:
-  ingress_domain: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
 
 #! NOTE: this is a workaround to disable cosign as it needs to be updated
 excluded_packages:

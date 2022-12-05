@@ -46,6 +46,10 @@ do
   $TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 done
 
+information "Applying cert"
+
+$TKG_LAB_SCRIPTS/apply-cert.sh
+
 information "Installing view profile"
 
 $TKG_LAB_SCRIPTS/tap-view-profile-install.sh
@@ -57,6 +61,10 @@ VIEW_CLUSTER_KUBECONFIG=$VIEW_CLUSTER_KUBECONFIG $TKG_LAB_SCRIPTS/tap-build-prof
 information "Installing run profiles"
 
 $TKG_LAB_SCRIPTS/tap-run-profiles-install.sh
+
+information "Applying cert delegation"
+
+$TKG_LAB_SCRIPTS/apply-cert-delegation.sh
 
 information "Waiting for reconciliation of TAP clusters"
 
