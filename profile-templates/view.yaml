@@ -33,6 +33,14 @@ tap_gui:
       baseUrl: #@ "https://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
       cors:
         origin: #@ "https://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
+      database:
+        client: pg
+        connection:
+          host: tap-gui-db-postgresql.tap-gui-backend.svc.cluster.local
+          port: 5432
+          user: tapuser
+          password: VMware1!
+          ssl: false
     proxy:
       /metadata-store:
         target: https://metadata-store-app.metadata-store:8443/api/v1
