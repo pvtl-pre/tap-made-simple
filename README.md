@@ -20,8 +20,9 @@ Example: https://github.com/pvtl-pre/tap-catalogs
 - [jq v1.6+](https://github.com/stedolan/jq) (to install use `brew` for Mac and `apt-get` for Linux)
 - [pivnet](https://github.com/pivotal-cf/pivnet-cli)
 - [yq v4.12+](https://github.com/mikefarah/yq) (to install use `brew` for Mac and `apt-get` for Linux)
+- [helm](https://helm.sh/docs/intro/install/) (to install use `brew` for Mac and `apt-get` for Linux)
 
-NOTE: The Tanzu CLI (v0.10.0) and associated plugins will be installed as part of the deployment process.
+NOTE: The Tanzu CLI and associated plugins will be installed as part of the deployment process.
 
 ## Setup Environment Variable for params.yaml
 

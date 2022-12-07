@@ -63,6 +63,14 @@ export METADATA_STORE_ACCESS_TOKEN=$(kubectl get secrets $(kubectl get sa -n met
 
 yq e -i '.tap_gui.app_config.proxy./metadata-store.headers.Authorization = "Bearer " + env(METADATA_STORE_ACCESS_TOKEN) + ""' "$VIEW_PROFILE"
 
+information "Deploy TAP GUI database"
+
+helm repo add bitnami https://charts.bitnami.com/bitnami
+
+kubectl create ns tap-gui-backend --dry-run=client -o yaml | kubectl --kubeconfig $VIEW_CLUSTER_KUBECONFIG apply -f -
+
+helm upgrade --install tap-gui-db bitnami/postgresql -n tap-gui-backend --set auth.postgresPassword="VMware1!" --set auth.username="tapuser" --set auth.password="VMware1!" --wait --kubeconfig $VIEW_CLUSTER_KUBECONFIG
+
 information "Update TAP GUI for CVE scan visibility"
 
 tanzu package installed update tap \
