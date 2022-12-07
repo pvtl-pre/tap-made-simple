@@ -27,10 +27,10 @@ tanzu package install tap \
 
 information "Waiting for Contour to be given an IP on the View Cluster"
 
-while ! kubectl get svc -n tanzu-system-ingress envoy --kubeconfig $VIEW_CLUSTER_KUBECONFIG -o jsonpath='{.status.loadBalancer.ingress[0].ip}' >/dev/null 2>&1; do sleep 2; done
+while [[ -z $(kubectl get service -n tanzu-system-ingress envoy -o jsonpath='{.status.loadBalancer.ingress[0].ip}' --kubeconfig $VIEW_CLUSTER_KUBECONFIG 2>/dev/null) ]]; do sleep 2; done
 
 VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingress_domain $PARAMS_YAML)
-VIEW_CLUSTER_INGRESS_IP=$(kubectl get service -n tanzu-system-ingress envoy --kubeconfig $VIEW_CLUSTER_KUBECONFIG -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+VIEW_CLUSTER_INGRESS_IP=$(kubectl get service -n tanzu-system-ingress envoy -o jsonpath='{.status.loadBalancer.ingress[0].ip}' --kubeconfig $VIEW_CLUSTER_KUBECONFIG)
 
 message=$(cat <<END
 To proceed, you must register the View Cluster Wildcard DNS record with the following details:
