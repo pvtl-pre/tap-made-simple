@@ -1,10 +1,6 @@
 #@data/values
 ---
 jumpbox_os: Linux #! default is Linux; other values: OSX
-tls:
-  generate: true #! a self signed cert will be automatically generated
-  cert_data: #! cert data for wildcard cert that covers all clusters ingress domains
-  key_data: #! key data for wildcard cert that covers all clusters ingress domains
 tanzu_registry:
   hostname: "registry.tanzu.vmware.com"
   username: #! set
