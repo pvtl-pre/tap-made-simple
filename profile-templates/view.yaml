@@ -3,6 +3,9 @@
 profile: view
 ceip_policy_disclosed: true
 
+shared:
+  ingress_domain: #@ data.values.clusters.view_cluster.ingress_domain
+
 contour:
   envoy:
     service:
@@ -69,6 +72,3 @@ accelerator:
 appliveview:
   ingressEnabled: true
   sslDisabled: true
-
-shared:
-  ingress_domain: #@ data.values.clusters.view_cluster.ingress_domain
