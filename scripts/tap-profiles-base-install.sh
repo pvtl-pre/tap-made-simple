@@ -47,6 +47,8 @@ if [[ $IS_VIEW_CLUSTER == false ]]; then
   yq e -i "$SA_TOKEN_PATH = env(SA_TOKEN)" "$PARAMS_YAML"
 fi
 
+information "Waiting for TAP package repository on cluster '$CLUSTER_NAME'"
+
 kubectl wait pkgr --for condition=ReconcileSucceeded=True \
   -n tap-install tanzu-tap-repository \
   --kubeconfig $KUBECONFIG \

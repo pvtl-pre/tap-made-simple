@@ -66,12 +66,14 @@ information "Applying cert delegation"
 
 $TKG_LAB_SCRIPTS/apply-cert-delegation.sh
 
-information "Waiting for reconciliation of TAP clusters"
+information "Waiting for reconciliation on the View Cluster"
 
 kubectl wait pkgi --for condition=ReconcileSucceeded=True \
   -n tap-install tap \
   --kubeconfig $VIEW_CLUSTER_KUBECONFIG \
   --timeout=15m
+
+information "Waiting for reconciliation on the Build Cluster"
 
 kubectl wait pkgi --for condition=ReconcileSucceeded=True \
   -n tap-install tap \
@@ -80,7 +82,10 @@ kubectl wait pkgi --for condition=ReconcileSucceeded=True \
 
 for ((i=0;i<${#run_clusters[@]};i++)); 
 do
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
+
+  information "Waiting for reconciliation on Run Cluster '$RUN_CLUSTER_NAME'"
 
   kubectl wait pkgi --for condition=ReconcileSucceeded=True \
     -n tap-install tap \
