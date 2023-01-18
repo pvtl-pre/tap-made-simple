@@ -73,6 +73,12 @@ VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAM
 
 kubectl apply -f $CERT_PATH/tls-secret.yaml --kubeconfig $VIEW_CLUSTER_KUBECONFIG
 
+information "Applying TLS secret on the Iterate Cluster"
+
+ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+
+kubectl apply -f $CERT_PATH/tls-secret.yaml --kubeconfig $ITERATE_CLUSTER_KUBECONFIG
+
 declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
 
 for ((i=0;i<${#run_clusters[@]};i++)); 

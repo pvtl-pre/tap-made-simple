@@ -26,6 +26,11 @@ export VIEW_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$VIEW_CLUSTER_NAME.yaml"
 
 yq e -i '.clusters.view_cluster.k8s_info.kubeconfig = env(VIEW_CLUSTER_KUBECONFIG)' "$PARAMS_YAML"
 
+ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML)
+export ITERATE_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$ITERATE_CLUSTER_NAME.yaml"
+
+yq e -i '.clusters.iterate_cluster.k8s_info.kubeconfig = env(ITERATE_CLUSTER_KUBECONFIG)' "$PARAMS_YAML"
+
 BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.k8s_info.name $PARAMS_YAML)
 export BUILD_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$BUILD_CLUSTER_NAME.yaml"
 
@@ -59,6 +64,10 @@ CLUSTER_NAME=$VIEW_CLUSTER_NAME \
 KUBECONFIG=$VIEW_CLUSTER_KUBECONFIG \
 $TKG_LAB_SCRIPTS/03a-deploy-azure-k8s-cluster.sh \
 & \
+CLUSTER_NAME=$ITERATE_CLUSTER_NAME \
+KUBECONFIG=$ITERATE_CLUSTER_KUBECONFIG \
+$TKG_LAB_SCRIPTS/03a-deploy-azure-k8s-cluster.sh \
+& \
 CLUSTER_NAME=$BUILD_CLUSTER_NAME \
 KUBECONFIG=$BUILD_CLUSTER_KUBECONFIG \
 $TKG_LAB_SCRIPTS/03a-deploy-azure-k8s-cluster.sh \
@@ -73,6 +82,9 @@ information "Getting K8S urls"
 
 export VIEW_CLUSTER_URL=$(kubectl --kubeconfig $VIEW_CLUSTER_KUBECONFIG config view | yq '.clusters[0].cluster.server')
 yq e -i '.clusters.view_cluster.k8s_info.url = env(VIEW_CLUSTER_URL)' "$PARAMS_YAML"
+
+export ITERATE_CLUSTER_URL=$(kubectl --kubeconfig $ITERATE_CLUSTER_KUBECONFIG config view | yq '.clusters[0].cluster.server')
+yq e -i '.clusters.iterate_cluster.k8s_info.url = env(ITERATE_CLUSTER_URL)' "$PARAMS_YAML"
 
 export BUILD_CLUSTER_URL=$(kubectl --kubeconfig $BUILD_CLUSTER_KUBECONFIG config view | yq '.clusters[0].cluster.server')
 yq e -i '.clusters.build_cluster.k8s_info.url = env(BUILD_CLUSTER_URL)' "$PARAMS_YAML"

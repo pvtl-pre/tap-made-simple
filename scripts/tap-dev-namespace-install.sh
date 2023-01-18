@@ -5,6 +5,16 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
+information "Setting up developer namespace on the Iterate Cluster"
+
+ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML)
+ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+
+CLUSTER_NAME=$ITERATE_CLUSTER_NAME \
+KUBECONFIG=$ITERATE_CLUSTER_KUBECONFIG \
+IS_ITERATE_CLUSTER=true \
+$TKG_LAB_SCRIPTS/tap-dev-namespace-base-install.sh
+
 information "Setting up developer namespace on the Build Cluster"
 
 BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.k8s_info.name $PARAMS_YAML)

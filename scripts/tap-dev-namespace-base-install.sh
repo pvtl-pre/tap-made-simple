@@ -24,10 +24,12 @@ kubectl apply -f tap-declarative-yaml/dev-namespace/rbac.yaml --kubeconfig $KUBE
 if [[ $IS_BUILD_CLUSTER == true ]]; then
   information "Create a scan policy to the developer namespace on cluster '$CLUSTER_NAME'"
   kubectl apply -f tap-declarative-yaml/dev-namespace/scan-policy.yaml --kubeconfig $KUBECONFIG
+fi
 
-  information "Create an ootb_supply_chain_testing_scanning Java pipeline on cluster '$CLUSTER_NAME'"
+if [[ $IS_ITERATE_CLUSTER == true ]] || [[ $IS_BUILD_CLUSTER == true ]]; then
+  information "Create a Java pipeline on cluster '$CLUSTER_NAME'"
   kubectl apply -f tap-declarative-yaml/dev-namespace/java-pipeline.yaml --kubeconfig $KUBECONFIG
 
-  information "Create an ootb_supply_chain_testing_scanning Python pipeline on cluster '$CLUSTER_NAME'"
+  information "Create a Python pipeline on cluster '$CLUSTER_NAME'"
   kubectl apply -f tap-declarative-yaml/dev-namespace/python-pipeline.yaml --kubeconfig $KUBECONFIG
 fi
