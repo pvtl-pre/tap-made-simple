@@ -52,20 +52,20 @@ tap_gui:
       serviceLocatorMethod:
         type: 'multiTenant'
       clusterLocatorMethods:
-      - type: 'config'
-        clusters:
-          - url: #@ data.values.clusters.build_cluster.k8s_info.url
-            name: #@ data.values.clusters.build_cluster.k8s_info.name
-            authProvider: serviceAccount
-            serviceAccountToken: #@ data.values.clusters.build_cluster.k8s_info.sa_token
-            skipTLSVerify: true
-          #@ for i in range(len(data.values.clusters.run_clusters)):
-          - url: #@ data.values.clusters.run_clusters[i].k8s_info.url
-            name: #@ data.values.clusters.run_clusters[i].k8s_info.name
-            authProvider: serviceAccount
-            skipTLSVerify: true
-            serviceAccountToken: #@ data.values.clusters.run_clusters[i].k8s_info.sa_token
-          #@ end 
+        - type: 'config'
+          clusters:
+            - url: #@ data.values.clusters.build_cluster.k8s_info.url
+              name: #@ data.values.clusters.build_cluster.k8s_info.name
+              authProvider: serviceAccount
+              serviceAccountToken: #@ data.values.clusters.build_cluster.k8s_info.sa_token
+              skipTLSVerify: true
+            #@ for i in range(len(data.values.clusters.run_clusters)):
+            - url: #@ data.values.clusters.run_clusters[i].k8s_info.url
+              name: #@ data.values.clusters.run_clusters[i].k8s_info.name
+              authProvider: serviceAccount
+              skipTLSVerify: true
+              serviceAccountToken: #@ data.values.clusters.run_clusters[i].k8s_info.sa_token
+            #@ end 
 
 accelerator:
   domain: #@ data.values.clusters.view_cluster.ingress_domain
