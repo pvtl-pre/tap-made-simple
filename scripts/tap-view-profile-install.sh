@@ -51,17 +51,7 @@ while ! kubectl get namespace metadata-store --kubeconfig $VIEW_CLUSTER_KUBECONF
 
 information "Create a service account for the metadata store"
 
-KUBE_VERSION=$(kubectl version -o yaml --kubeconfig $VIEW_CLUSTER_KUBECONFIG | yq e '.serverVersion.minor')
-
-if [[ "$KUBE_VERSION" -ge "24" ]]; then
-  kubectl apply -f tap-declarative-yaml/cve-viewer-tap-gui-rbac.yaml --kubeconfig $VIEW_CLUSTER_KUBECONFIG
-  METADATA_STORE_SECRET="metadata-store-read-client"
-else
-  kubectl apply -f tap-declarative-yaml/cve-viewer-tap-gui-rbac-k8s-23-and-below.yaml --kubeconfig $VIEW_CLUSTER_KUBECONFIG
-  METADATA_STORE_SECRET=$(kubectl get sa -n metadata-store metadata-store-read-client -o yaml --kubeconfig $VIEW_CLUSTER_KUBECONFIG | yq -r '.secrets[0].name')
-fi
-
-export METADATA_STORE_ACCESS_TOKEN=$(kubectl get secrets $METADATA_STORE_SECRET -n metadata-store -o jsonpath="{.data.token}" --kubeconfig $VIEW_CLUSTER_KUBECONFIG | base64 -d)
+export METADATA_STORE_ACCESS_TOKEN=$(kubectl get secrets metadata-store-read-write-client -n metadata-store -o jsonpath="{.data.token}" --kubeconfig $VIEW_CLUSTER_KUBECONFIG | base64 -d)
 
 yq e -i '.tap_gui.app_config.proxy./metadata-store.headers.Authorization = "Bearer " + env(METADATA_STORE_ACCESS_TOKEN) + ""' "$VIEW_PROFILE"
 

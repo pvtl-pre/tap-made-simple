@@ -24,7 +24,3 @@ appliveview_connector:
   backend:
     sslDisabled: false
     host: #@ "appliveview.{}".format(data.values.clusters.view_cluster.ingress_domain)
-
-#! NOTE: this is a workaround to disable cosign as it needs to be updated
-excluded_packages:
-  - policy.apps.tanzu.vmware.com

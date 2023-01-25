@@ -39,14 +39,14 @@ tanzu apps workload apply python-function \
 
 information "Waiting for deliverable tanzu-java-web-app"
 
-while ! kubectl get configmap tanzu-java-web-app -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done
+while ! kubectl get configmap tanzu-java-web-app-deliverable -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done
 
 information "Waiting for deliverable python-function"
 
-while ! kubectl get configmap python-function -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done
+while ! kubectl get configmap python-function-deliverable -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done
 
-kubectl get configmap tanzu-java-web-app -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/tanzu-java-web-app.yaml
-kubectl get configmap python-function -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/python-function.yaml
+kubectl get configmap tanzu-java-web-app-deliverable -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/tanzu-java-web-app.yaml
+kubectl get configmap python-function-deliverable -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/python-function.yaml
 
 declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
 

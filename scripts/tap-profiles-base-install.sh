@@ -34,24 +34,21 @@ tanzu package repository add tanzu-tap-repository \
   --wait=false \
   --kubeconfig $KUBECONFIG
 
-information "Adding TAP GUI multi-cluster RBAC on cluster '$CLUSTER_NAME'"
+if [[ $IS_BUILD_OR_RUN_CLUSTER == true ]]; then
+  information "Adding TAP GUI multi-cluster RBAC on cluster '$CLUSTER_NAME'"
 
-KUBE_VERSION=$(kubectl version -o yaml --kubeconfig $KUBECONFIG | yq e '.serverVersion.minor')
+  KUBE_VERSION=$(kubectl version -o yaml --kubeconfig $KUBECONFIG | yq e '.serverVersion.minor')
 
-if [[ "$KUBE_VERSION" -ge "24" ]]; then
   kubectl apply -f tap-declarative-yaml/tap-gui-viewer-service-account-rbac.yaml --kubeconfig $KUBECONFIG
-else
-  kubectl apply -f tap-declarative-yaml/tap-gui-viewer-service-account-rbac-k8s-23-and-below.yaml --kubeconfig $KUBECONFIG
-fi
-
-if [[ $IS_VIEW_CLUSTER == false ]]; then
-  information "Get service account token on cluster '$CLUSTER_NAME'"
 
   if [[ "$KUBE_VERSION" -ge "24" ]]; then
+    kubectl apply -f tap-declarative-yaml/tap-gui-viewer-service-account-secret.yaml --kubeconfig $KUBECONFIG
     TAP_GUI_VIEWER_SECRET="tap-gui-viewer"
   else
     TAP_GUI_VIEWER_SECRET=$(kubectl -n tap-gui get sa tap-gui-viewer -o yaml --kubeconfig $KUBECONFIG | yq -r '.secrets[0].name')
   fi
+
+  information "Getting service account token on cluster '$CLUSTER_NAME'"
 
   export SA_TOKEN=$(kubectl -n tap-gui get secret $TAP_GUI_VIEWER_SECRET -o yaml --kubeconfig $KUBECONFIG | yq -r '.data["token"]' | base64 --decode)
 

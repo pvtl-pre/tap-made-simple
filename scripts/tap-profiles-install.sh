@@ -14,7 +14,7 @@ VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAM
 
 CLUSTER_NAME=$VIEW_CLUSTER_NAME \
 KUBECONFIG=$VIEW_CLUSTER_KUBECONFIG \
-IS_VIEW_CLUSTER=true \
+IS_BUILD_OR_RUN_CLUSTER=false \
 $TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 
 information "Installing base TAP components on the Iterate Cluster"
@@ -26,7 +26,7 @@ SA_TOKEN_PATH=".clusters.iterate_cluster.k8s_info.sa_token"
 CLUSTER_NAME=$ITERATE_CLUSTER_NAME \
 KUBECONFIG=$ITERATE_CLUSTER_KUBECONFIG \
 SA_TOKEN_PATH=$SA_TOKEN_PATH \
-IS_VIEW_CLUSTER=false \
+IS_BUILD_OR_RUN_CLUSTER=false \
 $TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 
 information "Installing base TAP components on the Build Cluster"
@@ -38,7 +38,7 @@ SA_TOKEN_PATH=".clusters.build_cluster.k8s_info.sa_token"
 CLUSTER_NAME=$BUILD_CLUSTER_NAME \
 KUBECONFIG=$BUILD_CLUSTER_KUBECONFIG \
 SA_TOKEN_PATH=$SA_TOKEN_PATH \
-IS_VIEW_CLUSTER=false \
+IS_BUILD_OR_RUN_CLUSTER=true \
 $TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 
 declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
@@ -54,7 +54,7 @@ do
   CLUSTER_NAME=$RUN_CLUSTER_NAME \
   KUBECONFIG=$RUN_CLUSTER_KUBECONFIG \
   SA_TOKEN_PATH=$SA_TOKEN_PATH \
-  IS_VIEW_CLUSTER=false \
+  IS_BUILD_OR_RUN_CLUSTER=true \
   $TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 done
 
