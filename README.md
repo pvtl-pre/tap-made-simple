@@ -44,7 +44,7 @@ Ensure the `az` CLI is installed and configured. The deploy all script will use 
 Log into VMware Tanzu Network via the pivnet CLI.
 
 ```bash
-pivnet login --api-token='my-api-token'
+pivnet login --api-token='MY-API-TOKEN'
 ```
 
 ## Execute the Deploy All Script
