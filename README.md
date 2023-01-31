@@ -68,10 +68,17 @@ IP Address: 240.1.1.1
 ##############################################################################
 
 ##############################################################################
-To proceed, you must register Run Cluster 'run-cluster-name' Wildcard DNS record with the following details:
+To proceed, you must register Iterate Cluster Wildcard DNS record with the following details:
 
 Domain Name: *.subdomain.example.com
 IP Address: 240.1.1.2
+##############################################################################
+
+##############################################################################
+To proceed, you must register Run Cluster 'run-cluster-name' Wildcard DNS record with the following details:
+
+Domain Name: *.subdomain.example.com
+IP Address: 240.1.1.3
 ##############################################################################
 ```
 
