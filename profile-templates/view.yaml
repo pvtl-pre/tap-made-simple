@@ -25,10 +25,7 @@ tap_gui:
     #@ if data.values.clusters.view_cluster.tap_gui.auth_settings:
     auth: #@ data.values.clusters.view_cluster.tap_gui.auth_settings
     #@ end
-    catalog:
-      locations:
-        - type: url
-          target: #@ data.values.clusters.view_cluster.tap_gui.catalog_url
+    catalog: #@ data.values.clusters.view_cluster.tap_gui.catalog
     backend:
       baseUrl: #@ "https://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
       cors:

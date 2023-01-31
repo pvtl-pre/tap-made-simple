@@ -26,8 +26,11 @@ clusters:
     k8s_info:
       name: view-cluster #! name of the cluster to create
     tap_gui:
-      catalog_url: #! set (i.e. https://GIT-CATALOG-URL/catalog-info.yaml)
       auth_settings: {} #! when empty only Guest auth is enabled. can be changed later
+      catalog:
+        locations:
+          - type: url
+            target: #! set (i.e. https://GIT-CATALOG-URL/catalog-info.yaml)
   iterate_cluster:
     ingress_domain: #! set to the ingress domain for iterate ingress objects (e.g. iterate.example.com)
     k8s_info:
