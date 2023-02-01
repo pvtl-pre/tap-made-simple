@@ -22,9 +22,7 @@ tap_gui:
     title: TAP Multi Cluster Demo Environment
     app:
       baseUrl: #@ "https://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
-    #@ if data.values.clusters.view_cluster.tap_gui.auth_settings:
-    auth: #@ data.values.clusters.view_cluster.tap_gui.auth_settings
-    #@ end
+    auth: #@ data.values.clusters.view_cluster.tap_gui.auth
     catalog: #@ data.values.clusters.view_cluster.tap_gui.catalog
     backend:
       baseUrl: #@ "https://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)

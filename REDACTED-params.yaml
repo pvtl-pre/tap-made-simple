@@ -26,7 +26,8 @@ clusters:
     k8s_info:
       name: view-cluster #! name of the cluster to create
     tap_gui:
-      auth_settings: {} #! when empty only Guest auth is enabled. can be changed later
+      auth:
+        allowGuestAccess: true
       catalog:
         locations:
           - type: url

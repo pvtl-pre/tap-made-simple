@@ -63,6 +63,24 @@ tap_gui:
         target: https://github.com/pvtl-pre/python-function/blob/main/catalog/catalog-info.yaml
 ```
 
+## (Optional) GitHub Authentication
+
+In order to use GitHub to authenticate, a GitHub [OAuth App](https://docs.github.com/en/developers/apps/building-oauth-apps/creating-an-oauth-app) will need to be created. The `Homepage URL` would be your TAP GUI FQDN (e.g. https://tap-gui.subdomain.example.com). The `Authorization callback URL` would be https://tap-gui.subdomain.example.com/api/auth/github/handler/frame. Once created, a Client ID and Client Secret will need to be generated.
+
+Configure your copy of `params.yaml` to include the additional `environment` and `providers` sections.
+
+```yaml
+tap_gui:
+  auth:
+    allowGuestAccess: true
+    environment: development
+    providers:
+      github:
+        development:
+          clientId: CLIENT-ID
+          clientSecret: CLIENT-SECRET
+```
+
 ## Execute the Deploy All Script
 
 Now you can execute the following script to perform all of those tasks:
