@@ -47,6 +47,22 @@ Log into VMware Tanzu Network via the pivnet CLI.
 pivnet login --api-token='MY-API-TOKEN'
 ```
 
+## (Optional) Register Catalog Entities
+
+Static configuration of catalog entities can be done by configuring your copy of `params.yaml` to include locations. Example, yet functional, locations are shown below.
+
+```yaml
+tap_gui:
+  catalog:
+    locations:
+      - type: url
+        target: https://github.com/pvtl-pre/tap-catalogs/blob/main/yelb-catalog/catalog-info.yaml
+      - type: url
+        target: https://github.com/pvtl-pre/tanzu-java-web-app/blob/main/catalog/catalog-info.yaml
+      - type: url
+        target: https://github.com/pvtl-pre/python-function/blob/main/catalog/catalog-info.yaml
+```
+
 ## Execute the Deploy All Script
 
 Now you can execute the following script to perform all of those tasks:
