@@ -6,6 +6,7 @@ ceip_policy_disclosed: true
 
 shared:
   ingress_domain: #@ data.values.clusters.iterate_cluster.ingress_domain
+  ingress_issuer: ""
   ca_cert_data: #@ base64.decode(data.values.tls.cert_data)
 
 buildservice:
