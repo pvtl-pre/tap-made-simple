@@ -45,9 +45,9 @@ information "$message"
 read -p "Press any key to continue once the record is created" -n1 -s
 echo ""
 
-information "Waiting for the metadata-store namespace to be created"
+information "Waiting for the metadata-store-read-write-client secret to be created"
 
-while ! kubectl get namespace metadata-store --kubeconfig $VIEW_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done
+while ! kubectl get secrets metadata-store-read-write-client -n metadata-store --kubeconfig $VIEW_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done
 
 information "Create a service account for the metadata store"
 
