@@ -1,6 +1,6 @@
 # Tanzu Application Platform Made Simple
 
-This repo has scripts to deploy Tanzu Application Platform 1.3 to Azure.
+This repo has scripts to deploy Tanzu Application Platform 1.4 to Azure.
 
 ## Goals and Audience
 
