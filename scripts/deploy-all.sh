@@ -12,3 +12,5 @@ $TKG_LAB_SCRIPTS/tap-prereqs-install.sh
 $TKG_LAB_SCRIPTS/tap-profiles-install.sh
 $TKG_LAB_SCRIPTS/tap-dev-namespace-install.sh
 $TKG_LAB_SCRIPTS/tap-deploy-workloads.sh
+
+$TKG_LAB_SCRIPTS/tap-dns-configuration.sh

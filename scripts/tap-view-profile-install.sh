@@ -25,26 +25,6 @@ tanzu package install tap \
   --kubeconfig $VIEW_CLUSTER_KUBECONFIG \
   --wait=false
 
-information "Waiting for Contour to be given an IP on the View Cluster"
-
-while [[ -z $(kubectl get service -n tanzu-system-ingress envoy -o jsonpath='{.status.loadBalancer.ingress[0].ip}' --kubeconfig $VIEW_CLUSTER_KUBECONFIG 2>/dev/null) ]]; do sleep 2; done
-
-VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingress_domain $PARAMS_YAML)
-VIEW_CLUSTER_INGRESS_IP=$(kubectl get service -n tanzu-system-ingress envoy -o jsonpath='{.status.loadBalancer.ingress[0].ip}' --kubeconfig $VIEW_CLUSTER_KUBECONFIG)
-
-message=$(cat <<END
-To proceed, you must register the View Cluster Wildcard DNS record with the following details:
-
-Domain Name: *.$VIEW_CLUSTER_INGRESS_DOMAIN
-IP Address: $VIEW_CLUSTER_INGRESS_IP
-END
-)
-
-information "$message"
-
-read -p "Press any key to continue once the record is created" -n1 -s
-echo ""
-
 information "Waiting for the metadata-store-read-write-client secret to be created"
 
 while ! kubectl get secrets metadata-store-read-write-client -n metadata-store --kubeconfig $VIEW_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done

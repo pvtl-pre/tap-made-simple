@@ -91,29 +91,21 @@ Now you can execute the following script to perform all of those tasks:
 
 ### A Record Examples
 
-The output of the deploy-all script will prompt for A record creation for the view cluster and each run cluster.
+The output of the deploy-all script will prompt for A record creation for the view, iterate and each run cluster.
 
 ```shell
 ##############################################################################
-To proceed, you must register the View Cluster Wildcard DNS record with the following details:
+To proceed, you must register the wildcard DNS record with the following details:
+##############################################################################
 
 Domain Name: *.subdomain.example.com
 IP Address: 240.1.1.1
-##############################################################################
-
-##############################################################################
-To proceed, you must register Iterate Cluster Wildcard DNS record with the following details:
 
 Domain Name: *.subdomain.example.com
 IP Address: 240.1.1.2
-##############################################################################
-
-##############################################################################
-To proceed, you must register Run Cluster 'run-cluster-name' Wildcard DNS record with the following details:
 
 Domain Name: *.subdomain.example.com
 IP Address: 240.1.1.3
-##############################################################################
 ```
 
 ## Tear Down
