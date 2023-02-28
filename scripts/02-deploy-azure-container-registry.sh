@@ -15,7 +15,7 @@ if [[ -z "$ACR_NAME" || "$ACR_NAME" == "null" ]]; then
 
   CREATE_ACR=true
 else
-  ACR_EXISTS=$(az acr list -g $RESOURCE_GROUP -o json | jq ".[] | contains({name: \"$ACR_NAME\"})")
+  ACR_EXISTS=$(az acr list -g $RESOURCE_GROUP -o json | jq "any(.name == \"$ACR_NAME\")")
 
   if [[ -z "$ACR_EXISTS" || "$ACR_EXISTS" == false ]]; then
     CREATE_ACR=true
