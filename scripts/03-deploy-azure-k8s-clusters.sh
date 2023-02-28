@@ -6,6 +6,7 @@ TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
 RESOURCE_GROUP=$(yq e .azure.resource_group $PARAMS_YAML)
+NODE_SIZE=$(yq e .azure.node_size $PARAMS_YAML)
 
 export SSH_KEY_PATH="generated/ssh-key"
 export KUBECONFIGS_PATH="generated/kubeconfigs"
@@ -52,7 +53,7 @@ CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$VIEW_CLUSTER_NAME\")")
 
 if [[ $CLUSTER_EXISTS == false ]]; then
   information "Creating View Cluster"
-  az aks create --name $VIEW_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size standard_a8_v2 --node-count 4 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
+  az aks create --name $VIEW_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size $NODE_SIZE --node-count 1 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
   CREATING_VIEW_CLUSTER=true
 fi
 
@@ -60,7 +61,7 @@ CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$ITERATE_CLUSTER_NAME\")")
 
 if [[ $CLUSTER_EXISTS == false ]]; then
   information "Creating Iterate Cluster"
-  az aks create --name $ITERATE_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size standard_a8_v2 --node-count 4 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
+  az aks create --name $ITERATE_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size $NODE_SIZE --node-count 2 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
   CREATING_ITERATE_CLUSTER=true
 fi
 
@@ -68,7 +69,7 @@ CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$BUILD_CLUSTER_NAME\")")
 
 if [[ $CLUSTER_EXISTS == false ]]; then
   information "Creating Build Cluster"
-  az aks create --name $BUILD_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size standard_a8_v2 --node-count 4 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
+  az aks create --name $BUILD_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size $NODE_SIZE --node-count 2 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
   CREATING_BUILD_CLUSTER=true
 fi
 
@@ -83,7 +84,7 @@ do
 
   if [[ $CLUSTER_EXISTS == false ]]; then
     information "Creating Run Cluster '$RUN_CLUSTER_NAME'"
-    az aks create --name $RUN_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size standard_a8_v2 --node-count 4 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
+    az aks create --name $RUN_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size $NODE_SIZE --node-count 2 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
     CREATING_RUN_CLUSTERS+=(true)
   else
     CREATING_RUN_CLUSTERS+=(false)

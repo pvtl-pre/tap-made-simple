@@ -12,6 +12,7 @@ tanzu_registry:
 azure:
   resource_group: tap
   location: centralus
+  node_size: standard_a8_v2
   acr_sku: standard
   acr_name: #! will be automatically set
 registry:
