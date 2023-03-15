@@ -10,6 +10,7 @@ if [[ "$(az group exists --name $RESOURCE_GROUP)" == 'false' ]]; then
   information "Resource group '$RESOURCE_GROUP' does not exist"
 else
   information "Deleting resource group $RESOURCE_GROUP"
+
   az group delete --resource-group $RESOURCE_GROUP
 fi
 

@@ -5,11 +5,12 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-RESOURCE_GROUP=$(yq e .azure.resource_group $PARAMS_YAML)
 NODE_SIZE=$(yq e .azure.node_size $PARAMS_YAML)
+RESOURCE_GROUP=$(yq e .azure.resource_group $PARAMS_YAML)
+RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
 
-export SSH_KEY_PATH="generated/ssh-key"
 export KUBECONFIGS_PATH="generated/kubeconfigs"
+export SSH_KEY_PATH="generated/ssh-key"
 
 mkdir -p $KUBECONFIGS_PATH
 
@@ -39,9 +40,7 @@ export BUILD_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$BUILD_CLUSTER_NAME.yaml"
 
 yq e -i '.clusters.build_cluster.k8s_info.kubeconfig = env(BUILD_CLUSTER_KUBECONFIG)' "$PARAMS_YAML"
 
-declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
-
-for ((i=0;i<${#run_clusters[@]};i++));
+for ((i=0;i<$RUN_CLUSTER_COUNT;i++));
 do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   export RUN_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$RUN_CLUSTER_NAME.yaml"
@@ -73,10 +72,9 @@ if [[ $CLUSTER_EXISTS == false ]]; then
   CREATING_BUILD_CLUSTER=true
 fi
 
-declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
 declare -a CREATING_RUN_CLUSTERS=()
 
-for ((i=0;i<${#run_clusters[@]};i++));
+for ((i=0;i<$RUN_CLUSTER_COUNT;i++));
 do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
@@ -115,9 +113,7 @@ else
   information "Build Cluster already exists"
 fi
 
-declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
-
-for ((i=0;i<${#run_clusters[@]};i++));
+for ((i=0;i<$RUN_CLUSTER_COUNT;i++));
 do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   
@@ -147,10 +143,10 @@ az aks get-credentials --name $BUILD_CLUSTER_NAME --resource-group $RESOURCE_GRO
 export BUILD_CLUSTER_URL=$(kubectl --kubeconfig $BUILD_CLUSTER_KUBECONFIG config view | yq '.clusters[0].cluster.server')
 yq e -i '.clusters.build_cluster.k8s_info.url = env(BUILD_CLUSTER_URL)' "$PARAMS_YAML"
 
-for ((i=0;i<${#run_clusters[@]};i++));
+for ((i=0;i<$RUN_CLUSTER_COUNT;i++));
 do
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   RUN_CLUSTER_KUBECONFIG="$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)"
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
   az aks get-credentials --name $RUN_CLUSTER_NAME --resource-group $RESOURCE_GROUP --overwrite-existing --file $RUN_CLUSTER_KUBECONFIG
 

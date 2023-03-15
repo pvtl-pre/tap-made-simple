@@ -5,8 +5,9 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-DELIVERABLES_DIR="generated/deliverables"
 BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+DELIVERABLES_DIR="generated/deliverables"
+RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
 
 mkdir -p $DELIVERABLES_DIR
 
@@ -48,12 +49,10 @@ while ! kubectl get configmap python-function-deliverable -o yaml --kubeconfig $
 kubectl get configmap tanzu-java-web-app-deliverable -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/tanzu-java-web-app.yaml
 kubectl get configmap python-function-deliverable -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG > $DELIVERABLES_DIR/python-function.yaml
 
-declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
-
-for ((i=0;i<${#run_clusters[@]};i++)); 
+for ((i=0;i<$RUN_CLUSTER_COUNT;i++)); 
 do
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
   information "Deploying deliverables on Run Cluster '$RUN_CLUSTER_NAME'"
 

@@ -5,12 +5,20 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-TAP_VERSION=$(yq e .tap.version tap-version.yaml)
-
-information "Installing base TAP components on the View Cluster"
-
+BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.k8s_info.name $PARAMS_YAML)
+BUILD_CLUSTER_SA_TOKEN_PATH=".clusters.build_cluster.k8s_info.sa_token"
+ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML)
+ITERATE_CLUSTER_SA_TOKEN_PATH=".clusters.iterate_cluster.k8s_info.sa_token"
+RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
 VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.k8s_info.name $PARAMS_YAML)
 VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+
+TAP_VERSION_YAML="tap-version.yaml"
+TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
+
+information "Installing base TAP components on the View Cluster"
 
 CLUSTER_NAME=$VIEW_CLUSTER_NAME \
 KUBECONFIG=$VIEW_CLUSTER_KUBECONFIG \
@@ -19,41 +27,31 @@ $TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 
 information "Installing base TAP components on the Iterate Cluster"
 
-ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML)
-ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
-SA_TOKEN_PATH=".clusters.iterate_cluster.k8s_info.sa_token"
-
 CLUSTER_NAME=$ITERATE_CLUSTER_NAME \
 KUBECONFIG=$ITERATE_CLUSTER_KUBECONFIG \
-SA_TOKEN_PATH=$SA_TOKEN_PATH \
+SA_TOKEN_PATH=$ITERATE_CLUSTER_SA_TOKEN_PATH \
 IS_BUILD_OR_RUN_CLUSTER=false \
 $TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 
 information "Installing base TAP components on the Build Cluster"
 
-BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.k8s_info.name $PARAMS_YAML)
-BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
-SA_TOKEN_PATH=".clusters.build_cluster.k8s_info.sa_token"
-
 CLUSTER_NAME=$BUILD_CLUSTER_NAME \
 KUBECONFIG=$BUILD_CLUSTER_KUBECONFIG \
-SA_TOKEN_PATH=$SA_TOKEN_PATH \
+SA_TOKEN_PATH=$BUILD_CLUSTER_SA_TOKEN_PATH \
 IS_BUILD_OR_RUN_CLUSTER=true \
 $TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 
-declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
-
-for ((i=0;i<${#run_clusters[@]};i++)); 
+for ((i=0;i<$RUN_CLUSTER_COUNT;i++)); 
 do
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
-  SA_TOKEN_PATH=".clusters.run_clusters[$i].k8s_info.sa_token"
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
+  RUN_CLUSTER_SA_TOKEN_PATH=".clusters.run_clusters[$i].k8s_info.sa_token"
 
   information "Installing base TAP components on Run Cluster '$RUN_CLUSTER_NAME'"
 
   CLUSTER_NAME=$RUN_CLUSTER_NAME \
   KUBECONFIG=$RUN_CLUSTER_KUBECONFIG \
-  SA_TOKEN_PATH=$SA_TOKEN_PATH \
+  SA_TOKEN_PATH=$RUN_CLUSTER_SA_TOKEN_PATH \
   IS_BUILD_OR_RUN_CLUSTER=true \
   $TKG_LAB_SCRIPTS/tap-profiles-base-install.sh
 done
@@ -107,10 +105,10 @@ kubectl wait pkgi --for condition=ReconcileSucceeded=True \
   --kubeconfig $BUILD_CLUSTER_KUBECONFIG \
   --timeout=15m
 
-for ((i=0;i<${#run_clusters[@]};i++)); 
+for ((i=0;i<$RUN_CLUSTER_COUNT;i++)); 
 do
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
   information "Waiting for reconciliation on Run Cluster '$RUN_CLUSTER_NAME'"
 

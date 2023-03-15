@@ -5,10 +5,12 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-TAP_VERSION=$(yq e .tap.version tap-version.yaml)
 VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.k8s_info.name $PARAMS_YAML)
 VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 VIEW_PROFILE="generated/profile-templates/$VIEW_CLUSTER_NAME.yaml"
+
+TAP_VERSION_YAML="tap-version.yaml"
+TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
 information "Generating view profile"
 

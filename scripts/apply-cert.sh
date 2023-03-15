@@ -5,13 +5,14 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-GENERATE_CERT=$(yq e .tls.generate $PARAMS_YAML)
-VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingress_domain $PARAMS_YAML)
 CERT_PATH="generated/cert"
+GENERATE_CERT=$(yq e .tls.generate $PARAMS_YAML)
+RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
+VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingress_domain $PARAMS_YAML)
 
 mkdir -p $CERT_PATH
 
-if [[ "$GENERATE_CERT" == true ]]; then
+if [[ $GENERATE_CERT == true ]]; then
   if [[ -z $(yq e .tls.cert_data $PARAMS_YAML) ]] || [[ -z $(yq e .tls.key_data $PARAMS_YAML) ]]; then
     information "Generating self-signed wildcard cert"
 
@@ -35,9 +36,7 @@ subjectAltName = @alt_names
 [alt_names]
 EOF
 
-    declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
-
-    for ((i=0;i<${#run_clusters[@]};i++)); 
+    for ((i=0;i<$RUN_CLUSTER_COUNT;i++)); 
     do
       RUN_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.run_clusters[$i].ingress_domain $PARAMS_YAML)
 
@@ -79,9 +78,7 @@ ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig 
 
 kubectl apply -f $CERT_PATH/tls-secret.yaml --kubeconfig $ITERATE_CLUSTER_KUBECONFIG
 
-declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
-
-for ((i=0;i<${#run_clusters[@]};i++)); 
+for ((i=0;i<$RUN_CLUSTER_COUNT;i++)); 
 do
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)

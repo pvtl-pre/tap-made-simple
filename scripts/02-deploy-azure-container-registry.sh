@@ -5,10 +5,11 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-RESOURCE_GROUP=$(yq e .azure.resource_group $PARAMS_YAML)
-export ACR_NAME=$(yq e .azure.acr_name $PARAMS_YAML)
 ACR_SKU=$(yq e .azure.acr_sku $PARAMS_YAML)
 CREATE_ACR=false
+RESOURCE_GROUP=$(yq e .azure.resource_group $PARAMS_YAML)
+
+export ACR_NAME=$(yq e .azure.acr_name $PARAMS_YAML)
 
 if [[ -z "$ACR_NAME" || "$ACR_NAME" == "null" ]]; then
   ACR_NAME=tapregistry$(date +%Y%m%d%H%M%S)
@@ -17,16 +18,17 @@ if [[ -z "$ACR_NAME" || "$ACR_NAME" == "null" ]]; then
 else
   ACR_EXISTS=$(az acr list -g $RESOURCE_GROUP -o json | jq "any(.name == \"$ACR_NAME\")")
 
-  if [[ -z "$ACR_EXISTS" || "$ACR_EXISTS" == false ]]; then
+  if [[ $ACR_EXISTS == false ]]; then
     CREATE_ACR=true
   fi
 fi
 
-if [[ "$CREATE_ACR" == true ]]; then
-  RETURNED_ACR_JSON=$(az acr check-name -n $ACR_NAME -o json)
+if [[ $CREATE_ACR == true ]]; then
+  ACR_NAME_AVAILABLE=$(az acr check-name -n $ACR_NAME -o json | jq -r '.nameAvailable')
 
-  if [[ $(echo "$RETURNED_ACR_JSON" | jq -r '.nameAvailable') == false ]]; then
+  if [[ $ACR_NAME_AVAILABLE == false ]]; then
     information "Azure Container Registry name $ACR_NAME is not available"
+
     exit 1
   fi
 
@@ -42,8 +44,9 @@ information "Getting Azure Container Registry creds"
 
 ACR_ADMIN_ENABLED=$(az acr show -n $ACR_NAME -g $RESOURCE_GROUP -o json | jq '.adminUserEnabled')
 
-if [[ "$ACR_ADMIN_ENABLED" == false ]]; then
+if [[ $ACR_ADMIN_ENABLED == false ]]; then
   information "Enabling admin on registry $ACR_NAME"
+
   az acr update -n $ACR_NAME -g $RESOURCE_GROUP --admin-enabled true
 fi
 

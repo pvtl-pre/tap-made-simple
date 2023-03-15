@@ -5,10 +5,12 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-TAP_VERSION=$(yq e .tap.version tap-version.yaml)
 INSTALL_REGISTRY_HOSTNAME=$(yq e .tanzu_registry.hostname $PARAMS_YAML)
 INSTALL_REGISTRY_USERNAME=$(yq e .tanzu_registry.username $PARAMS_YAML)
 INSTALL_REGISTRY_PASSWORD=$(yq e .tanzu_registry.password $PARAMS_YAML)
+
+TAP_VERSION_YAML="tap-version.yaml"
+TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
 information "Creating tap-install and tap-gui namespaces on cluster '$CLUSTER_NAME'"
 
@@ -41,7 +43,7 @@ if [[ $IS_BUILD_OR_RUN_CLUSTER == true ]]; then
 
   kubectl apply -f tap-declarative-yaml/tap-gui-viewer-service-account-rbac.yaml --kubeconfig $KUBECONFIG
 
-  if [[ "$KUBE_VERSION" -ge "24" ]]; then
+  if [[ $KUBE_VERSION -ge "24" ]]; then
     kubectl apply -f tap-declarative-yaml/tap-gui-viewer-service-account-secret.yaml --kubeconfig $KUBECONFIG
     TAP_GUI_VIEWER_SECRET="tap-gui-viewer"
   else

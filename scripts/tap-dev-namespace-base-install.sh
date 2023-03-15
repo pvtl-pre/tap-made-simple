@@ -19,17 +19,21 @@ tanzu secret registry add registry-credentials \
   --kubeconfig $KUBECONFIG
 
 information "Authorize the service account to the developer namespace on cluster '$CLUSTER_NAME'"
+
 kubectl apply -f tap-declarative-yaml/dev-namespace/rbac.yaml --kubeconfig $KUBECONFIG
 
 if [[ $IS_BUILD_CLUSTER == true ]]; then
   information "Create a scan policy to the developer namespace on cluster '$CLUSTER_NAME'"
+  
   kubectl apply -f tap-declarative-yaml/dev-namespace/scan-policy.yaml --kubeconfig $KUBECONFIG
 fi
 
 if [[ $IS_ITERATE_CLUSTER == true ]] || [[ $IS_BUILD_CLUSTER == true ]]; then
   information "Create a Java pipeline on cluster '$CLUSTER_NAME'"
+  
   kubectl apply -f tap-declarative-yaml/dev-namespace/java-pipeline.yaml --kubeconfig $KUBECONFIG
 
   information "Create a Python pipeline on cluster '$CLUSTER_NAME'"
+  
   kubectl apply -f tap-declarative-yaml/dev-namespace/python-pipeline.yaml --kubeconfig $KUBECONFIG
 fi

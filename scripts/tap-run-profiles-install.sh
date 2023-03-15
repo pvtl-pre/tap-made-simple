@@ -5,16 +5,17 @@ shopt -s nocasematch;
 TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
-TAP_VERSION=$(yq e .tap.version tap-version.yaml)
+RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
+
+TAP_VERSION_YAML="tap-version.yaml"
+TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
 mkdir -p generated/profile-templates
 
-declare -a run_clusters=($(yq e -o=j -I=0 '.clusters.run_clusters[]' $PARAMS_YAML))
-
-for ((i=0;i<${#run_clusters[@]};i++)); 
+for ((i=0;i<$RUN_CLUSTER_COUNT;i++)); 
 do
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
   RUN_PROFILE="generated/profile-templates/$RUN_CLUSTER_NAME.yaml"
 
