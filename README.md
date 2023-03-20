@@ -89,9 +89,11 @@ Now you can execute the following script to perform all of those tasks:
 ./scripts/deploy-all.sh
 ```
 
-### A Record Examples
+The output of the `deploy-all.sh` script will either prompt for manual DNS record creation for the view, iterate and each run cluster or auto configure it for you.
 
-The output of the deploy-all script will prompt for A record creation for the view, iterate and each run cluster.
+### Manual DNS Record Creation
+
+After the completion of the `deploy-all.sh` script, you must update your DNS records. An example of the script output is below which contains the DNS records you will need.
 
 ```shell
 ##############################################################################
@@ -106,6 +108,18 @@ IP Address: 240.1.1.2
 
 Domain Name: *.subdomain.example.com
 IP Address: 240.1.1.3
+```
+
+### Automatic DNS Record Creation
+
+After the completion of the `deploy-all.sh` script, multiple DNS records will be automatically. In order for this to occur, a DNS Zone must be created in Azure DNS for the domain used as `ingress_domain` for the clusters in `params.yaml`. Finally, set the `params.yaml` Azure section to the following:
+
+```yaml
+azure:
+  dns:
+    auto_configure: true
+    dns_zone_name: example.com
+    resource_group: example
 ```
 
 ## Tear Down
