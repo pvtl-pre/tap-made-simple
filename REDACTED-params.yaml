@@ -17,8 +17,8 @@ azure:
   acr_name: #! will be automatically set
   dns:
     auto_configure: false
-    dns_zone_name: # set to the dns zone that will create A Records
-    resource_group: # set to the resource group that contains the dns zone
+    dns_zone_name: #! set to the dns zone that will create A Records
+    resource_group: #! set to the resource group that contains the dns zone
 registry:
   fqdn: #! will be automatically set
   username: #! will be automatically set
