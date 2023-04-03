@@ -7,8 +7,10 @@ source "$TKG_LAB_SCRIPTS/set-env.sh"
 
 CERT_PATH="generated/cert"
 GENERATE_CERT=$(yq e .tls.generate $PARAMS_YAML)
+ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
 VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingress_domain $PARAMS_YAML)
+VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 
 mkdir -p $CERT_PATH
 
@@ -68,13 +70,9 @@ kubectl create secret tls wildcard -n tap-install --cert=$CERT_PATH/wildcard.cer
 
 information "Applying TLS secret on the View Cluster"
 
-VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
-
 kubectl apply -f $CERT_PATH/tls-secret.yaml --kubeconfig $VIEW_CLUSTER_KUBECONFIG
 
 information "Applying TLS secret on the Iterate Cluster"
-
-ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 
 kubectl apply -f $CERT_PATH/tls-secret.yaml --kubeconfig $ITERATE_CLUSTER_KUBECONFIG
 
