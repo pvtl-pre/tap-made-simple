@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
-shopt -s nocasematch;
+shopt -s nocasematch
 
-TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+TKG_LAB_SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
 NODE_SIZE=$(yq e .azure.node_size $PARAMS_YAML)
@@ -40,8 +40,7 @@ export BUILD_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$BUILD_CLUSTER_NAME.yaml"
 
 yq e -i '.clusters.build_cluster.k8s_info.kubeconfig = env(BUILD_CLUSTER_KUBECONFIG)' "$PARAMS_YAML"
 
-for ((i=0;i<$RUN_CLUSTER_COUNT;i++));
-do
+for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   export RUN_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$RUN_CLUSTER_NAME.yaml"
 
@@ -74,8 +73,7 @@ fi
 
 declare -a CREATING_RUN_CLUSTERS=()
 
-for ((i=0;i<$RUN_CLUSTER_COUNT;i++));
-do
+for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
   CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$RUN_CLUSTER_NAME\")")
@@ -113,10 +111,9 @@ else
   information "Build Cluster already exists"
 fi
 
-for ((i=0;i<$RUN_CLUSTER_COUNT;i++));
-do
+for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
-  
+
   if [[ ${CREATING_RUN_CLUSTERS[$i]} == true ]]; then
     information "Waiting for creation of the Run Cluster '$RUN_CLUSTER_NAME'"
 
@@ -143,8 +140,7 @@ az aks get-credentials --name $BUILD_CLUSTER_NAME --resource-group $RESOURCE_GRO
 export BUILD_CLUSTER_URL=$(kubectl --kubeconfig $BUILD_CLUSTER_KUBECONFIG config view | yq '.clusters[0].cluster.server')
 yq e -i '.clusters.build_cluster.k8s_info.url = env(BUILD_CLUSTER_URL)' "$PARAMS_YAML"
 
-for ((i=0;i<$RUN_CLUSTER_COUNT;i++));
-do
+for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_KUBECONFIG="$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)"
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 

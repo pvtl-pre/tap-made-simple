@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
-shopt -s nocasematch;
+shopt -s nocasematch
 
-TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+TKG_LAB_SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
 VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.k8s_info.name $PARAMS_YAML)
@@ -15,7 +15,7 @@ TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 information "Generating view profile"
 
 mkdir -p generated/profiles
-ytt -f "$PARAMS_YAML" -f profile-templates/view.yaml > $VIEW_PROFILE
+ytt -f "$PARAMS_YAML" -f profile-templates/view.yaml >$VIEW_PROFILE
 
 information "Installing view profile"
 

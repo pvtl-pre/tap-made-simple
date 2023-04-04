@@ -3,7 +3,7 @@ set -e -o pipefail
 
 : ${PARAMS_YAML?"Need to set PARAMS_YAML environment variable"}
 
-information () {
+information() {
   RED='\033[0;31m'
   NO_COLOR='\033[0m'
 

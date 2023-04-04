@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
-shopt -s nocasematch;
+shopt -s nocasematch
 
-TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+TKG_LAB_SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
 JUMPBOX_OS=$(yq e .jumpbox_os $PARAMS_YAML)
@@ -49,9 +49,8 @@ tar -xvf generated/$CLUSTER_ESSENTIALS_FILE -C generated/tanzu-cluster-essential
 
   KUBECONFIG=../../$VIEW_CLUSTER_KUBECONFIG ./install.sh --yes
 
-  for ((i=0;i<$RUN_CLUSTER_COUNT;i++));
-  do
-    RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig ../../$PARAMS_YAML)  
+  for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
+    RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig ../../$PARAMS_YAML)
 
     KUBECONFIG=../../$RUN_CLUSTER_KUBECONFIG ./install.sh --yes
   done

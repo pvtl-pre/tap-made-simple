@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
-shopt -s nocasematch;
+shopt -s nocasematch
 
-TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+TKG_LAB_SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
 CERT_PATH="generated/cert"
@@ -20,13 +20,13 @@ else
 
   information "Getting cert details"
 
-  echo $(yq e .tls.cert_data $PARAMS_YAML) | base64 --decode > $CERT_PATH/wildcard.cer
-  echo $(yq e .tls.key_data $PARAMS_YAML) | base64 --decode > $CERT_PATH/wildcard.key
+  echo $(yq e .tls.cert_data $PARAMS_YAML) | base64 --decode >$CERT_PATH/wildcard.cer
+  echo $(yq e .tls.key_data $PARAMS_YAML) | base64 --decode >$CERT_PATH/wildcard.key
 fi
 
 information "Creating TLS secret yaml"
 
-kubectl create secret tls wildcard -n tap-install --cert=$CERT_PATH/wildcard.cer --key=$CERT_PATH/wildcard.key --dry-run=client -o yaml > $CERT_PATH/tls-secret.yaml
+kubectl create secret tls wildcard -n tap-install --cert=$CERT_PATH/wildcard.cer --key=$CERT_PATH/wildcard.key --dry-run=client -o yaml >$CERT_PATH/tls-secret.yaml
 
 information "Applying TLS secret on the View Cluster"
 
@@ -36,8 +36,7 @@ information "Applying TLS secret on the Iterate Cluster"
 
 kubectl apply -f $CERT_PATH/tls-secret.yaml --kubeconfig $ITERATE_CLUSTER_KUBECONFIG
 
-for ((i=0;i<$RUN_CLUSTER_COUNT;i++)); 
-do
+for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 

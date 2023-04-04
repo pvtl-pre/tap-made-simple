@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
-shopt -s nocasematch;
+shopt -s nocasematch
 
-TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+TKG_LAB_SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
 BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
@@ -24,7 +24,7 @@ function install_profile() {
   information "Generating $CLUSTER_TYPE profile"
 
   mkdir -p generated/profiles
-  ytt -f "$PARAMS_YAML" -f profile-templates/$CLUSTER_TYPE.yaml > $PROFILE
+  ytt -f "$PARAMS_YAML" -f profile-templates/$CLUSTER_TYPE.yaml >$PROFILE
 
   information "Getting metadata store creds from the View Cluster"
 
@@ -50,4 +50,4 @@ function install_profile() {
 }
 
 install_profile $ITERATE_CLUSTER_NAME $ITERATE_CLUSTER_KUBECONFIG "iterate"
-install_profile $BUILD_CLUSTER_NAME   $BUILD_CLUSTER_KUBECONFIG   "build"
+install_profile $BUILD_CLUSTER_NAME $BUILD_CLUSTER_KUBECONFIG "build"

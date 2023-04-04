@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
-shopt -s nocasematch;
+shopt -s nocasematch
 
-TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+TKG_LAB_SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
 BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
@@ -42,11 +42,10 @@ function install_components() {
   yq e -i "$SA_TOKEN_PATH = env(SA_TOKEN)" "$PARAMS_YAML"
 }
 
-install_components $ITERATE_CLUSTER_NAME  $ITERATE_CLUSTER_KUBECONFIG $ITERATE_CLUSTER_SA_TOKEN_PATH
-install_components $BUILD_CLUSTER_NAME    $BUILD_CLUSTER_KUBECONFIG   $BUILD_CLUSTER_SA_TOKEN_PATH
+install_components $ITERATE_CLUSTER_NAME $ITERATE_CLUSTER_KUBECONFIG $ITERATE_CLUSTER_SA_TOKEN_PATH
+install_components $BUILD_CLUSTER_NAME $BUILD_CLUSTER_KUBECONFIG $BUILD_CLUSTER_SA_TOKEN_PATH
 
-for ((i=0;i<$RUN_CLUSTER_COUNT;i++)); 
-do
+for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
   RUN_CLUSTER_SA_TOKEN_PATH=".clusters.run_clusters[$i].k8s_info.sa_token"

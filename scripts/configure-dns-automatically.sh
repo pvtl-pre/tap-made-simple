@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
-shopt -s nocasematch;
+shopt -s nocasematch
 
-TKG_LAB_SCRIPTS="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+TKG_LAB_SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source "$TKG_LAB_SCRIPTS/set-env.sh"
 
 DNS_AUTO_CONFIGURE=$(yq e .azure.dns.auto_configure $PARAMS_YAML)
@@ -47,8 +47,7 @@ information "Configuring Iterate Cluster"
 
 update_a_record $ITERATE_CLUSTER_INGRESS_DOMAIN $ITERATE_CLUSTER_INGRESS_IP
 
-for ((i=0;i<$RUN_CLUSTER_COUNT;i++)); 
-do
+for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
