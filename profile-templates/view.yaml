@@ -63,8 +63,8 @@ tap_gui:
             - url: #@ data.values.clusters.run_clusters[i].k8s_info.url
               name: #@ data.values.clusters.run_clusters[i].k8s_info.name
               authProvider: serviceAccount
-              skipTLSVerify: true
               serviceAccountToken: #@ data.values.clusters.run_clusters[i].k8s_info.sa_token
+              skipTLSVerify: true
             #@ end 
 
 accelerator:
