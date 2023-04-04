@@ -8,9 +8,14 @@ $TKG_LAB_SCRIPTS/01-prep-azure-objects.sh
 $TKG_LAB_SCRIPTS/02-deploy-azure-container-registry.sh
 $TKG_LAB_SCRIPTS/03-deploy-azure-k8s-clusters.sh
 
-$TKG_LAB_SCRIPTS/tap-prereqs-install.sh
-$TKG_LAB_SCRIPTS/tap-profiles-install.sh
-$TKG_LAB_SCRIPTS/tap-dev-namespace-install.sh
-$TKG_LAB_SCRIPTS/tap-deploy-workloads.sh
+$TKG_LAB_SCRIPTS/install-tap-prereqs.sh
 
-$TKG_LAB_SCRIPTS/tap-dns-configuration.sh
+$TKG_LAB_SCRIPTS/install-tap-profiles.sh
+
+$TKG_LAB_SCRIPTS/install-tap-dev-namespace.sh
+$TKG_LAB_SCRIPTS/install-tap-scan-policies.sh
+$TKG_LAB_SCRIPTS/install-tap-pipelines.sh
+
+$TKG_LAB_SCRIPTS/deploy-workloads.sh
+
+$TKG_LAB_SCRIPTS/configure-dns.sh

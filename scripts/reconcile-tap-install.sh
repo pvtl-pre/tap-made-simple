@@ -9,32 +9,30 @@ BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PAR
 BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.k8s_info.name $PARAMS_YAML)
 ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML)
-
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
+VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.k8s_info.name $PARAMS_YAML)
 
-information "Setting up developer namespace on the Iterate Cluster"
+function reconcile() {
+  CLUSTER_NAME=$1
+  KUBECONFIG=$2
 
-CLUSTER_NAME=$ITERATE_CLUSTER_NAME \
-KUBECONFIG=$ITERATE_CLUSTER_KUBECONFIG \
-IS_ITERATE_CLUSTER=true \
-$TKG_LAB_SCRIPTS/tap-dev-namespace-base-install.sh
+  information "Waiting for reconciliation on cluster '$CLUSTER_NAME'"
 
-information "Setting up developer namespace on the Build Cluster"
+  kubectl wait pkgi --for condition=ReconcileSucceeded=True \
+  -n tap-install tap \
+  --kubeconfig $KUBECONFIG \
+  --timeout=15m
+}
 
-CLUSTER_NAME=$BUILD_CLUSTER_NAME \
-KUBECONFIG=$BUILD_CLUSTER_KUBECONFIG \
-IS_BUILD_CLUSTER=true \
-$TKG_LAB_SCRIPTS/tap-dev-namespace-base-install.sh
+reconcile $VIEW_CLUSTER_NAME    $VIEW_CLUSTER_KUBECONFIG
+reconcile $ITERATE_CLUSTER_NAME $ITERATE_CLUSTER_KUBECONFIG
+reconcile $BUILD_CLUSTER_NAME   $BUILD_CLUSTER_KUBECONFIG
 
 for ((i=0;i<$RUN_CLUSTER_COUNT;i++)); 
 do
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
-  information "Setting up developer namespace on Run Cluster '$RUN_CLUSTER_NAME'"
-
-  CLUSTER_NAME=$RUN_CLUSTER_NAME \
-  KUBECONFIG=$RUN_CLUSTER_KUBECONFIG \
-  IS_BUILD_CLUSTER=false \
-  $TKG_LAB_SCRIPTS/tap-dev-namespace-base-install.sh
+  reconcile $RUN_CLUSTER_NAME $RUN_CLUSTER_KUBECONFIG
 done

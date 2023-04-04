@@ -7,14 +7,14 @@ source "$TKG_LAB_SCRIPTS/set-env.sh"
 
 VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.k8s_info.name $PARAMS_YAML)
 VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
-VIEW_PROFILE="generated/profile-templates/$VIEW_CLUSTER_NAME.yaml"
+VIEW_PROFILE="generated/profiles/$VIEW_CLUSTER_NAME.yaml"
 
 TAP_VERSION_YAML="tap-version.yaml"
 TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
 information "Generating view profile"
 
-mkdir -p generated/profile-templates
+mkdir -p generated/profiles
 ytt -f "$PARAMS_YAML" -f profile-templates/view.yaml > $VIEW_PROFILE
 
 information "Installing view profile"

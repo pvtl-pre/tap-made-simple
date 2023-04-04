@@ -9,52 +9,12 @@ CERT_PATH="generated/cert"
 GENERATE_CERT=$(yq e .tls.generate $PARAMS_YAML)
 ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
-VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingress_domain $PARAMS_YAML)
 VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 
 mkdir -p $CERT_PATH
 
 if [[ $GENERATE_CERT == true ]]; then
-  if [[ -z $(yq e .tls.cert_data $PARAMS_YAML) ]] || [[ -z $(yq e .tls.key_data $PARAMS_YAML) ]]; then
-    information "Generating self-signed wildcard cert"
-
-    cat <<EOF > $CERT_PATH/req.cnf
-[req]
-distinguished_name = req_distinguished_name
-x509_extensions = v3_req
-prompt = no
-[req_distinguished_name]
-C = US
-ST = CA
-O = VMware
-localityName = Palo Alto
-commonName = *.$VIEW_CLUSTER_INGRESS_DOMAIN
-organizationalUnitName = Tanzu
-emailAddress = employee@vmare.com
-[v3_req]
-keyUsage = nonRepudiation, digitalSignature, keyEncipherment
-extendedKeyUsage = serverAuth
-subjectAltName = @alt_names
-[alt_names]
-EOF
-
-    for ((i=0;i<$RUN_CLUSTER_COUNT;i++)); 
-    do
-      RUN_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.run_clusters[$i].ingress_domain $PARAMS_YAML)
-
-      echo "DNS.$((i+1)) = *.$RUN_CLUSTER_INGRESS_DOMAIN" >> $CERT_PATH/req.cnf
-    done
-
-    openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout $CERT_PATH/wildcard.key -config $CERT_PATH/req.cnf -out $CERT_PATH/wildcard.cer -sha256
-    
-    export ENCODED_WILDCARD_CER=$(cat $CERT_PATH/wildcard.cer | base64)
-    export ENCODED_WILDCARD_KEY=$(cat $CERT_PATH/wildcard.key | base64)
-
-    yq e -i ".tls.cert_data = env(ENCODED_WILDCARD_CER)" $PARAMS_YAML
-    yq e -i ".tls.key_data = env(ENCODED_WILDCARD_KEY)" $PARAMS_YAML
-  else
-    information "Skipping cert creation since cert_data and key_data have already been set"
-  fi
+  $TKG_LAB_SCRIPTS/generate-cert.sh
 else
   information "Skipped cert generation due to user providing cert"
 
