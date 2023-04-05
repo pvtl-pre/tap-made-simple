@@ -4,32 +4,34 @@
 profile: build
 ceip_policy_disclosed: true
 
-buildservice:
-  kp_default_repository: #@ "{}/{}/build-service".format(data.values.registry.fqdn, data.values.registry.system_project)
-  kp_default_repository_username: #@ data.values.registry.username
-  kp_default_repository_password: #@ data.values.registry.password
-  exclude_dependencies: false
+shared:
+  image_registry:
+    project_path: #@ "{}/{}".format(data.values.registry.fqdn, data.values.registry.system_project)
+    username: #@ data.values.registry.username
+    password: #@ data.values.registry.password
 
-supply_chain: testing_scanning
+#!supply_chain: testing_scanning
+supply_chain: basic
 
-ootb_supply_chain_testing_scanning:
+#!ootb_supply_chain_testing_scanning:
+ootb_supply_chain_basic:
   registry:
     server: #@ data.values.registry.fqdn
     repository: #@ "{}/workloads".format(data.values.registry.system_project)
-  gitops:
-    ssh_secret: ""
+  #!gitops:
+    #!ssh_secret: ""
 
-grype:
-  targetImagePullSecret: "registry-credentials"
-  metadataStore:
-    url: #@ "https://metadata-store.{}".format(data.values.clusters.view_cluster.ingress_domain)
-    caSecret:
-      name: store-ca-cert
-      importFromNamespace: metadata-store-secrets
-    authSecret:
-      name: store-auth-token
-      importFromNamespace: metadata-store-secrets
+#!grype:
+  #!targetImagePullSecret: "registry-credentials"
+  #!metadataStore:
+    #!url: #@ "https://metadata-store.{}".format(data.values.clusters.view_cluster.ingress_domain)
+    #!caSecret:
+      #!name: store-ca-cert
+      #!importFromNamespace: metadata-store-secrets
+    #!authSecret:
+      #!name: store-auth-token
+      #!importFromNamespace: metadata-store-secrets
 
-scanning:
-  metadataStore:
-    url: "" #! Configuration is moved, so set this string to empty.
+#!scanning:
+  #!metadataStore:
+    #!url: "" #! Configuration is moved, so set this string to empty.
