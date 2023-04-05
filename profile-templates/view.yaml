@@ -6,7 +6,6 @@ ceip_policy_disclosed: true
 
 shared:
   ingress_domain: #@ data.values.clusters.view_cluster.ingress_domain
-  ca_cert_data: #@ base64.decode(data.values.tls.cert_data)
 
 contour:
   envoy:

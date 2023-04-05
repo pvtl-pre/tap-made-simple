@@ -7,7 +7,6 @@ ceip_policy_disclosed: true
 shared:
   ingress_domain: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
   ingress_issuer: ""
-  ca_cert_data: #@ base64.decode(data.values.tls.cert_data)
 
 supply_chain: testing_scanning
 

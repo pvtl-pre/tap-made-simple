@@ -4,9 +4,6 @@
 profile: build
 ceip_policy_disclosed: true
 
-shared:
-  ca_cert_data: #@ base64.decode(data.values.tls.cert_data)
-
 buildservice:
   kp_default_repository: #@ "{}/{}/build-service".format(data.values.registry.fqdn, data.values.registry.system_project)
   kp_default_repository_username: #@ data.values.registry.username
