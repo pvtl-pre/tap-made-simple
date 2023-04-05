@@ -8,8 +8,19 @@ source "$TKG_LAB_SCRIPTS/set-env.sh"
 CERT_PATH="generated/cert"
 GENERATE_CERT=$(yq e .tls.generate $PARAMS_YAML)
 ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML)
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
+VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.k8s_info.name $PARAMS_YAML)
 VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+
+function install_cert() {
+  CLUSTER_NAME=$1
+  KUBECONFIG=$2
+
+  information "Applying TLS secret on cluster '$CLUSTER_NAME'"
+
+  kubectl apply -f $CERT_PATH/tls-secret.yaml --kubeconfig $KUBECONFIG
+}
 
 mkdir -p $CERT_PATH
 
@@ -28,19 +39,12 @@ information "Creating TLS secret yaml"
 
 kubectl create secret tls wildcard -n tap-install --cert=$CERT_PATH/wildcard.cer --key=$CERT_PATH/wildcard.key --dry-run=client -o yaml >$CERT_PATH/tls-secret.yaml
 
-information "Applying TLS secret on the View Cluster"
-
-kubectl apply -f $CERT_PATH/tls-secret.yaml --kubeconfig $VIEW_CLUSTER_KUBECONFIG
-
-information "Applying TLS secret on the Iterate Cluster"
-
-kubectl apply -f $CERT_PATH/tls-secret.yaml --kubeconfig $ITERATE_CLUSTER_KUBECONFIG
+install_cert $VIEW_CLUSTER_NAME $VIEW_CLUSTER_KUBECONFIG
+install_cert $ITERATE_CLUSTER_NAME $ITERATE_CLUSTER_KUBECONFIG
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
-  information "Applying TLS secret on Run Cluster '$RUN_CLUSTER_NAME'"
-
-  kubectl apply -f $CERT_PATH/tls-secret.yaml --kubeconfig $RUN_CLUSTER_KUBECONFIG
+  install_cert $RUN_CLUSTER_NAME $RUN_CLUSTER_KUBECONFIG
 done
