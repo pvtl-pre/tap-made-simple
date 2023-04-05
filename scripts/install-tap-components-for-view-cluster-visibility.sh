@@ -26,10 +26,10 @@ function install_components() {
 
   KUBE_VERSION=$(kubectl version -o yaml --kubeconfig $KUBECONFIG | yq e '.serverVersion.minor')
 
-  kubectl apply -f tap-declarative-yaml/tap-gui-viewer-service-account-rbac.yaml --kubeconfig $KUBECONFIG
+  kubectl apply -f tap-declarative-yaml/tap-gui/tap-gui-viewer-service-account-rbac.yaml --kubeconfig $KUBECONFIG
 
-  if [[ $KUBE_VERSION -ge "24" ]]; then
-    kubectl apply -f tap-declarative-yaml/tap-gui-viewer-service-account-secret.yaml --kubeconfig $KUBECONFIG
+  if [[ $KUBE_VERSION -ge 24 ]]; then
+    kubectl apply -f tap-declarative-yaml/tap-gui/tap-gui-viewer-service-account-secret.yaml --kubeconfig $KUBECONFIG
     TAP_GUI_VIEWER_SECRET="tap-gui-viewer"
   else
     TAP_GUI_VIEWER_SECRET=$(kubectl -n tap-gui get sa tap-gui-viewer -o yaml --kubeconfig $KUBECONFIG | yq -r '.secrets[0].name')
