@@ -12,10 +12,10 @@ $TKG_LAB_SCRIPTS/install-tap-prereqs.sh
 
 $TKG_LAB_SCRIPTS/install-tap-profiles.sh
 
-$TKG_LAB_SCRIPTS/install-tap-dev-namespace.sh
-$TKG_LAB_SCRIPTS/install-tap-scan-policies.sh
-$TKG_LAB_SCRIPTS/install-tap-pipelines.sh
+# $TKG_LAB_SCRIPTS/install-tap-dev-namespace.sh
+# $TKG_LAB_SCRIPTS/install-tap-scan-policies.sh
+# $TKG_LAB_SCRIPTS/install-tap-pipelines.sh
 
-$TKG_LAB_SCRIPTS/deploy-workloads.sh
+# $TKG_LAB_SCRIPTS/deploy-workloads.sh
 
-$TKG_LAB_SCRIPTS/configure-dns.sh
+# $TKG_LAB_SCRIPTS/configure-dns.sh
