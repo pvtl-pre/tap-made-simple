@@ -11,7 +11,7 @@ $TKG_LAB_SCRIPTS/install-tap-view-profile.sh
 
 $TKG_LAB_SCRIPTS/install-tap-build-or-iterate-profile.sh
 
-# $TKG_LAB_SCRIPTS/install-tap-run-profile.sh
+$TKG_LAB_SCRIPTS/install-tap-run-profile.sh
 
 # $TKG_LAB_SCRIPTS/install-tap-build-or-iterate-profile.sh
 

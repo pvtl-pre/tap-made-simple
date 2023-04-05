@@ -6,14 +6,15 @@ ceip_policy_disclosed: true
 
 shared:
   ingress_domain: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
-  ingress_issuer: ""
+#!  ingress_issuer: ""
 
-supply_chain: testing_scanning
+#!supply_chain: testing_scanning
+supply_chain: basic
 
 cnrs:
   domain_name: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
   domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
-  default_tls_secret: "tap-install/wildcard"
+#!  default_tls_secret: "tap-install/wildcard"
 
 contour:
   envoy:
@@ -22,5 +23,5 @@ contour:
 
 appliveview_connector:
   backend:
-    sslDisabled: false
+#!    sslDisabled: false
     host: #@ "appliveview.{}".format(data.values.clusters.view_cluster.ingress_domain)
