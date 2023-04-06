@@ -7,18 +7,18 @@ ceip_policy_disclosed: true
 shared:
   ingress_domain: #@ data.values.clusters.view_cluster.ingress_domain
 
-contour:
-  envoy:
-    service:
-      type: LoadBalancer
+#!contour:
+  #!envoy:
+    #!service:
+      #!type: LoadBalancer
 
 tap_gui:
   #!tls:
     #!secretName: wildcard
     #!namespace: tap-install
   service_type: ClusterIP
-  app_config:
-    title: TAP Multi Cluster Demo Environment
+  #!app_config:
+    #!title: TAP Multi Cluster Demo Environment
     #!app:
       #!baseUrl: #@ "https://tap-gui.{}".format(data.values.clusters.view_cluster.ingress_domain)
     #!auth: #@ data.values.clusters.view_cluster.tap_gui.auth
