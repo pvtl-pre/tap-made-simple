@@ -20,18 +20,20 @@ function add_dev_namespace() {
   KUBECONFIG=$2
   IS_ITERATE_CLUSTER=$3
 
+  kubectl create ns product-team1 --dry-run=client -o yaml | kubectl --kubeconfig $KUBECONFIG apply -f -
+
   information "Add read/write registry credentials to the developer namespace on cluster '$CLUSTER_NAME'"
 
   tanzu secret registry add registry-credentials \
     --server $REGISTRY_HOSTNAME \
     --username $REGISTRY_USERNAME \
     --password $REGISTRY_PASSWORD \
-    --namespace default \
+    --namespace product-team1 \
     --kubeconfig $KUBECONFIG
 
   information "Authorize the service account to the developer namespace on cluster '$CLUSTER_NAME'"
 
-  kubectl apply -f tap-declarative-yaml/dev-namespace/rbac.yaml --kubeconfig $KUBECONFIG
+  kubectl apply -f tap-declarative-yaml/dev-namespace/rbac.yaml -n product-team1 --kubeconfig $KUBECONFIG
 }
 
 add_dev_namespace $ITERATE_CLUSTER_NAME $ITERATE_CLUSTER_KUBECONFIG
