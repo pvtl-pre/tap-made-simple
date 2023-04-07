@@ -1,0 +1,9 @@
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.all
+---
+#@overlay/match missing_ok=True
+contour:
+  envoy:
+    service:
+      type: LoadBalancer
