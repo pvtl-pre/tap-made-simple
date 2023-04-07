@@ -1,0 +1,32 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:data","data")
+
+#@overlay/match by=overlay.all
+---
+#@overlay/match missing_ok=True
+#@overlay/match-child-defaults missing_ok=True
+tap_gui:
+  app_config:
+    kubernetes:
+      serviceLocatorMethod:
+        type: 'multiTenant'
+      clusterLocatorMethods:
+        - type: 'config'
+          clusters:
+            - url: #@ data.values.clusters.iterate_cluster.k8s_info.url
+              name: #@ data.values.clusters.iterate_cluster.k8s_info.name
+              authProvider: serviceAccount
+              serviceAccountToken: #@ data.values.clusters.iterate_cluster.k8s_info.sa_token
+              skipTLSVerify: true
+            - url: #@ data.values.clusters.build_cluster.k8s_info.url
+              name: #@ data.values.clusters.build_cluster.k8s_info.name
+              authProvider: serviceAccount
+              serviceAccountToken: #@ data.values.clusters.build_cluster.k8s_info.sa_token
+              skipTLSVerify: true
+            #@ for i in range(len(data.values.clusters.run_clusters)):
+            - url: #@ data.values.clusters.run_clusters[i].k8s_info.url
+              name: #@ data.values.clusters.run_clusters[i].k8s_info.name
+              authProvider: serviceAccount
+              serviceAccountToken: #@ data.values.clusters.run_clusters[i].k8s_info.sa_token
+              skipTLSVerify: true
+            #@ end 

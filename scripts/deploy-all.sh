@@ -19,7 +19,7 @@ $SCRIPTS/install-tap-gui-database.sh
 
 $SCRIPTS/install-tap-supply-chain-basic.sh
 
-# $SCRIPTS/install-tap-components-for-view-cluster-visibility.sh
+$SCRIPTS/install-tap-components-to-view-cluster-resources.sh
 
 # $SCRIPTS/install-cert.sh
 

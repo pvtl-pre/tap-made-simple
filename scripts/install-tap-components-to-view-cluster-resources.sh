@@ -15,12 +15,14 @@ RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
 VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.k8s_info.name $PARAMS_YAML)
 VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 
+VIEW_PROFILE="generated/profiles/$VIEW_CLUSTER_NAME.yaml"
+
 function install_components() {
   CLUSTER_NAME=$1
   KUBECONFIG=$2
   SA_TOKEN_PATH=$3
 
-  information "Installing TAP components for View Cluster visibility on cluster '$CLUSTER_NAME'"
+  information "Installing TAP components to view cluster resources from cluster '$CLUSTER_NAME'"
 
   information "Adding TAP GUI multi-cluster RBAC on cluster '$CLUSTER_NAME'"
 
@@ -52,3 +54,11 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
 
   install_components $RUN_CLUSTER_NAME $RUN_CLUSTER_KUBECONFIG $RUN_CLUSTER_SA_TOKEN_PATH
 done
+
+information "Updating generated view profile with view cluster resources configuration"
+
+ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/view-cluster-resources.yaml --output-files generated/profiles
+
+$SCRIPTS/install-tap-view-profile.sh
+
+$SCRIPTS/reconcile-tap-install-for-view-cluster.sh
