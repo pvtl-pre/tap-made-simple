@@ -35,3 +35,6 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   echo "IP Address: $RUN_CLUSTER_INGRESS_IP"
   echo ""
 done
+
+read -p "Press any key to continue once the records are created" -n1 -s
+echo ""
