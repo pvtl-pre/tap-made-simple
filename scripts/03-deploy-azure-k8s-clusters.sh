@@ -51,7 +51,7 @@ CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$VIEW_CLUSTER_NAME\")")
 
 if [[ $CLUSTER_EXISTS == false ]]; then
   information "Creating View Cluster"
-  az aks create --name $VIEW_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size $NODE_SIZE --node-count 1 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
+  az aks create --name $VIEW_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size $NODE_SIZE --node-count 2 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
   CREATING_VIEW_CLUSTER=true
 fi
 
