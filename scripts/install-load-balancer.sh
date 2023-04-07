@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e -o pipefail
 
-TKG_LAB_SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source $TKG_LAB_SCRIPTS/set-env.sh
+SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source $SCRIPTS/set-env.sh
 
 ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML)
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
@@ -24,10 +24,10 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   ytt --data-value-yaml index=$i -f "$PARAMS_YAML" -f $RUN_PROFILE -f profile-overlays/load-balancer.yaml --output-files generated/profiles
 done
 
-$TKG_LAB_SCRIPTS/install-tap-view-profile.sh
-$TKG_LAB_SCRIPTS/install-tap-iterate-profile.sh
-$TKG_LAB_SCRIPTS/install-tap-run-profiles.sh
+$SCRIPTS/install-tap-view-profile.sh
+$SCRIPTS/install-tap-iterate-profile.sh
+$SCRIPTS/install-tap-run-profiles.sh
 
-$TKG_LAB_SCRIPTS/reconcile-tap-install-for-view-cluster.sh
-$TKG_LAB_SCRIPTS/reconcile-tap-install-for-iterate-cluster.sh
-$TKG_LAB_SCRIPTS/reconcile-tap-install-for-run-clusters.sh
+$SCRIPTS/reconcile-tap-install-for-view-cluster.sh
+$SCRIPTS/reconcile-tap-install-for-iterate-cluster.sh
+$SCRIPTS/reconcile-tap-install-for-run-clusters.sh

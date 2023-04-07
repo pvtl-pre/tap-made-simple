@@ -2,8 +2,8 @@
 set -e -o pipefail
 shopt -s nocasematch
 
-TKG_LAB_SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source "$TKG_LAB_SCRIPTS/set-env.sh"
+SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source "$SCRIPTS/set-env.sh"
 
 CERT_PATH="generated/cert"
 GENERATE_CERT=$(yq e .tls.generate $PARAMS_YAML)
@@ -25,7 +25,7 @@ function install_cert() {
 mkdir -p $CERT_PATH
 
 if [[ $GENERATE_CERT == true ]]; then
-  $TKG_LAB_SCRIPTS/generate-cert.sh
+  $SCRIPTS/generate-cert.sh
 else
   information "Skipped cert generation due to user providing cert"
 

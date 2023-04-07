@@ -2,8 +2,8 @@
 set -e -o pipefail
 shopt -s nocasematch
 
-TKG_LAB_SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
-source "$TKG_LAB_SCRIPTS/set-env.sh"
+SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
+source "$SCRIPTS/set-env.sh"
 
 CERT_PATH="generated/cert"
 ITERATE_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.iterate_cluster.ingress_domain $PARAMS_YAML)
