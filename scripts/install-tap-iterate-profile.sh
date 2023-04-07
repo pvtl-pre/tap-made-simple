@@ -13,11 +13,6 @@ ITERATE_PROFILE="generated/profiles/$ITERATE_CLUSTER_NAME.yaml"
 TAP_VERSION_YAML="tap-version.yaml"
 TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
-# information "Generating iterate profile"
-
-# mkdir -p generated/profiles
-# ytt -f "$PARAMS_YAML" -f profile-templates/iterate.yaml >$PROFILE
-
 # information "Getting metadata store creds from the View Cluster"
 
 # CA_CERT=$(kubectl get secret -n metadata-store ingress-cert -o yaml --kubeconfig $VIEW_CLUSTER_KUBECONFIG | yq -r '.data."ca.crt"')

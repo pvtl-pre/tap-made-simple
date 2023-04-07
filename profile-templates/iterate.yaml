@@ -32,12 +32,7 @@ shared:
 #!cnrs:
   #!domain_name: #@ data.values.clusters.iterate_cluster.ingress_domain
   #!domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
-#!  default_tls_secret: "tap-install/wildcard"
-
-#!contour:
-  #!envoy:
-    #!service:
-      #!type: LoadBalancer
+  #!default_tls_secret: "tap-install/wildcard"
 
 #!appliveview_connector:
   #!backend:

@@ -15,9 +15,6 @@ TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
 # information "Generating view profile"
 
-# mkdir -p generated/profiles
-# ytt -f "$PARAMS_YAML" -f profile-templates/view.yaml >$VIEW_PROFILE
-
 information "Installing view profile"
 
 tanzu package install tap \
@@ -37,16 +34,6 @@ tanzu package install tap \
 # export METADATA_STORE_ACCESS_TOKEN=$(kubectl get secrets metadata-store-read-write-client -n metadata-store -o jsonpath="{.data.token}" --kubeconfig $VIEW_CLUSTER_KUBECONFIG | base64 -d)
 
 # yq e -i '.tap_gui.app_config.proxy./metadata-store.headers.Authorization = "Bearer " + env(METADATA_STORE_ACCESS_TOKEN) + ""' "$VIEW_PROFILE"
-
-# information "Deploy TAP GUI database"
-
-# helm repo add bitnami https://charts.bitnami.com/bitnami
-
-# kubectl create ns tap-gui-backend --dry-run=client -o yaml | kubectl --kubeconfig $VIEW_CLUSTER_KUBECONFIG apply -f -
-
-# helm upgrade --install tap-gui-db bitnami/postgresql -n tap-gui-backend --set auth.postgresPassword="VMware1!" --set auth.username="tapuser" --set auth.password="VMware1!" --kubeconfig $VIEW_CLUSTER_KUBECONFIG
-
-# information "Update TAP GUI for CVE scan visibility"
 
 # tanzu package installed update tap \
 #   -n tap-install \
