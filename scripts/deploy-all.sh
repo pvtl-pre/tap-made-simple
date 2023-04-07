@@ -10,7 +10,7 @@ $TKG_LAB_SCRIPTS/03-deploy-azure-k8s-clusters.sh
 
 $TKG_LAB_SCRIPTS/install-tap-prereqs.sh
 
-$TKG_LAB_SCRIPTS/install-tap-profiles.sh
+$TKG_LAB_SCRIPTS/install-minimal-tap-profiles.sh
 
 # $TKG_LAB_SCRIPTS/install-tap-dev-namespace.sh
 # $TKG_LAB_SCRIPTS/install-tap-scan-policies.sh

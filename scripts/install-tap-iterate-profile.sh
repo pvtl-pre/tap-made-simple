@@ -8,15 +8,15 @@ source "$TKG_LAB_SCRIPTS/set-env.sh"
 ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML)
 
+ITERATE_PROFILE="generated/profiles/$ITERATE_CLUSTER_NAME.yaml"
+
 TAP_VERSION_YAML="tap-version.yaml"
 TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
-PROFILE="generated/profiles/$ITERATE_CLUSTER_NAME.yaml"
+# information "Generating iterate profile"
 
-information "Generating iterate profile"
-
-mkdir -p generated/profiles
-ytt -f "$PARAMS_YAML" -f profile-templates/iterate.yaml >$PROFILE
+# mkdir -p generated/profiles
+# ytt -f "$PARAMS_YAML" -f profile-templates/iterate.yaml >$PROFILE
 
 # information "Getting metadata store creds from the View Cluster"
 
@@ -36,6 +36,6 @@ tanzu package install tap \
   -n tap-install \
   -p tap.tanzu.vmware.com \
   -v $TAP_VERSION \
-  -f $PROFILE \
+  -f $ITERATE_PROFILE \
   --kubeconfig $ITERATE_CLUSTER_KUBECONFIG \
   --wait=false

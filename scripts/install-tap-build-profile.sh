@@ -8,15 +8,15 @@ source "$TKG_LAB_SCRIPTS/set-env.sh"
 BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.k8s_info.name $PARAMS_YAML)
 
+BUILD_PROFILE="generated/profiles/$BUILD_CLUSTER_NAME.yaml"
+
 TAP_VERSION_YAML="tap-version.yaml"
 TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
-PROFILE="generated/profiles/$BUILD_CLUSTER_NAME.yaml"
+# information "Generating build profile"
 
-information "Generating build profile"
-
-mkdir -p generated/profiles
-ytt -f "$PARAMS_YAML" -f profile-templates/build.yaml >$PROFILE
+# mkdir -p generated/profiles
+# ytt -f "$PARAMS_YAML" -f profile-templates/build.yaml >$PROFILE
 
 # information "Getting metadata store creds from the View Cluster"
 
@@ -36,6 +36,6 @@ tanzu package install tap \
   -n tap-install \
   -p tap.tanzu.vmware.com \
   -v $TAP_VERSION \
-  -f $PROFILE \
+  -f $BUILD_PROFILE \
   --kubeconfig $BUILD_CLUSTER_KUBECONFIG \
   --wait=false

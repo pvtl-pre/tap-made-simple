@@ -10,7 +10,7 @@ RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
 TAP_VERSION_YAML="tap-version.yaml"
 TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
-mkdir -p generated/profiles
+# mkdir -p generated/profiles
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
@@ -18,9 +18,9 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
 
   RUN_PROFILE="generated/profiles/$RUN_CLUSTER_NAME.yaml"
 
-  information "Generating run profile for cluster '$RUN_CLUSTER_NAME'"
+  # information "Generating run profile for cluster '$RUN_CLUSTER_NAME'"
 
-  ytt --data-value-yaml index=$i -f "$PARAMS_YAML" -f profile-templates/run.yaml >$RUN_PROFILE
+  # ytt --data-value-yaml index=$i -f "$PARAMS_YAML" -f profile-templates/run.yaml >$RUN_PROFILE
 
   information "Installing run profile on cluster '$RUN_CLUSTER_NAME'"
 
