@@ -2,6 +2,7 @@
 
 #@overlay/match by=overlay.all
 ---
+#@overlay/match missing_ok=True
 #@overlay/match-child-defaults missing_ok=True
 tap_gui:
   app_config:
