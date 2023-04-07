@@ -15,6 +15,8 @@ $SCRIPTS/install-minimal-tap-profiles.sh
 $SCRIPTS/install-load-balancer.sh
 $SCRIPTS/configure-dns.sh
 
+$SCRIPTS/install-tap-gui-database.sh
+
 # $SCRIPTS/install-tap-components-for-view-cluster-visibility.sh
 
 # $SCRIPTS/install-cert.sh

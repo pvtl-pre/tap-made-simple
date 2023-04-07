@@ -1,0 +1,16 @@
+#@ load("@ytt:overlay", "overlay")
+
+#@overlay/match by=overlay.all
+---
+#@overlay/match-child-defaults missing_ok=True
+tap_gui:
+  app_config:
+    backend:
+      database:
+        client: pg
+        connection:
+          host: tap-gui-db-postgresql.tap-gui-backend.svc.cluster.local
+          port: 5432
+          user: tapuser
+          password: VMware1!
+          ssl: false
