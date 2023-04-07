@@ -25,9 +25,9 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
 done
 
 $TKG_LAB_SCRIPTS/install-tap-view-profile.sh
-
-$TKG_LAB_SCRIPTS/install-tap-run-profile.sh
-
 $TKG_LAB_SCRIPTS/install-tap-iterate-profile.sh
+$TKG_LAB_SCRIPTS/install-tap-run-profiles.sh
 
-$TKG_LAB_SCRIPTS/reconcile-tap-install.sh
+$TKG_LAB_SCRIPTS/reconcile-tap-install-for-view-cluster.sh
+$TKG_LAB_SCRIPTS/reconcile-tap-install-for-iterate-cluster.sh
+$TKG_LAB_SCRIPTS/reconcile-tap-install-for-run-clusters.sh
