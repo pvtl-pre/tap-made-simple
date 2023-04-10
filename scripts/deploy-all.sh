@@ -18,7 +18,7 @@ $SCRIPTS/configure-dns.sh
 $SCRIPTS/install-tap-gui-database.sh
 
 $SCRIPTS/install-tap-supply-chain-basic.sh
-$SCRIPTS/install-tap-dev-namespace.sh.sh
+$SCRIPTS/install-tap-dev-namespace.sh
 $SCRIPTS/deploy-java-workload.sh
 
 $SCRIPTS/install-tap-components-to-view-cluster-resources.sh
