@@ -15,13 +15,3 @@ shared:
   #!domain_name: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
   #!domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
   #!default_tls_secret: "tap-install/wildcard"
-
-#!contour:
-  #!envoy:
-    #!service:
-      #!type: LoadBalancer
-
-#!appliveview_connector:
-  #!backend:
-    #!sslDisabled: false
-    #!host: #@ "appliveview.{}".format(data.values.clusters.view_cluster.ingress_domain)

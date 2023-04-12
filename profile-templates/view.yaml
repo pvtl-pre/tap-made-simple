@@ -14,7 +14,6 @@ tap_gui:
   service_type: ClusterIP
   #!app_config:
     #!title: TAP Multi Cluster Demo Environment
-    #!auth: #@ data.values.clusters.view_cluster.tap_gui.auth
     #!proxy:
       #!/metadata-store:
         #!target: https://metadata-store-app.metadata-store:8443/api/v1
