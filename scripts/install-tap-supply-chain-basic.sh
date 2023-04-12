@@ -10,7 +10,7 @@ ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML
 BUILD_PROFILE="generated/profiles/$BUILD_CLUSTER_NAME.yaml"
 ITERATE_PROFILE="generated/profiles/$ITERATE_CLUSTER_NAME.yaml"
 
-information "Updating generated profiles with load balancer configuration"
+information "Updating generated profiles with basic supply chain configuration"
 
 ytt -f "$PARAMS_YAML" -f $BUILD_PROFILE -f profile-overlays/supply-chain-basic.yaml --output-files generated/profiles
 ytt -f "$PARAMS_YAML" -f $ITERATE_PROFILE -f profile-overlays/supply-chain-basic.yaml --output-files generated/profiles
