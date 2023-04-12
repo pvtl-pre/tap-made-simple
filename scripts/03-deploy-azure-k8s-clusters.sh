@@ -18,6 +18,7 @@ if [ -f "$SSH_KEY_PATH" ]; then
   information "Skipping ssh key generation since it exists"
 else
   information "Generating ssh key at $SSH_KEY_PATH"
+
   ssh-keygen -t rsa -b 4096 -f "$SSH_KEY_PATH" -q -N ""
 
   yq e -i '.clusters.ssh_key_path = env(SSH_KEY_PATH)' "$PARAMS_YAML"
@@ -51,27 +52,31 @@ CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$VIEW_CLUSTER_NAME\")")
 
 if [[ $CLUSTER_EXISTS == false ]]; then
   information "Creating View Cluster"
+
   az aks create --name $VIEW_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size $NODE_SIZE --node-count 2 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
-  CREATING_VIEW_CLUSTER=true
+else
+  information "View Cluster already exists"
 fi
 
 CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$ITERATE_CLUSTER_NAME\")")
 
 if [[ $CLUSTER_EXISTS == false ]]; then
   information "Creating Iterate Cluster"
+
   az aks create --name $ITERATE_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size $NODE_SIZE --node-count 2 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
-  CREATING_ITERATE_CLUSTER=true
+else
+  information "Iterate Cluster already exists"
 fi
 
 CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$BUILD_CLUSTER_NAME\")")
 
 if [[ $CLUSTER_EXISTS == false ]]; then
   information "Creating Build Cluster"
-  az aks create --name $BUILD_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size $NODE_SIZE --node-count 2 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
-  CREATING_BUILD_CLUSTER=true
-fi
 
-declare -a CREATING_RUN_CLUSTERS=()
+  az aks create --name $BUILD_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size $NODE_SIZE --node-count 2 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
+else
+  information "Build Cluster already exists"
+fi
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
@@ -80,47 +85,31 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
 
   if [[ $CLUSTER_EXISTS == false ]]; then
     information "Creating Run Cluster '$RUN_CLUSTER_NAME'"
+
     az aks create --name $RUN_CLUSTER_NAME --resource-group $RESOURCE_GROUP --node-vm-size $NODE_SIZE --node-count 2 --ssh-key-value $SSH_KEY_PATH.pub --yes --no-wait
-    CREATING_RUN_CLUSTERS+=(true)
   else
-    CREATING_RUN_CLUSTERS+=(false)
+    information "Run Cluster '$RUN_CLUSTER_NAME' already exists"
   fi
 done
 
-if [[ $CREATING_VIEW_CLUSTER == true ]]; then
-  information "Waiting for creation of the View Cluster"
+information "Waiting for creation of the View Cluster"
 
-  az aks wait --name $VIEW_CLUSTER_NAME --resource-group $RESOURCE_GROUP --created --interval 5
-else
-  information "View Cluster already exists"
-fi
+az aks wait --name $VIEW_CLUSTER_NAME --resource-group $RESOURCE_GROUP --created --interval 5
 
-if [[ $CREATING_ITERATE_CLUSTER == true ]]; then
-  information "Waiting for creation of the Iterate Cluster"
+information "Waiting for creation of the Iterate Cluster"
 
-  az aks wait --name $ITERATE_CLUSTER_NAME --resource-group $RESOURCE_GROUP --created --interval 5
-else
-  information "Iterate Cluster already exists"
-fi
+az aks wait --name $ITERATE_CLUSTER_NAME --resource-group $RESOURCE_GROUP --created --interval 5
 
-if [[ $CREATING_BUILD_CLUSTER == true ]]; then
-  information "Waiting for creation of the Build Cluster"
+information "Waiting for creation of the Build Cluster"
 
-  az aks wait --name $BUILD_CLUSTER_NAME --resource-group $RESOURCE_GROUP --created --interval 5
-else
-  information "Build Cluster already exists"
-fi
+az aks wait --name $BUILD_CLUSTER_NAME --resource-group $RESOURCE_GROUP --created --interval 5
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
-  if [[ ${CREATING_RUN_CLUSTERS[$i]} == true ]]; then
-    information "Waiting for creation of the Run Cluster '$RUN_CLUSTER_NAME'"
+  information "Waiting for creation of the Run Cluster '$RUN_CLUSTER_NAME'"
 
-    az aks wait --name $RUN_CLUSTER_NAME --resource-group $RESOURCE_GROUP --created --interval 5
-  else
-    information "Run Cluster '$RUN_CLUSTER_NAME' already exists"
-  fi
+  az aks wait --name $RUN_CLUSTER_NAME --resource-group $RESOURCE_GROUP --created --interval 5
 done
 
 information "Getting kubeconfigs and extracting cluster endpoints"
