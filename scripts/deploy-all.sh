@@ -19,6 +19,10 @@ $SCRIPTS/install-tap-gui-database.sh
 
 $SCRIPTS/install-tap-supply-chain-basic.sh
 $SCRIPTS/install-tap-dev-namespace.sh
+
+$SCRIPTS/install-tap-application-accelerator.sh
+$SCRIPTS/install-tap-gui-catalogs.sh
+$SCRIPTS/install-tap-application-live-view.sh
 $SCRIPTS/deploy-java-workload.sh
 
 $SCRIPTS/install-tap-components-to-view-cluster-resources.sh

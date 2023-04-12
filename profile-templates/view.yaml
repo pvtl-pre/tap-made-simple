@@ -54,17 +54,11 @@ tap_gui:
             #!#@ end 
 
 #!accelerator:
-  #!domain: #@ data.values.clusters.view_cluster.ingress_domain
-  #!ingress:
-    #!include: true
-    #!enable_tls: true
   #!tls:
     #!secret_name: wildcard
     #!namespace: tap-install
 
 #!appliveview:
-  #!ingressEnabled: true
-  #!sslDisabled: false
   #!tls:
     #!secretName: wildcard
     #!namespace: tap-install
