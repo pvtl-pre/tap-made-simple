@@ -6,5 +6,4 @@
 #@overlay/match missing_ok=True
 #@overlay/match-child-defaults missing_ok=True
 appliveview:
-  ingressDomain: #@ data.values.clusters.view_cluster.ingress_domain
   ingressEnabled: true
