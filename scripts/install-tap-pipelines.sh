@@ -16,11 +16,11 @@ function add_dev_namespace() {
 
   information "Create a Java pipeline on cluster '$CLUSTER_NAME'"
 
-  kubectl apply -f tap-declarative-yaml/dev-namespace/java-pipeline.yaml --kubeconfig $KUBECONFIG
+  kubectl apply -f tap-declarative-yaml/dev-namespace/java-pipeline.yaml -n product-team1 --kubeconfig $KUBECONFIG
 
-  information "Create a Python pipeline on cluster '$CLUSTER_NAME'"
+  #information "Create a Python pipeline on cluster '$CLUSTER_NAME'"
 
-  kubectl apply -f tap-declarative-yaml/dev-namespace/python-pipeline.yaml --kubeconfig $KUBECONFIG
+  #kubectl apply -f tap-declarative-yaml/dev-namespace/python-pipeline.yaml -n product-team1 --kubeconfig $KUBECONFIG
 }
 
 add_dev_namespace $ITERATE_CLUSTER_NAME $ITERATE_CLUSTER_KUBECONFIG
