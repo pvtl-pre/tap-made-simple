@@ -31,8 +31,5 @@ $SCRIPTS/install-tap-components-to-view-cluster-resources.sh
 
 # $SCRIPTS/install-cert-delegation.sh
 
-# $SCRIPTS/install-tap-dev-namespace.sh
 # $SCRIPTS/install-tap-scan-policies.sh
 # $SCRIPTS/install-tap-pipelines.sh
-
-# $SCRIPTS/deploy-workloads.sh
