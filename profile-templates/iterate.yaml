@@ -8,7 +8,7 @@ shared:
   ingress_domain: #@ data.values.clusters.iterate_cluster.ingress_domain
   #!ingress_issuer: ""
   image_registry:
-    project_path: #@ "{}/{}".format(data.values.registry.fqdn, data.values.registry.system_project)
+    project_path: #@ "{}/{}/iterate".format(data.values.registry.fqdn, data.values.registry.system_project)
     username: #@ data.values.registry.username
     password: #@ data.values.registry.password
 

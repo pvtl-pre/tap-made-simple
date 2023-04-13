@@ -26,6 +26,12 @@ $SCRIPTS/install-tap-gui-catalogs.sh
 $SCRIPTS/install-tap-application-live-view.sh
 $SCRIPTS/deploy-java-workload.sh
 
+read -p "Press any key to update to the testing supply chain" -n1 -s
+echo ""
+
+$SCRIPTS/install-tap-pipelines.sh
+$SCRIPTS/install-tap-supply-chain-testing.sh
+$SCRIPTS/update-java-workload-for-testing-supply-chain.sh
 
 # $SCRIPTS/install-cert.sh
 

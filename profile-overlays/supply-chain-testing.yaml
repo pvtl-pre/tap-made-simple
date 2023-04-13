@@ -4,10 +4,16 @@
 ---
 #@overlay/match missing_ok=True
 #@overlay/match-child-defaults missing_ok=True
-supply_chain: basic
+supply_chain: testing
+
+#@overlay/match by=overlay.all
+---
+#@overlay/match missing_ok=True
+#@overlay/remove
+ootb_supply_chain_basic: {}
 
 #@overlay/match by=overlay.all
 ---
 #@overlay/match missing_ok=True
 #@overlay/match-child-defaults missing_ok=True
-ootb_supply_chain_basic: {}
+ootb_supply_chain_testing: {}
