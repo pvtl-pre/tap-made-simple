@@ -16,3 +16,5 @@ $SCRIPTS/install-tap-build-profile.sh
 $SCRIPTS/install-tap-run-profiles.sh
 
 $SCRIPTS/install-tap-iterate-profile.sh
+
+$SCRIPTS/install-tap-components-to-view-cluster-resources.sh

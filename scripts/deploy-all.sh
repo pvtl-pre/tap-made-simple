@@ -26,7 +26,6 @@ $SCRIPTS/install-tap-gui-catalogs.sh
 $SCRIPTS/install-tap-application-live-view.sh
 $SCRIPTS/deploy-java-workload.sh
 
-$SCRIPTS/install-tap-components-to-view-cluster-resources.sh
 
 # $SCRIPTS/install-cert.sh
 
