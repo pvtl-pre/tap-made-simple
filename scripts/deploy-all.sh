@@ -33,6 +33,13 @@ $SCRIPTS/install-tap-pipelines.sh
 $SCRIPTS/install-tap-supply-chain-testing.sh
 $SCRIPTS/update-java-workload-for-testing-supply-chain.sh
 
+read -p "Press any key to update to the testing and scanning supply chain" -n1 -s
+echo ""
+
+$SCRIPTS/install-tap-scan-policies.sh
+$SCRIPTS/install-tap-metadata-store.sh
+$SCRIPTS/install-tap-supply-chain-testing-and-scanning.sh
+
 # $SCRIPTS/install-cert.sh
 
 # $SCRIPTS/install-cert-delegation.sh

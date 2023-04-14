@@ -21,11 +21,6 @@ tanzu apps workload apply tanzu-java-web-app \
   -n product-team1 \
   --yes \
   --kubeconfig $BUILD_CLUSTER_KUBECONFIG
-  # --label apps.tanzu.vmware.com/has-tests=true \
-  # --param-yaml testing_pipeline_matching_labels='{"apps.tanzu.vmware.com/language":"java", "apps.tanzu.vmware.com/pipeline":"test"}' \
-  # -n product-team1 \
-  # --yes \
-  # --kubeconfig $BUILD_CLUSTER_KUBECONFIG
 
 # information "Creating workload python-function on the Build Cluster"
 
@@ -34,8 +29,6 @@ tanzu apps workload apply tanzu-java-web-app \
 #   --git-branch main \
 #   --type web \
 #   --label app.kubernetes.io/part-of=python-function \
-#   --label apps.tanzu.vmware.com/has-tests=true \
-#   --param-yaml testing_pipeline_matching_labels='{"apps.tanzu.vmware.com/language":"python", "apps.tanzu.vmware.com/pipeline":"test"}' \
 #   -n product-team1 \
 #   --build-env BP_FUNCTION=func.main \
 #   --yes \

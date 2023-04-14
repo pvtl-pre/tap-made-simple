@@ -9,4 +9,4 @@ BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PAR
 
 information "Create a scan policy to the developer namespace on the Build Cluster"
 
-kubectl apply -f tap-declarative-yaml/dev-namespace/scan-policy.yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG
+kubectl apply -f tap-declarative-yaml/dev-namespace/scan-policy.yaml -n product-team1 --kubeconfig $BUILD_CLUSTER_KUBECONFIG

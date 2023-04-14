@@ -18,11 +18,7 @@ shared:
   #!kp_default_repository_password: #@ data.values.registry.password
   #!exclude_dependencies: false
 
-#!supply_chain: testing
-#!supply_chain: basic
-
 #!ootb_supply_chain_testing:
-#!ootb_supply_chain_basic:
   #!registry:
     #!server: #@ data.values.registry.fqdn
     #!repository: #@ "{}/iterate/workloads".format(data.values.registry.system_project)

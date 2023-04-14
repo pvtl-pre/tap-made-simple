@@ -11,27 +11,10 @@ shared:
     password: #@ data.values.registry.password
 
 #!supply_chain: testing_scanning
-#!supply_chain: basic
 
 #!ootb_supply_chain_testing_scanning:
-#!ootb_supply_chain_basic:
   #!registry:
     #!server: #@ data.values.registry.fqdn
     #!repository: #@ "{}/workloads".format(data.values.registry.system_project)
   #!gitops:
     #!ssh_secret: ""
-
-#!grype:
-  #!targetImagePullSecret: "registry-credentials"
-  #!metadataStore:
-    #!url: #@ "https://metadata-store.{}".format(data.values.clusters.view_cluster.ingress_domain)
-    #!caSecret:
-      #!name: store-ca-cert
-      #!importFromNamespace: metadata-store-secrets
-    #!authSecret:
-      #!name: store-auth-token
-      #!importFromNamespace: metadata-store-secrets
-
-#!scanning:
-  #!metadataStore:
-    #!url: "" #! Configuration is moved, so set this string to empty.

@@ -8,9 +8,6 @@ shared:
   ingress_domain: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
   #!ingress_issuer: ""
 
-#!supply_chain: testing_scanning
-#!supply_chain: basic
-
 #!cnrs:
   #!domain_name: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
   #!domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
