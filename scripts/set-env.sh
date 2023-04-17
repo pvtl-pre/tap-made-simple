@@ -16,8 +16,10 @@ information() {
 # Copy params file to the generated dir and use that instead
 mkdir -p generated
 
-if [[ ! -f "generated/params.yaml" ]]; then
-  cp -p $PARAMS_YAML generated/params.yaml
+generatedParamsYaml=$(basename $PARAMS_YAML)
+
+if [[ ! -f "generated/$generatedParamsYaml" ]]; then
+  cp -p $PARAMS_YAML generated/$generatedParamsYaml
 fi
 
-PARAMS_YAML="generated/params.yaml"
+PARAMS_YAML="generated/$generatedParamsYaml"
