@@ -53,8 +53,8 @@ fi
 RETURNED_ACR_CREDS_JSON=$(az acr credential show -n $ACR_NAME -g $RESOURCE_GROUP -o json)
 
 export REGISTRY_FQDN="$ACR_NAME.azurecr.io"
-export REGISTRY_USERNAME=$(echo "$RETURNED_ACR_CREDS_JSON" | jq -r '.username')
-export REGISTRY_PASSWORD=$(echo "$RETURNED_ACR_CREDS_JSON" | jq -r '.passwords[0].value')
+export REGISTRY_USERNAME=$(jq -r '.username' <<<$RETURNED_ACR_CREDS_JSON)
+export REGISTRY_PASSWORD=$(jq -r '.passwords[0].value' <<<$RETURNED_ACR_CREDS_JSON)
 
 yq e -i '.registry.fqdn = env(REGISTRY_FQDN)' "$PARAMS_YAML"
 yq e -i '.registry.username = env(REGISTRY_USERNAME)' "$PARAMS_YAML"
