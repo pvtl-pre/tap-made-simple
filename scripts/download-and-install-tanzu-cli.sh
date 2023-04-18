@@ -24,12 +24,11 @@ else
   TANZU_CLI='tanzu-core-linux_amd64'
 fi
 
+rm generated/$TAP_FILE
 rm -rf generated/tanzu
 mkdir -p generated/tanzu
 
-if [[ ! -f "generated/$TAP_FILE" ]]; then
-  pivnet download-product-files --product-slug='tanzu-application-platform' --release-version=$TAP_VERSION --product-file-id=$TAP_FILE_PRODUCT_FILE_ID --download-dir generated
-fi
+pivnet download-product-files --product-slug='tanzu-application-platform' --release-version=$TAP_VERSION --product-file-id=$TAP_FILE_PRODUCT_FILE_ID --download-dir generated
 
 tar -xvf generated/$TAP_FILE -C generated/tanzu
 
