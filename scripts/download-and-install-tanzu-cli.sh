@@ -24,8 +24,6 @@ else
   TANZU_CLI='tanzu-core-linux_amd64'
 fi
 
-information "Downloading and extracting 'tanzu-framework-bundle' from Tanzu Network"
-
 rm -rf generated/tanzu
 mkdir -p generated/tanzu
 
