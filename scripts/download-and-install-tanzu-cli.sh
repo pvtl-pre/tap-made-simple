@@ -10,7 +10,7 @@ JUMPBOX_OS=$(yq e .jumpbox_os $PARAMS_YAML)
 TAP_VERSION_YAML="tap-version.yaml"
 TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
-information "Downloading and extracting 'tanzu-cluster-essentials' from Tanzu Network"
+information "Downloading and extracting 'tanzu-framework' from Tanzu Network"
 
 if [[ $JUMPBOX_OS == 'OSX' ]]; then
   TAP_FILE='tanzu-framework-darwin-amd64-*.tar'
