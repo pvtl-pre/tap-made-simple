@@ -31,8 +31,8 @@ else
 
   information "Getting cert details"
 
-  echo $(yq e .tls.cert_data $PARAMS_YAML) | base64 --decode >$CERT_PATH/wildcard.cer
-  echo $(yq e .tls.key_data $PARAMS_YAML) | base64 --decode >$CERT_PATH/wildcard.key
+  yq e .tls.cert_data $PARAMS_YAML | base64 --decode >$CERT_PATH/wildcard.cer
+  yq e .tls.key_data $PARAMS_YAML | base64 --decode >$CERT_PATH/wildcard.key
 fi
 
 information "Creating TLS secret yaml"
