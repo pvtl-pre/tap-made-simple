@@ -24,7 +24,7 @@ else
   TANZU_CLI='tanzu-core-linux_amd64'
 fi
 
-rm generated/$TAP_FILE
+rm -f generated/$TAP_FILE
 rm -rf generated/tanzu
 mkdir -p generated/tanzu
 
