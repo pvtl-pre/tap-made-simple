@@ -40,5 +40,5 @@ $SCRIPTS/install-tap-scan-policies.sh
 $SCRIPTS/install-tap-metadata-store.sh
 $SCRIPTS/install-tap-supply-chain-testing-and-scanning.sh
 
-# $SCRIPTS/install-cert.sh
-# $SCRIPTS/install-cert-delegation.sh
+$SCRIPTS/install-tap-cloud-native-runtimes.sh
+$SCRIPTS/install-cert.sh

@@ -1,0 +1,50 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:data", "data")
+
+#@ iterate_profile = overlay.subset({ "profile": "iterate" })
+#@ run_profile = overlay.subset({ "profile": "run" })
+#@ view_profile = overlay.subset({ "profile": "view" })
+
+#@overlay/match by=view_profile, missing_ok=True
+---
+#@overlay/match missing_ok=True
+#@overlay/match-child-defaults missing_ok=True
+tap_gui:
+  tls:
+    namespace: #@ data.values.tls_namespace
+    secretName: #@ data.values.tls_secret_name
+
+#@overlay/match by=view_profile, missing_ok=True
+#@overlay/match-child-defaults missing_ok=True
+---
+accelerator:
+  ingress:
+    enable_tls: true
+  tls:
+    namespace: #@ data.values.tls_namespace
+    secret_name: #@ data.values.tls_secret_name
+
+#@overlay/match by=view_profile, missing_ok=True
+#@overlay/match-child-defaults missing_ok=True
+---
+appliveview:
+  tls:
+    namespace: #@ data.values.tls_namespace
+    secretName: #@ data.values.tls_secret_name
+
+#@overlay/match by=overlay.or_op(iterate_profile, run_profile), missing_ok=True
+---
+#@overlay/match missing_ok=True
+#@overlay/match-child-defaults missing_ok=True
+cnrs:
+  default_tls_secret: #@ "{}/{}".format(data.values.tls_namespace, data.values.tls_secret_name)
+  ingress_issuer: ""
+
+#@overlay/match by=overlay.or_op(iterate_profile, run_profile), missing_ok=True
+---
+#@overlay/match missing_ok=True
+#@overlay/match-child-defaults missing_ok=True
+appliveview_connector:
+  backend:
+    caCertData: #@ data.values.app_live_view_cert
+    sslDeactivated: false

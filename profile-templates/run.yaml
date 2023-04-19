@@ -6,9 +6,3 @@ ceip_policy_disclosed: true
 
 shared:
   ingress_domain: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
-  #!ingress_issuer: ""
-
-#!cnrs:
-  #!domain_name: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
-  #!domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
-  #!default_tls_secret: "tap-install/wildcard"

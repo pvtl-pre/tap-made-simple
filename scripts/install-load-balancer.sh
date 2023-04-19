@@ -21,7 +21,7 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
 
   RUN_PROFILE="generated/profiles/$RUN_CLUSTER_NAME.yaml"
 
-  ytt --data-value-yaml index=$i -f "$PARAMS_YAML" -f $RUN_PROFILE -f profile-overlays/load-balancer.yaml --output-files generated/profiles
+  ytt -f "$PARAMS_YAML" -f $RUN_PROFILE -f profile-overlays/load-balancer.yaml --output-files generated/profiles
 done
 
 $SCRIPTS/install-tap-view-profile.sh

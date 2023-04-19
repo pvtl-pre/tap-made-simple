@@ -24,8 +24,3 @@ shared:
     #!repository: #@ "{}/iterate/workloads".format(data.values.registry.system_project)
   #!gitops:
     #!ssh_secret: ""
-
-#!cnrs:
-  #!domain_name: #@ data.values.clusters.iterate_cluster.ingress_domain
-  #!domain_template: "{{.Name}}-{{.Namespace}}.{{.Domain}}"
-  #!default_tls_secret: "tap-install/wildcard"
