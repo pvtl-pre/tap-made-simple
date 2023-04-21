@@ -16,6 +16,7 @@ Example: https://github.com/pvtl-pre/tap-catalogs
 ## Required CLIs and plugin-ins
 
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+- [Carvel](https://carvel.dev/)
 - [helm](https://helm.sh/docs/intro/install/) (to install use `brew` for Mac and `apt-get` for Linux)
 - [jq v1.6+](https://github.com/stedolan/jq) (to install use `brew` for Mac and `apt-get` for Linux)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
