@@ -109,6 +109,9 @@ IP Address: 240.1.1.2
 
 Domain Name: *.subdomain.example.com
 IP Address: 240.1.1.3
+
+Domain Name: *.subdomain.example.com
+IP Address: 240.1.1.4
 ```
 
 ### Automatic DNS Record Creation

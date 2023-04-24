@@ -7,6 +7,7 @@ source "$SCRIPTS/set-env.sh"
 
 ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 ITERATE_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.iterate_cluster.ingress_domain $PARAMS_YAML)
+LEARNING_CENTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.learning_center_ingress_domain $PARAMS_YAML)
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
 VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
 VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingress_domain $PARAMS_YAML)
@@ -17,6 +18,10 @@ VIEW_CLUSTER_INGRESS_IP=$(kubectl get service -n tanzu-system-ingress envoy -o j
 information "To proceed, you must register the wildcard DNS record with the following details:"
 
 echo "Domain Name: *.$VIEW_CLUSTER_INGRESS_DOMAIN"
+echo "IP Address: $VIEW_CLUSTER_INGRESS_IP"
+echo ""
+
+echo "Domain Name: *.$LEARNING_CENTER_INGRESS_DOMAIN"
 echo "IP Address: $VIEW_CLUSTER_INGRESS_IP"
 echo ""
 

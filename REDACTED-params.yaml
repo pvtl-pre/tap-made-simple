@@ -28,6 +28,7 @@ clusters:
   ssh_key_path: #! set or it will be automatically set
   view_cluster:
     ingress_domain: #! set to the ingress domain for View Cluster components (e.g. tap.example.com)
+    learning_center_ingress_domain: #! set to the ingress domain for the Learning Center component (e.g. learningcenter.example.com)
     k8s_info:
       name: view-cluster #! name of the cluster to create
     tap_gui:

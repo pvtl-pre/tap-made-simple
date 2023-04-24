@@ -62,15 +62,43 @@ done
 
 information "Updating generated profiles with load balancer configuration"
 
-ytt --data-value-file app_live_view_cert=$CERT_PATH/wildcard.cer -v tls_namespace=tap-install -v tls_secret_name=wildcard -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/tls.yaml --output-files generated/profiles
-ytt --data-value-file app_live_view_cert=$CERT_PATH/wildcard.cer -v tls_namespace=tap-install -v tls_secret_name=wildcard -f "$PARAMS_YAML" -f $ITERATE_PROFILE -f profile-overlays/tls.yaml --output-files generated/profiles
+ytt \
+  --data-value-file app_live_view_cert=$CERT_PATH/wildcard.cer \
+  --data-value-file learning_center_cert=$CERT_PATH/wildcard.cer \
+  --data-value-file learning_center_private_key=$CERT_PATH/wildcard.key \
+  -v tls_namespace=tap-install \
+  -v tls_secret_name=wildcard \
+  -f "$PARAMS_YAML" \
+  -f $VIEW_PROFILE \
+  -f profile-overlays/tls.yaml \
+  --output-files generated/profiles
+
+ytt \
+  --data-value-file app_live_view_cert=$CERT_PATH/wildcard.cer \
+  --data-value-file learning_center_cert=$CERT_PATH/wildcard.cer \
+  --data-value-file learning_center_private_key=$CERT_PATH/wildcard.key \
+  -v tls_namespace=tap-install \
+  -v tls_secret_name=wildcard \
+  -f "$PARAMS_YAML" \
+  -f $ITERATE_PROFILE \
+  -f profile-overlays/tls.yaml \
+  --output-files generated/profiles
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
   RUN_PROFILE="generated/profiles/$RUN_CLUSTER_NAME.yaml"
 
-  ytt --data-value-file app_live_view_cert=$CERT_PATH/wildcard.cer -v tls_namespace=tap-install -v tls_secret_name=wildcard -f "$PARAMS_YAML" -f $RUN_PROFILE -f profile-overlays/tls.yaml --output-files generated/profiles
+  ytt \
+    --data-value-file app_live_view_cert=$CERT_PATH/wildcard.cer \
+    --data-value-file learning_center_cert=$CERT_PATH/wildcard.cer \
+    --data-value-file learning_center_private_key=$CERT_PATH/wildcard.key \
+    -v tls_namespace=tap-install \
+    -v tls_secret_name=wildcard \
+    -f "$PARAMS_YAML" \
+    -f $RUN_PROFILE \
+    -f profile-overlays/tls.yaml \
+    --output-files generated/profiles
 done
 
 $SCRIPTS/install-tap-view-profile.sh
@@ -80,3 +108,5 @@ $SCRIPTS/install-tap-run-profiles.sh
 $SCRIPTS/reconcile-tap-install-for-view-cluster.sh
 $SCRIPTS/reconcile-tap-install-for-iterate-cluster.sh
 $SCRIPTS/reconcile-tap-install-for-run-clusters.sh
+
+$SCRIPTS/restart-tap-learning-center.sh

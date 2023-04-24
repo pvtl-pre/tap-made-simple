@@ -32,6 +32,14 @@ appliveview:
     namespace: #@ data.values.tls_namespace
     secretName: #@ data.values.tls_secret_name
 
+#@overlay/match by=view_profile, missing_ok=True
+#@overlay/match-child-defaults missing_ok=True
+---
+learningcenter:
+  ingressSecret:
+    certificate: #@ data.values.learning_center_cert
+    privateKey: #@ data.values.learning_center_private_key
+
 #@overlay/match by=overlay.or_op(iterate_profile, run_profile), missing_ok=True
 ---
 #@overlay/match missing_ok=True

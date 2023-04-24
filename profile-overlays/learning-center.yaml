@@ -1,0 +1,10 @@
+#@ load("@ytt:overlay", "overlay")
+#@ load("@ytt:data", "data")
+
+#@overlay/match by=overlay.all
+---
+#@overlay/match missing_ok=True
+#@overlay/match-child-defaults missing_ok=True
+learningcenter:
+  ingressClass: contour
+  ingressDomain: #@ data.values.clusters.view_cluster.learning_center_ingress_domain
