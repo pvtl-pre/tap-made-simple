@@ -50,7 +50,7 @@ pivnet login --api-token='MY-API-TOKEN'
 
 ## (Optional) Register Catalog Entities
 
-Static configuration of catalog entities can be done by configuring your copy of `params.yaml` to include locations. Example, yet functional, locations are shown below.
+Static configuration of catalog entities can be done by configuring your copy of `params.yaml` to include locations. Example, yet functional, locations are shown below and are preconfigured.
 
 ```yaml
 tap_gui:
