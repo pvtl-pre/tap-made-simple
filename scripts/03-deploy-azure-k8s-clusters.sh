@@ -48,7 +48,7 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   yq e -i ".clusters.run_clusters[$i].k8s_info.kubeconfig = env(RUN_CLUSTER_KUBECONFIG)" "$PARAMS_YAML"
 done
 
-CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$VIEW_CLUSTER_NAME\")")
+CLUSTER_EXISTS=$(az aks list -g $RESOURCE_GROUP | jq "any(.name == \"$VIEW_CLUSTER_NAME\")")
 
 if [[ $CLUSTER_EXISTS == false ]]; then
   information "Creating View Cluster"
@@ -58,7 +58,7 @@ else
   information "View Cluster already exists"
 fi
 
-CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$ITERATE_CLUSTER_NAME\")")
+CLUSTER_EXISTS=$(az aks list -g $RESOURCE_GROUP | jq "any(.name == \"$ITERATE_CLUSTER_NAME\")")
 
 if [[ $CLUSTER_EXISTS == false ]]; then
   information "Creating Iterate Cluster"
@@ -68,7 +68,7 @@ else
   information "Iterate Cluster already exists"
 fi
 
-CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$BUILD_CLUSTER_NAME\")")
+CLUSTER_EXISTS=$(az aks list -g $RESOURCE_GROUP | jq "any(.name == \"$BUILD_CLUSTER_NAME\")")
 
 if [[ $CLUSTER_EXISTS == false ]]; then
   information "Creating Build Cluster"
@@ -81,7 +81,7 @@ fi
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
 
-  CLUSTER_EXISTS=$(az aks list | jq "any(.name == \"$RUN_CLUSTER_NAME\")")
+  CLUSTER_EXISTS=$(az aks list -g $RESOURCE_GROUP | jq "any(.name == \"$RUN_CLUSTER_NAME\")")
 
   if [[ $CLUSTER_EXISTS == false ]]; then
     information "Creating Run Cluster '$RUN_CLUSTER_NAME'"
