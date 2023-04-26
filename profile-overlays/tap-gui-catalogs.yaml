@@ -7,5 +7,6 @@
 #@overlay/match-child-defaults missing_ok=True
 tap_gui:
   app_config:
-    #@overlay/replace
-    catalog: #@ data.values.clusters.view_cluster.tap_gui.catalog
+    catalog:
+      #@overlay/replace
+      locations: #@ data.values.clusters.view_cluster.tap_gui.catalog.locations
