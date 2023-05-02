@@ -13,7 +13,7 @@ To install, navigate to Tanzu Network. Under the list of available files to down
 
 Example: https://github.com/pvtl-pre/tap-catalogs
 
-## Required CLIs and Plugins
+## Required CLIs, Plugins and Accounts
 
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 - [Carvel](https://carvel.dev/)
