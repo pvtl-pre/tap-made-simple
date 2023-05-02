@@ -13,7 +13,7 @@ To install, navigate to Tanzu Network. Under the list of available files to down
 
 Example: https://github.com/pvtl-pre/tap-catalogs
 
-## Required CLIs and plugin-ins
+## Required CLIs and Plugins
 
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 - [Carvel](https://carvel.dev/)
@@ -22,6 +22,8 @@ Example: https://github.com/pvtl-pre/tap-catalogs
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - [pivnet](https://github.com/pivotal-cf/pivnet-cli)
 - [yq v4.12+](https://github.com/mikefarah/yq) (to install use `brew` for Mac and `apt-get` for Linux)
+
+Additionally, you will need a [Tanzu Network account](https://network.tanzu.vmware.com/). For this account, you will need to accept any Tanzu Application Platform EULAs and create a UAA API TOKEN (i.e. refresh token).
 
 NOTE: The Tanzu CLI and associated plugins will be installed as part of the deployment process.
 
