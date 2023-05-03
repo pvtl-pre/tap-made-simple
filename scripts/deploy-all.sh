@@ -8,7 +8,8 @@ $SCRIPTS/01-prep-azure-objects.sh
 $SCRIPTS/02-deploy-azure-container-registry.sh
 $SCRIPTS/03-deploy-azure-k8s-clusters.sh
 
-$SCRIPTS/install-tap-prereqs.sh
+$SCRIPTS/download-and-install-cluster-essentials.sh
+$SCRIPTS/download-and-install-tanzu-cli.sh
 
 $SCRIPTS/install-minimal-tap-profiles.sh
 
