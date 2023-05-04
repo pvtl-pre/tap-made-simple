@@ -15,8 +15,8 @@ information "Updating generated profiles with testing supply chain configuration
 ytt -f "$PARAMS_YAML" -f $BUILD_PROFILE -f profile-overlays/supply-chain-testing.yaml --output-files generated/profiles
 ytt -f "$PARAMS_YAML" -f $ITERATE_PROFILE -f profile-overlays/supply-chain-testing.yaml --output-files generated/profiles
 
-$SCRIPTS/install-tap-build-profile.sh
-$SCRIPTS/install-tap-iterate-profile.sh
+$SCRIPTS/apply-build-profile.sh
+$SCRIPTS/apply-iterate-profile.sh
 
-$SCRIPTS/reconcile-tap-install-for-build-cluster.sh
-$SCRIPTS/reconcile-tap-install-for-iterate-cluster.sh
+$SCRIPTS/reconcile-build-cluster.sh
+$SCRIPTS/reconcile-iterate-cluster.sh

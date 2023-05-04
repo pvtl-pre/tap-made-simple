@@ -19,8 +19,8 @@ if [[ $KUBE_VERSION -ge 25 ]]; then
   ytt -v k8s_version="1.$KUBE_VERSION.0" -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/learning-center-podsecuritypolicy-fix.yaml --output-files generated/profiles
 fi
 
-$SCRIPTS/install-tap-view-profile.sh
+$SCRIPTS/apply-view-profile.sh
 
-$SCRIPTS/reconcile-tap-install-for-view-cluster.sh
+$SCRIPTS/reconcile-view-cluster.sh
 
-$SCRIPTS/restart-tap-learning-center.sh
+$SCRIPTS/restart-learning-center.sh

@@ -25,8 +25,8 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   ytt -f "$PARAMS_YAML" -v ingress_domain=$RUN_CLUSTER_INGRESS_DOMAIN -f $RUN_PROFILE -f profile-overlays/cloud-native-runtimes.yaml --output-files generated/profiles
 done
 
-$SCRIPTS/install-tap-iterate-profile.sh
-$SCRIPTS/install-tap-run-profiles.sh
+$SCRIPTS/apply-iterate-profile.sh
+$SCRIPTS/apply-run-profiles.sh
 
-$SCRIPTS/reconcile-tap-install-for-iterate-cluster.sh
-$SCRIPTS/reconcile-tap-install-for-run-clusters.sh
+$SCRIPTS/reconcile-iterate-cluster.sh
+$SCRIPTS/reconcile-run-clusters.sh

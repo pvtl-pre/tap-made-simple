@@ -25,6 +25,6 @@ information "Updating generated view profile with TAP GUI database configuration
 
 ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/tap-gui-database.yaml --output-files generated/profiles
 
-$SCRIPTS/install-tap-view-profile.sh
+$SCRIPTS/apply-view-profile.sh
 
-$SCRIPTS/reconcile-tap-install-for-view-cluster.sh
+$SCRIPTS/reconcile-view-cluster.sh

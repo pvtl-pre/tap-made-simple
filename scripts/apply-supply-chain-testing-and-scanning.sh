@@ -12,6 +12,6 @@ information "Updating generated build profile with testing and scanning supply c
 
 ytt -f "$PARAMS_YAML" -f $BUILD_PROFILE -f profile-overlays/supply-chain-testing-and-scanning.yaml --output-files generated/profiles
 
-$SCRIPTS/install-tap-build-profile.sh
+$SCRIPTS/apply-build-profile.sh
 
-$SCRIPTS/reconcile-tap-install-for-build-cluster.sh
+$SCRIPTS/reconcile-build-cluster.sh

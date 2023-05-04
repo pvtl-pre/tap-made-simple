@@ -9,10 +9,10 @@ VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAM
 
 VIEW_PROFILE="generated/profiles/$VIEW_CLUSTER_NAME.yaml"
 
-information "Updating generated view profile with TAP GUI auth configuration"
+information "Updating generated view profile with TAP GUI catalogs configuration"
 
-ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/tap-gui-auth.yaml --output-files generated/profiles
+ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/tap-gui-catalogs.yaml --output-files generated/profiles
 
-$SCRIPTS/install-tap-view-profile.sh
+$SCRIPTS/apply-view-profile.sh
 
-$SCRIPTS/reconcile-tap-install-for-view-cluster.sh
+$SCRIPTS/reconcile-view-cluster.sh

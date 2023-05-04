@@ -59,6 +59,6 @@ information "Updating generated view profile with view cluster resources configu
 
 ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/view-cluster-resources.yaml --output-files generated/profiles
 
-$SCRIPTS/install-tap-view-profile.sh
+$SCRIPTS/apply-view-profile.sh
 
-$SCRIPTS/reconcile-tap-install-for-view-cluster.sh
+$SCRIPTS/reconcile-view-cluster.sh

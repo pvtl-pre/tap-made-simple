@@ -12,6 +12,6 @@ information "Updating generated profiles with application accelerator configurat
 
 ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/application-accelerator.yaml --output-files generated/profiles
 
-$SCRIPTS/install-tap-view-profile.sh
+$SCRIPTS/apply-view-profile.sh
 
-$SCRIPTS/reconcile-tap-install-for-view-cluster.sh
+$SCRIPTS/reconcile-view-cluster.sh

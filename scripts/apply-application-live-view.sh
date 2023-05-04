@@ -28,12 +28,12 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   ytt -f "$PARAMS_YAML" -f $RUN_PROFILE -f profile-overlays/application-live-view-connector.yaml --output-files generated/profiles
 done
 
-$SCRIPTS/install-tap-view-profile.sh
-$SCRIPTS/install-tap-iterate-profile.sh
-$SCRIPTS/install-tap-build-profile.sh
-$SCRIPTS/install-tap-run-profiles.sh
+$SCRIPTS/apply-view-profile.sh
+$SCRIPTS/apply-iterate-profile.sh
+$SCRIPTS/apply-build-profile.sh
+$SCRIPTS/apply-run-profiles.sh
 
-$SCRIPTS/reconcile-tap-install-for-view-cluster.sh
-$SCRIPTS/reconcile-tap-install-for-iterate-cluster.sh
-$SCRIPTS/reconcile-tap-install-for-build-cluster.sh
-$SCRIPTS/reconcile-tap-install-for-run-clusters.sh
+$SCRIPTS/reconcile-view-cluster.sh
+$SCRIPTS/reconcile-iterate-cluster.sh
+$SCRIPTS/reconcile-build-cluster.sh
+$SCRIPTS/reconcile-run-clusters.sh

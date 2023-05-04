@@ -22,9 +22,9 @@ information "Updating generated view profile with TAP GUI metadata store auth co
 
 ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/tap-gui-metadata-store-auth.yaml --output-files generated/profiles
 
-$SCRIPTS/install-tap-view-profile.sh
+$SCRIPTS/apply-view-profile.sh
 
-$SCRIPTS/reconcile-tap-install-for-view-cluster.sh
+$SCRIPTS/reconcile-view-cluster.sh
 
 information "Adding metadata store auth on the Build Cluster"
 

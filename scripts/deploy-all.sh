@@ -11,31 +11,37 @@ $SCRIPTS/03-deploy-azure-k8s-clusters.sh
 $SCRIPTS/download-and-install-cluster-essentials.sh
 $SCRIPTS/download-and-install-tanzu-cli.sh
 
-$SCRIPTS/install-minimal-tap-profiles.sh
+$SCRIPTS/add-tap-package-repository.sh
+$SCRIPTS/generate-profiles-from-templates.sh
+$SCRIPTS/apply-view-profile.sh
+$SCRIPTS/apply-build-profile.sh
+$SCRIPTS/apply-run-profiles.sh
+$SCRIPTS/apply-iterate-profile.sh
+$SCRIPTS/allow-tap-gui-to-view-resources.sh
 
-$SCRIPTS/install-load-balancer.sh
+$SCRIPTS/apply-load-balancer.sh
 $SCRIPTS/configure-dns.sh
 
-$SCRIPTS/install-tap-gui-auth.sh
-$SCRIPTS/install-tap-gui-database.sh
+$SCRIPTS/apply-tap-gui-auth.sh
+$SCRIPTS/apply-tap-gui-database.sh
 
-$SCRIPTS/install-tap-supply-chain-basic.sh
-$SCRIPTS/install-tap-dev-namespace.sh
+$SCRIPTS/apply-supply-chain-basic.sh
+$SCRIPTS/apply-dev-namespace-legacy.sh
 
-$SCRIPTS/install-tap-application-accelerator.sh
-$SCRIPTS/install-tap-gui-catalogs.sh
-$SCRIPTS/install-tap-application-live-view.sh
-$SCRIPTS/deploy-java-workload.sh
+$SCRIPTS/apply-application-accelerator.sh
+$SCRIPTS/apply-tap-gui-catalogs.sh
+$SCRIPTS/apply-application-live-view.sh
+$SCRIPTS/apply-java-workload.sh
 
-$SCRIPTS/install-tap-pipelines.sh
-$SCRIPTS/install-tap-supply-chain-testing.sh
-$SCRIPTS/update-java-workload-for-testing-supply-chain.sh
+$SCRIPTS/apply-pipelines.sh
+$SCRIPTS/apply-supply-chain-testing.sh
+$SCRIPTS/apply-java-workload-for-supply-chain-testing.sh
 
-$SCRIPTS/install-tap-scan-policies.sh
-$SCRIPTS/install-tap-metadata-store.sh
-$SCRIPTS/install-tap-supply-chain-testing-and-scanning.sh
+$SCRIPTS/apply-scan-policies.sh
+$SCRIPTS/apply-metadata-store-auth.sh
+$SCRIPTS/apply-supply-chain-testing-and-scanning.sh
 
-$SCRIPTS/install-tap-learning-center.sh
+$SCRIPTS/apply-learning-center.sh
 
-$SCRIPTS/install-tap-cloud-native-runtimes.sh
-$SCRIPTS/install-cert.sh
+$SCRIPTS/apply-cloud-native-runtimes.sh
+$SCRIPTS/apply-cert.sh
