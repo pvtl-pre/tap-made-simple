@@ -9,12 +9,3 @@ shared:
     project_path: #@ "{}/{}".format(data.values.registry.fqdn, data.values.registry.system_project)
     username: #@ data.values.registry.username
     password: #@ data.values.registry.password
-
-#!supply_chain: testing_scanning
-
-#!ootb_supply_chain_testing_scanning:
-  #!registry:
-    #!server: #@ data.values.registry.fqdn
-    #!repository: #@ "{}/workloads".format(data.values.registry.system_project)
-  #!gitops:
-    #!ssh_secret: ""
