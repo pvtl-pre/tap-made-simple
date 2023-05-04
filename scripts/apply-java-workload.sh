@@ -22,28 +22,11 @@ tanzu apps workload apply tanzu-java-web-app \
   --yes \
   --kubeconfig $BUILD_CLUSTER_KUBECONFIG
 
-# information "Creating workload python-function on the Build Cluster"
-
-# tanzu apps workload apply python-function \
-#   --git-repo https://github.com/pvtl-pre/python-function.git \
-#   --git-branch main \
-#   --type web \
-#   --label app.kubernetes.io/part-of=python-function \
-#   -n product-team1 \
-#   --build-env BP_FUNCTION=func.main \
-#   --yes \
-#   --kubeconfig $BUILD_CLUSTER_KUBECONFIG
-
 information "Waiting for deliverable tanzu-java-web-app"
 
 while ! kubectl get configmap tanzu-java-web-app-deliverable -n product-team1 -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done
 
-# information "Waiting for deliverable python-function"
-
-# while ! kubectl get configmap python-function-deliverable -n product-team1 -o yaml --kubeconfig $BUILD_CLUSTER_KUBECONFIG >/dev/null 2>&1; do sleep 2; done
-
 kubectl get configmap tanzu-java-web-app-deliverable -n product-team1 -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG >$DELIVERABLES_DIR/tanzu-java-web-app.yaml
-# kubectl get configmap python-function-deliverable -n product-team1 -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG >$DELIVERABLES_DIR/python-function.yaml
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
@@ -52,5 +35,4 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   information "Deploying deliverables on Run Cluster '$RUN_CLUSTER_NAME'"
 
   kubectl apply -f $DELIVERABLES_DIR/tanzu-java-web-app.yaml -n product-team1 --kubeconfig $RUN_CLUSTER_KUBECONFIG
-  # kubectl apply -f $DELIVERABLES_DIR/python-function.yaml -n product-team1 --kubeconfig $RUN_CLUSTER_KUBECONFIG
 done
