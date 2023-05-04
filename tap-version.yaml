@@ -1,8 +1,8 @@
 tap:
-  version: 1.4.2
+  version: 1.4.4
   tanzu_net:
-    linux_product_file_id: 1433868
-    osx_product_file_id: 1433867
+    linux_product_file_id: 1457672
+    osx_product_file_id: 1457671
 cluster_essentials:
   version: 1.4.1
   bundle: "registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:2354688e46d4bb4060f74fca069513c9b42ffa17a0a6d5b0dbb81ed52242ea44"
