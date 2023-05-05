@@ -31,8 +31,8 @@ This script creates an Azure Resource Group.
 
 ```yaml
 azure:
-  resource_group: 
-  location: 
+  resource_group: tap
+  location: centralus
 ```
 
 ## Go to Next Step
