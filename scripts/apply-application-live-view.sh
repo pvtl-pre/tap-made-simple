@@ -4,10 +4,10 @@ set -e -o pipefail
 SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source $SCRIPTS/set-env.sh
 
-BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.k8s_info.name $PARAMS_YAML)
-ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML)
+BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.name $PARAMS_YAML)
+ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.name $PARAMS_YAML)
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
-VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.k8s_info.name $PARAMS_YAML)
+VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.name $PARAMS_YAML)
 
 BUILD_PROFILE="generated/profiles/$BUILD_CLUSTER_NAME.yaml"
 ITERATE_PROFILE="generated/profiles/$ITERATE_CLUSTER_NAME.yaml"
@@ -21,7 +21,7 @@ ytt -f "$PARAMS_YAML" -f $ITERATE_PROFILE -f profile-overlays/application-live-v
 ytt -f "$PARAMS_YAML" -f $ITERATE_PROFILE -f profile-overlays/application-live-view-conventions.yaml --output-files generated/profiles
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name $PARAMS_YAML)
 
   RUN_PROFILE="generated/profiles/$RUN_CLUSTER_NAME.yaml"
 

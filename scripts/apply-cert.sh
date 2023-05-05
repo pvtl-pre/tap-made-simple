@@ -7,11 +7,11 @@ source "$SCRIPTS/set-env.sh"
 
 CERT_PATH="generated/cert"
 GENERATE_CERT=$(yq e .tls.generate $PARAMS_YAML)
-ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
-ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML)
+ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.kubeconfig $PARAMS_YAML)
+ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.name $PARAMS_YAML)
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
-VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.k8s_info.name $PARAMS_YAML)
-VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.name $PARAMS_YAML)
+VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.kubeconfig $PARAMS_YAML)
 
 ITERATE_PROFILE="generated/profiles/$ITERATE_CLUSTER_NAME.yaml"
 VIEW_PROFILE="generated/profiles/$VIEW_CLUSTER_NAME.yaml"
@@ -54,8 +54,8 @@ install_cert $VIEW_CLUSTER_NAME $VIEW_CLUSTER_KUBECONFIG
 install_cert $ITERATE_CLUSTER_NAME $ITERATE_CLUSTER_KUBECONFIG
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
-  RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
+  RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].kubeconfig $PARAMS_YAML)
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name $PARAMS_YAML)
 
   install_cert $RUN_CLUSTER_NAME $RUN_CLUSTER_KUBECONFIG
 done
@@ -85,7 +85,7 @@ ytt \
   --output-files generated/profiles
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name $PARAMS_YAML)
 
   RUN_PROFILE="generated/profiles/$RUN_CLUSTER_NAME.yaml"
 

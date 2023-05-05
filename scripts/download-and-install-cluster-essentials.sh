@@ -37,9 +37,9 @@ tar -xvf generated/$CLUSTER_ESSENTIALS_FILE -C generated/tanzu-cluster-essential
   export INSTALL_REGISTRY_USERNAME=$(yq e .tanzu_registry.username $PARAMS_YAML)
   export INSTALL_REGISTRY_PASSWORD=$(yq e .tanzu_registry.password $PARAMS_YAML)
 
-  BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
-  ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.k8s_info.kubeconfig $PARAMS_YAML)
-  VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+  BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.kubeconfig $PARAMS_YAML)
+  ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.kubeconfig $PARAMS_YAML)
+  VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.kubeconfig $PARAMS_YAML)
 
   cd generated/tanzu-cluster-essentials
 
@@ -50,7 +50,7 @@ tar -xvf generated/$CLUSTER_ESSENTIALS_FILE -C generated/tanzu-cluster-essential
   KUBECONFIG=../../$VIEW_CLUSTER_KUBECONFIG ./install.sh --yes
 
   for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
-    RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig ../../$PARAMS_YAML)
+    RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].kubeconfig ../../$PARAMS_YAML)
 
     KUBECONFIG=../../$RUN_CLUSTER_KUBECONFIG ./install.sh --yes
   done

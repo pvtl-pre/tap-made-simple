@@ -5,7 +5,7 @@ shopt -s nocasematch
 SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source "$SCRIPTS/set-env.sh"
 
-BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.k8s_info.kubeconfig $PARAMS_YAML)
+BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.kubeconfig $PARAMS_YAML)
 DELIVERABLES_DIR="generated/deliverables"
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
 
@@ -29,8 +29,8 @@ while ! kubectl get configmap tanzu-java-web-app-deliverable -n product-team1 -o
 kubectl get configmap tanzu-java-web-app-deliverable -n product-team1 -o go-template='{{.data.deliverable}}' --kubeconfig $BUILD_CLUSTER_KUBECONFIG >$DELIVERABLES_DIR/tanzu-java-web-app.yaml
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
-  RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
+  RUN_CLUSTER_KUBECONFIG=$(yq e .clusters.run_clusters[$i].kubeconfig $PARAMS_YAML)
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name $PARAMS_YAML)
 
   information "Deploying deliverables on Run Cluster '$RUN_CLUSTER_NAME'"
 

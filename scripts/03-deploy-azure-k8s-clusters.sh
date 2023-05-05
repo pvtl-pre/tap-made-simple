@@ -26,26 +26,26 @@ fi
 
 information "Getting kubeconfig paths"
 
-VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.k8s_info.name $PARAMS_YAML)
+VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.name $PARAMS_YAML)
 export VIEW_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$VIEW_CLUSTER_NAME.yaml"
 
-yq e -i '.clusters.view_cluster.k8s_info.kubeconfig = env(VIEW_CLUSTER_KUBECONFIG)' "$PARAMS_YAML"
+yq e -i '.clusters.view_cluster.kubeconfig = env(VIEW_CLUSTER_KUBECONFIG)' "$PARAMS_YAML"
 
-ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.k8s_info.name $PARAMS_YAML)
+ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.name $PARAMS_YAML)
 export ITERATE_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$ITERATE_CLUSTER_NAME.yaml"
 
-yq e -i '.clusters.iterate_cluster.k8s_info.kubeconfig = env(ITERATE_CLUSTER_KUBECONFIG)' "$PARAMS_YAML"
+yq e -i '.clusters.iterate_cluster.kubeconfig = env(ITERATE_CLUSTER_KUBECONFIG)' "$PARAMS_YAML"
 
-BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.k8s_info.name $PARAMS_YAML)
+BUILD_CLUSTER_NAME=$(yq e .clusters.build_cluster.name $PARAMS_YAML)
 export BUILD_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$BUILD_CLUSTER_NAME.yaml"
 
-yq e -i '.clusters.build_cluster.k8s_info.kubeconfig = env(BUILD_CLUSTER_KUBECONFIG)' "$PARAMS_YAML"
+yq e -i '.clusters.build_cluster.kubeconfig = env(BUILD_CLUSTER_KUBECONFIG)' "$PARAMS_YAML"
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name $PARAMS_YAML)
   export RUN_CLUSTER_KUBECONFIG="$KUBECONFIGS_PATH/$RUN_CLUSTER_NAME.yaml"
 
-  yq e -i ".clusters.run_clusters[$i].k8s_info.kubeconfig = env(RUN_CLUSTER_KUBECONFIG)" "$PARAMS_YAML"
+  yq e -i ".clusters.run_clusters[$i].kubeconfig = env(RUN_CLUSTER_KUBECONFIG)" "$PARAMS_YAML"
 done
 
 CLUSTER_EXISTS=$(az aks list -g $RESOURCE_GROUP | jq "any(.name == \"$VIEW_CLUSTER_NAME\")")
@@ -79,7 +79,7 @@ else
 fi
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name $PARAMS_YAML)
 
   CLUSTER_EXISTS=$(az aks list -g $RESOURCE_GROUP | jq "any(.name == \"$RUN_CLUSTER_NAME\")")
 
@@ -105,7 +105,7 @@ information "Waiting for creation of the Build Cluster"
 az aks wait --name $BUILD_CLUSTER_NAME --resource-group $RESOURCE_GROUP --created --interval 5
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name $PARAMS_YAML)
 
   information "Waiting for creation of the Run Cluster '$RUN_CLUSTER_NAME'"
 
@@ -117,24 +117,24 @@ information "Getting kubeconfigs and extracting cluster endpoints"
 az aks get-credentials --name $VIEW_CLUSTER_NAME --resource-group $RESOURCE_GROUP --overwrite-existing --file $VIEW_CLUSTER_KUBECONFIG
 
 export VIEW_CLUSTER_URL=$(kubectl --kubeconfig $VIEW_CLUSTER_KUBECONFIG config view | yq '.clusters[0].cluster.server')
-yq e -i '.clusters.view_cluster.k8s_info.url = env(VIEW_CLUSTER_URL)' "$PARAMS_YAML"
+yq e -i '.clusters.view_cluster.url = env(VIEW_CLUSTER_URL)' "$PARAMS_YAML"
 
 az aks get-credentials --name $ITERATE_CLUSTER_NAME --resource-group $RESOURCE_GROUP --overwrite-existing --file $ITERATE_CLUSTER_KUBECONFIG
 
 export ITERATE_CLUSTER_URL=$(kubectl --kubeconfig $ITERATE_CLUSTER_KUBECONFIG config view | yq '.clusters[0].cluster.server')
-yq e -i '.clusters.iterate_cluster.k8s_info.url = env(ITERATE_CLUSTER_URL)' "$PARAMS_YAML"
+yq e -i '.clusters.iterate_cluster.url = env(ITERATE_CLUSTER_URL)' "$PARAMS_YAML"
 
 az aks get-credentials --name $BUILD_CLUSTER_NAME --resource-group $RESOURCE_GROUP --overwrite-existing --file $BUILD_CLUSTER_KUBECONFIG
 
 export BUILD_CLUSTER_URL=$(kubectl --kubeconfig $BUILD_CLUSTER_KUBECONFIG config view | yq '.clusters[0].cluster.server')
-yq e -i '.clusters.build_cluster.k8s_info.url = env(BUILD_CLUSTER_URL)' "$PARAMS_YAML"
+yq e -i '.clusters.build_cluster.url = env(BUILD_CLUSTER_URL)' "$PARAMS_YAML"
 
 for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
-  RUN_CLUSTER_KUBECONFIG="$(yq e .clusters.run_clusters[$i].k8s_info.kubeconfig $PARAMS_YAML)"
-  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].k8s_info.name $PARAMS_YAML)
+  RUN_CLUSTER_KUBECONFIG="$(yq e .clusters.run_clusters[$i].kubeconfig $PARAMS_YAML)"
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name $PARAMS_YAML)
 
   az aks get-credentials --name $RUN_CLUSTER_NAME --resource-group $RESOURCE_GROUP --overwrite-existing --file $RUN_CLUSTER_KUBECONFIG
 
   export RUN_CLUSTER_URL=$(kubectl --kubeconfig $RUN_CLUSTER_KUBECONFIG config view | yq '.clusters[0].cluster.server')
-  yq e -i ".clusters.run_clusters[$i].k8s_info.url = env(RUN_CLUSTER_URL)" "$PARAMS_YAML"
+  yq e -i ".clusters.run_clusters[$i].url = env(RUN_CLUSTER_URL)" "$PARAMS_YAML"
 done
