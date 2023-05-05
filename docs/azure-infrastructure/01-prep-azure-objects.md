@@ -23,9 +23,17 @@ After having entered in values in your `params.yaml` file, we'll run:
 
 ## What Did the Script Do?
 
-First a quick note on something that happens before all of the scripts are run, which is `./scripts/set-env.sh` is run first. It adds a function to display steps more vividly but more importantly, it makes a copy of `params.yaml` and puts it into a `generated` directory. Some of the subsequent scripts will need to modify the `params.yaml` file so making a copy of it and editing the "generated" version keeps your copy clean.
+First a quick note on something that happens before all of the scripts are run, which is `./scripts/set-env.sh` is run first. It adds a function to display steps more vividly but more importantly, it makes a copy of `params.yaml` and puts it into a `generated` directory. Some of the subsequent scripts will need to modify the `params.yaml` file so making a copy of it and editing the `./generated/params.yaml` version keeps your copy clean.
 
 This script creates an Azure Resource Group.
+
+## Values Used From params.yaml
+
+```yaml
+azure:
+  resource_group: 
+  location: 
+```
 
 ## Go to Next Step
 
