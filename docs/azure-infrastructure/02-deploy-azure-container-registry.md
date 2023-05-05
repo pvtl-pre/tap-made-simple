@@ -8,14 +8,16 @@
 
 ## What Did the Script Do?
 
-Creates or uses an existing Azure Container Registry (ACR). You can control of the name of the ACR by setting the value for `acr_name`. If it doesn't exist, the script will validate with Azure to be unique and create it. Finally, admin credentials are created and stored in `./generated/params.yaml`.
+Creates or uses an existing Azure Container Registry (ACR). You can control of the name of the ACR by setting the value for `acr.name`. If it doesn't exist, the script will validate uniqueness with Azure before creating it. Finally, admin credentials are created and stored in `./generated/params.yaml`.
 
 ## Values Used From params.yaml
 
 ```yaml
 azure:
-  acr_sku: standard
-  acr_name: 
+  acr:
+    name: #! set or it will be automatically set
+    repository: tap-made-simple
+    sku: standard
 ```
 
 ## Go to Next Step

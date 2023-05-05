@@ -5,11 +5,11 @@ shopt -s nocasematch
 SCRIPTS="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd)"
 source "$SCRIPTS/set-env.sh"
 
-ACR_SKU=$(yq e .azure.acr_sku $PARAMS_YAML)
+ACR_SKU=$(yq e .azure.acr.sku $PARAMS_YAML)
 CREATE_ACR=false
 RESOURCE_GROUP=$(yq e .azure.resource_group $PARAMS_YAML)
 
-export ACR_NAME=$(yq e .azure.acr_name $PARAMS_YAML)
+export ACR_NAME=$(yq e .azure.acr.name $PARAMS_YAML)
 
 if [[ -z "$ACR_NAME" || "$ACR_NAME" == "null" ]]; then
   ACR_NAME=tapregistry$(date +%Y%m%d%H%M%S)
@@ -35,7 +35,7 @@ if [[ $CREATE_ACR == true ]]; then
   information "Creating Azure Container Registry named $ACR_NAME"
 
   az acr create -n $ACR_NAME -g $RESOURCE_GROUP --sku $ACR_SKU
-  yq e -i '.azure.acr_name = env(ACR_NAME)' "$PARAMS_YAML"
+  yq e -i '.azure.acr.name = env(ACR_NAME)' "$PARAMS_YAML"
 else
   information "Azure Container Registry named $ACR_NAME already exists"
 fi

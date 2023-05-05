@@ -5,17 +5,14 @@ azure:
   resource_group: tap
   location: centralus
   node_size: standard_a8_v2
-  acr_sku: standard
-  acr_name: #! set or it will be automatically set
+  acr:
+    name: #! set or it will be automatically set
+    repository: tap-made-simple
+    sku: standard
   dns:
     auto_configure: false
     dns_zone_name: #! set to the dns zone that will create A Records
     resource_group: #! set to the resource group that contains the dns zone
-registry:
-  fqdn: #! set or it will be automatically set
-  username: #! set or it will be automatically set
-  password: #! set or it will be automatically set
-  system_project: "tap" #! project for all TAP and TBS Packages
 clusters:
   ssh_key_path: #! set or it will be automatically set
   view_cluster:
