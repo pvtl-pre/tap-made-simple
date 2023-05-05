@@ -20,17 +20,6 @@ clusters:
     learning_center_ingress_domain: #! set to the ingress domain for the Learning Center component (e.g. learningcenter.example.com)
     k8s_info:
       name: view-cluster #! name of the cluster to create
-    tap_gui:
-      auth:
-        allowGuestAccess: true
-      catalog:
-        locations:
-          - type: url
-            target: https://github.com/pvtl-pre/tap-catalogs/blob/main/yelb-catalog/catalog-info.yaml
-          - type: url
-            target: https://github.com/pvtl-pre/tanzu-java-web-app/blob/main/catalog/catalog-info.yaml
-          - type: url
-            target: https://github.com/pvtl-pre/python-function/blob/main/catalog/catalog-info.yaml
   iterate_cluster:
     ingress_domain: #! set to the ingress domain for iterate ingress objects (e.g. iterate.example.com)
     k8s_info:
@@ -49,6 +38,18 @@ tanzu_registry:
   hostname: "registry.tanzu.vmware.com"
   username: #! set
   password: #! set
+tap_gui:
+  app_config:
+    auth:
+      allowGuestAccess: true
+    catalog:
+      locations:
+        - type: url
+          target: https://github.com/pvtl-pre/tap-catalogs/blob/main/yelb-catalog/catalog-info.yaml
+        - type: url
+          target: https://github.com/pvtl-pre/tanzu-java-web-app/blob/main/catalog/catalog-info.yaml
+        - type: url
+          target: https://github.com/pvtl-pre/python-function/blob/main/catalog/catalog-info.yaml
 tls:
   generate: true #! a self signed cert will be automatically generated
   cert_data: #! cert data for wildcard cert that covers all clusters ingress domains

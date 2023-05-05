@@ -7,4 +7,4 @@
 #@overlay/match-child-defaults missing_ok=True
 tap_gui:
   app_config:
-    auth: #@ data.values.clusters.view_cluster.tap_gui.auth
+    auth: #@ data.values.tap_gui.app_config.auth

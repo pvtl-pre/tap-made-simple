@@ -9,4 +9,4 @@ tap_gui:
   app_config:
     catalog:
       #@overlay/replace
-      locations: #@ data.values.clusters.view_cluster.tap_gui.catalog.locations
+      locations: #@ data.values.tap_gui.app_config.catalog.locations
