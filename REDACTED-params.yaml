@@ -1,14 +1,6 @@
 #@data/values
 ---
 jumpbox_os: Linux #! default is Linux; other values: OSX
-tls:
-  generate: true #! a self signed cert will be automatically generated
-  cert_data: #! cert data for wildcard cert that covers all clusters ingress domains
-  key_data: #! key data for wildcard cert that covers all clusters ingress domains
-tanzu_registry:
-  hostname: "registry.tanzu.vmware.com"
-  username: #! set
-  password: #! set
 azure:
   resource_group: tap
   location: centralus
@@ -56,3 +48,11 @@ clusters:
     - ingress_domain: #! set to the ingress domain for prod ingress objects (e.g. prod.example.com)
       k8s_info:
         name: prod-cluster #! name of the cluster to create
+tanzu_registry:
+  hostname: "registry.tanzu.vmware.com"
+  username: #! set
+  password: #! set
+tls:
+  generate: true #! a self signed cert will be automatically generated
+  cert_data: #! cert data for wildcard cert that covers all clusters ingress domains
+  key_data: #! key data for wildcard cert that covers all clusters ingress domains
