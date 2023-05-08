@@ -12,9 +12,9 @@ TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
 information "Downloading and extracting 'tanzu-framework' from Tanzu Network"
 
-if [[ $JUMPBOX_OS == 'OSX' ]]; then
+if [[ $JUMPBOX_OS == 'MacOS' ]]; then
   TAP_FILE='tanzu-framework-darwin-amd64-*.tar'
-  TAP_FILE_PRODUCT_FILE_ID=$(yq e .tap.tanzu_net.osx_product_file_id $TAP_VERSION_YAML)
+  TAP_FILE_PRODUCT_FILE_ID=$(yq e .tap.tanzu_net.macos_product_file_id $TAP_VERSION_YAML)
 
   TANZU_CLI='tanzu-core-darwin_amd64'
 else

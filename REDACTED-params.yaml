@@ -1,6 +1,6 @@
 #@data/values
 ---
-jumpbox_os: Linux #! default is Linux; other values: OSX
+jumpbox_os: Linux #! default is Linux; other values: MacOS
 azure:
   resource_group: tap
   location: centralus

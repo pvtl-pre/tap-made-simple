@@ -11,7 +11,7 @@ Set the PARAMS_YAML environment variable to the path of your `params.yaml` file.
 export PARAMS_YAML=local-config/params.yaml
 ```
 
-Ensure that your copy of `params.yaml` indicates your Jumpbox OS: OSX or Linux
+Ensure that your copy of `params.yaml` indicates your Jumpbox OS: MacOS or Linux
 
 ## Azure Infrastructure
 

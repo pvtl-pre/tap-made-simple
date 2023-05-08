@@ -14,9 +14,9 @@ TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
 information "Downloading and extracting 'tanzu-cluster-essentials' from Tanzu Network"
 
-if [[ $JUMPBOX_OS == 'OSX' ]]; then
+if [[ $JUMPBOX_OS == 'MacOS' ]]; then
   CLUSTER_ESSENTIALS_FILE="tanzu-cluster-essentials-darwin-amd64-$CLUSTER_ESSENTIALS_VERSION.tgz"
-  CLUSTER_ESSENTIALS_PRODUCT_FILE_ID=$(yq e .cluster_essentials.tanzu_net.osx_product_file_id $TAP_VERSION_YAML)
+  CLUSTER_ESSENTIALS_PRODUCT_FILE_ID=$(yq e .cluster_essentials.tanzu_net.macos_product_file_id $TAP_VERSION_YAML)
 else
   CLUSTER_ESSENTIALS_FILE="tanzu-cluster-essentials-linux-amd64-$CLUSTER_ESSENTIALS_VERSION.tgz"
   CLUSTER_ESSENTIALS_PRODUCT_FILE_ID=$(yq e .cluster_essentials.tanzu_net.linux_product_file_id $TAP_VERSION_YAML)
