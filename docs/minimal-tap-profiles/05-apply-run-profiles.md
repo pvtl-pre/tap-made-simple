@@ -8,7 +8,7 @@
 
 ## What Did the Script Do?
 
-This script applies the generated Run profiles to the Run Clusters. It does not wait for a successful reconcilation. You can watch as it reconciles with the following command:
+This script applies the generated Run Profiles to the Run Clusters. It does not wait for a successful reconcilation. You can watch as it reconciles with the following command:
 
 ```shell
 # NOTE: replace [run-cluster-name]

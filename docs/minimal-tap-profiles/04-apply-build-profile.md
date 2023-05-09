@@ -8,7 +8,7 @@
 
 ## What Did the Script Do?
 
-This script applies the generated Build profile to the Build Cluster. It does not wait for a successful reconcilation. You can watch as it reconciles with the following command:
+This script applies the generated Build Profile to the Build Cluster. It does not wait for a successful reconcilation. You can watch as it reconciles with the following command:
 
 ```shell
 # NOTE: replace [build-cluster-name]
