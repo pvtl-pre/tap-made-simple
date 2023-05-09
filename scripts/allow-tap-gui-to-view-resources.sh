@@ -61,7 +61,7 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
   install_components $RUN_CLUSTER_NAME $RUN_CLUSTER_KUBECONFIG $RUN_CLUSTER_YAML_PATH
 done
 
-information "Updating generated view profile with view cluster resources configuration"
+information "Updating generated view profile with View Cluster resources configuration"
 
 ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/view-cluster-resources.yaml --output-files generated/profiles
 

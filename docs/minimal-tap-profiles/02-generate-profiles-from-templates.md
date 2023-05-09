@@ -8,7 +8,7 @@
 
 ## What Did the Script Do?
 
-This script generates individual TAP profiles for the 4 types of clusters roles: iterate, build, run and view. They are built from profile templates located in `profole-templates` directory with values coming from `./generated/params.yaml`. Once combined, the resulting profiles are stored in `./generated/profiles` as `[cluster-name]-cluster.yaml`. These generated profiles will eventually be deployed to their corresponding clusters. Additional layers of functionality will be added to the generated profiles as more steps are taken. Consequently, the profile templates are purposefully minimalistic and while deployable, TAP would not be considered useable at this stage.
+This script generates individual TAP profiles for the 4 types of clusters roles: Iterate, Build, Run and View. They are built from profile templates located in `profole-templates` directory with values coming from `./generated/params.yaml`. Once combined, the resulting profiles are stored in `./generated/profiles` as `[cluster-name]-cluster.yaml`. These generated profiles will eventually be deployed to their corresponding clusters. Additional layers of functionality will be added to the generated profiles as more steps are taken. Consequently, the profile templates are purposefully minimalistic and while deployable, TAP would not be considered useable at this stage.
 
 ### Iterate Profile
 

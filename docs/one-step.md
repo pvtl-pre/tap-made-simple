@@ -21,7 +21,7 @@ You can execute the following script to perform all of those tasks:
 ./scripts/deploy-all.sh
 ```
 
-The output of the `deploy-all.sh` script will either prompt for manual DNS record creation for the view, iterate and each run cluster or auto configure it for you.
+The output of the `deploy-all.sh` script will either prompt for manual DNS record creation for the View, Iterate and each Run Cluster or auto configure it for you.
 
 ## Manual DNS Record Creation
 
