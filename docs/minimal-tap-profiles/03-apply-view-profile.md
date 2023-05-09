@@ -1,5 +1,28 @@
 # Apply View Profile
 
+## Run the Script
+
+```shell
+./scripts/apply-view-profile.sh
+```
+
+## What Did the Script Do?
+
+This script applies the generated View profile to the View Cluster. It does not wait for a successful reconcilation. You can watch as it reconciles with the following command:
+
+```shell
+# NOTE: replace [view-cluster-name]
+watch tanzu -n tap-install package installed list --kubeconfig ./generated/kubeconfigs/[view-cluster-name].yaml
+```
+
+## Values Used From params.yaml
+
+```yaml
+clusters:
+  view_cluster:
+    name: view-cluster #! name of the cluster to create
+```
+
 ## Go to Next Step
 
 [Apply Build Profile](./04-apply-build-profile.md)
