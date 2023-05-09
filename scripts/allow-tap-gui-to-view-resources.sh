@@ -63,7 +63,7 @@ done
 
 information "Updating generated view profile with View Cluster resources configuration"
 
-ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/view-cluster-resources.yaml --output-files generated/profiles
+ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/tap-gui-view-resources.yaml --output-files generated/profiles
 
 $SCRIPTS/apply-view-profile.sh
 
