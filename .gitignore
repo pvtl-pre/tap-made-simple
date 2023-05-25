@@ -6,3 +6,6 @@ local-config/*
 
 # Ignore generated folders
 generated/*
+
+# Direnv file
+.envrc
