@@ -10,7 +10,6 @@ JUMPBOX_OS=$(yq e .jumpbox_os $PARAMS_YAML)
 TAP_VERSION_YAML="tap-version.yaml"
 CLUSTER_ESSENTIALS_VERSION=$(yq e .cluster_essentials.version $TAP_VERSION_YAML)
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
-TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
 information "Downloading and extracting 'tanzu-cluster-essentials' from Tanzu Network"
 
