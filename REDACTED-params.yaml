@@ -4,7 +4,7 @@ jumpbox_os: Linux #! default is Linux; other values: MacOS
 azure:
   resource_group: tap
   location: centralus
-  node_size: standard_a8_v2
+  node_size: standard_d4s_v3
   acr:
     name: #! set or it will be automatically set
     repository: tap-made-simple
