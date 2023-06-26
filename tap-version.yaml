@@ -1,5 +1,5 @@
 tap:
-  version: 1.4.4
+  version: 1.4.6
 tanzu_cli:
   tanzu_net:
     linux_product_file_id: 1457672
