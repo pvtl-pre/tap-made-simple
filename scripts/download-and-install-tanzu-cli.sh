@@ -28,7 +28,11 @@ rm -f generated/$TANZU_CLI_PRODUCT_FILE
 rm -rf generated/tanzu
 mkdir -p generated/tanzu
 
-pivnet download-product-files --product-slug='tanzu-application-platform' --release-version=$TAP_VERSION --product-file-id=$TANZU_CLI_PRODUCT_FILE_ID --download-dir generated
+pivnet download-product-files \
+  --product-slug='tanzu-application-platform' \
+  --release-version=$TAP_VERSION \
+  --product-file-id=$TANZU_CLI_PRODUCT_FILE_ID \
+  --download-dir generated
 
 tar -xvf generated/$TANZU_CLI_PRODUCT_FILE -C generated/tanzu
 

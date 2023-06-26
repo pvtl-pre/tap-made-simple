@@ -25,7 +25,11 @@ rm -f generated/$CLUSTER_ESSENTIALS_PRODUCT_FILE
 rm -rf generated/tanzu-cluster-essentials
 mkdir -p generated/tanzu-cluster-essentials
 
-pivnet download-product-files --product-slug='tanzu-cluster-essentials' --release-version=$CLUSTER_ESSENTIALS_VERSION --product-file-id=$CLUSTER_ESSENTIALS_PRODUCT_FILE_ID --download-dir generated
+pivnet download-product-files \
+  --product-slug='tanzu-cluster-essentials' \
+  --release-version=$CLUSTER_ESSENTIALS_VERSION \
+  --product-file-id=$CLUSTER_ESSENTIALS_PRODUCT_FILE_ID \
+  --download-dir generated
 
 tar -xvf generated/$CLUSTER_ESSENTIALS_PRODUCT_FILE -C generated/tanzu-cluster-essentials
 
