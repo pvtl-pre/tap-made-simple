@@ -13,24 +13,24 @@ TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 information "Downloading and extracting 'tanzu-framework' from Tanzu Network"
 
 if [[ $JUMPBOX_OS == 'MacOS' ]]; then
-  TAP_FILE='tanzu-framework-darwin-amd64-*.tar'
-  TAP_FILE_PRODUCT_FILE_ID=$(yq e .tap.tanzu_net.macos_product_file_id $TAP_VERSION_YAML)
+  TANZU_CLI_PRODUCT_FILE='tanzu-framework-darwin-amd64-*.tar'
+  TANZU_CLI_PRODUCT_FILE_ID=$(yq e .tanzu_cli.tanzu_net.macos_product_file_id $TAP_VERSION_YAML)
 
   TANZU_CLI='tanzu-core-darwin_amd64'
 else
-  TAP_FILE='tanzu-framework-linux-amd64-*.tar'
-  TAP_FILE_PRODUCT_FILE_ID=$(yq e .tap.tanzu_net.linux_product_file_id $TAP_VERSION_YAML)
+  TANZU_CLI_PRODUCT_FILE='tanzu-framework-linux-amd64-*.tar'
+  TANZU_CLI_PRODUCT_FILE_ID=$(yq e .tanzu_cli.tanzu_net.linux_product_file_id $TAP_VERSION_YAML)
 
   TANZU_CLI='tanzu-core-linux_amd64'
 fi
 
-rm -f generated/$TAP_FILE
+rm -f generated/$TANZU_CLI_PRODUCT_FILE
 rm -rf generated/tanzu
 mkdir -p generated/tanzu
 
-pivnet download-product-files --product-slug='tanzu-application-platform' --release-version=$TAP_VERSION --product-file-id=$TAP_FILE_PRODUCT_FILE_ID --download-dir generated
+pivnet download-product-files --product-slug='tanzu-application-platform' --release-version=$TAP_VERSION --product-file-id=$TANZU_CLI_PRODUCT_FILE_ID --download-dir generated
 
-tar -xvf generated/$TAP_FILE -C generated/tanzu
+tar -xvf generated/$TANZU_CLI_PRODUCT_FILE -C generated/tanzu
 
 information "Installing Tanzu CLI"
 
