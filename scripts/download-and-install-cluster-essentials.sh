@@ -14,21 +14,20 @@ RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
 information "Downloading and extracting 'tanzu-cluster-essentials' from Tanzu Network"
 
 if [[ $JUMPBOX_OS == 'MacOS' ]]; then
-  CLUSTER_ESSENTIALS_FILE="tanzu-cluster-essentials-darwin-amd64-$CLUSTER_ESSENTIALS_VERSION.tgz"
+  CLUSTER_ESSENTIALS_PRODUCT_FILE="tanzu-cluster-essentials-darwin-amd64-$CLUSTER_ESSENTIALS_VERSION.tgz"
   CLUSTER_ESSENTIALS_PRODUCT_FILE_ID=$(yq e .cluster_essentials.tanzu_net.macos_product_file_id $TAP_VERSION_YAML)
 else
-  CLUSTER_ESSENTIALS_FILE="tanzu-cluster-essentials-linux-amd64-$CLUSTER_ESSENTIALS_VERSION.tgz"
+  CLUSTER_ESSENTIALS_PRODUCT_FILE="tanzu-cluster-essentials-linux-amd64-$CLUSTER_ESSENTIALS_VERSION.tgz"
   CLUSTER_ESSENTIALS_PRODUCT_FILE_ID=$(yq e .cluster_essentials.tanzu_net.linux_product_file_id $TAP_VERSION_YAML)
 fi
 
+rm -f generated/$CLUSTER_ESSENTIALS_PRODUCT_FILE
 rm -rf generated/tanzu-cluster-essentials
 mkdir -p generated/tanzu-cluster-essentials
 
-if [[ ! -f "generated/$CLUSTER_ESSENTIALS_FILE" ]]; then
-  pivnet download-product-files --product-slug='tanzu-cluster-essentials' --release-version=$CLUSTER_ESSENTIALS_VERSION --product-file-id=$CLUSTER_ESSENTIALS_PRODUCT_FILE_ID --download-dir generated
-fi
+pivnet download-product-files --product-slug='tanzu-cluster-essentials' --release-version=$CLUSTER_ESSENTIALS_VERSION --product-file-id=$CLUSTER_ESSENTIALS_PRODUCT_FILE_ID --download-dir generated
 
-tar -xvf generated/$CLUSTER_ESSENTIALS_FILE -C generated/tanzu-cluster-essentials
+tar -xvf generated/$CLUSTER_ESSENTIALS_PRODUCT_FILE -C generated/tanzu-cluster-essentials
 
 (
   export INSTALL_BUNDLE=$(yq e .cluster_essentials.bundle $TAP_VERSION_YAML)
