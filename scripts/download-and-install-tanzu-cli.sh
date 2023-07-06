@@ -14,12 +14,12 @@ information "Downloading and extracting 'tanzu-framework' from Tanzu Network"
 
 if [[ $JUMPBOX_OS == 'MacOS' ]]; then
   TANZU_CLI_PRODUCT_FILE='tanzu-framework-darwin-amd64-*.tar'
-  TANZU_CLI_PRODUCT_FILE_ID=$(yq e .tanzu_cli.tanzu_net.macos_product_file_id $TAP_VERSION_YAML)
+  TANZU_CLI_PRODUCT_FILE_ID=$(yq e .tap.tanzu_cli.tanzu_net.macos_product_file_id $TAP_VERSION_YAML)
 
   TANZU_CLI='tanzu-core-darwin_amd64'
 else
   TANZU_CLI_PRODUCT_FILE='tanzu-framework-linux-amd64-*.tar'
-  TANZU_CLI_PRODUCT_FILE_ID=$(yq e .tanzu_cli.tanzu_net.linux_product_file_id $TAP_VERSION_YAML)
+  TANZU_CLI_PRODUCT_FILE_ID=$(yq e .tap.tanzu_cli.tanzu_net.linux_product_file_id $TAP_VERSION_YAML)
 
   TANZU_CLI='tanzu-core-linux_amd64'
 fi
