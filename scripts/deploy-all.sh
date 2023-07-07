@@ -38,7 +38,8 @@ $SCRIPTS/apply-supply-chain-testing.sh
 $SCRIPTS/apply-java-workload-for-supply-chain-testing.sh
 
 $SCRIPTS/apply-scan-policies.sh
-$SCRIPTS/apply-metadata-store-auth.sh
+$SCRIPTS/apply-scanner-access-to-store-scan-results.sh
+$SCRIPTS/apply-tap-gui-access-to-scan-results.sh
 $SCRIPTS/apply-supply-chain-testing-and-scanning.sh
 
 $SCRIPTS/apply-learning-center.sh
