@@ -14,4 +14,4 @@ tap_gui:
         secure: false
         headers:
           X-Custom-Source: project-star
-          Authorization: #@ data.values.clusters.view_cluster.metadata_store.auth
+          Authorization: #@ data.values.access_token

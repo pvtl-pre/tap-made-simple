@@ -16,9 +16,7 @@ export METADATA_STORE_ACCESS_TOKEN=$(kubectl get secrets metadata-store-read-wri
 
 information "Updating generated view profile with TAP GUI access to the metadata store configuration"
 
-yq e -i '.clusters.view_cluster.metadata_store.auth = "Bearer " + env(METADATA_STORE_ACCESS_TOKEN) + ""' "$PARAMS_YAML"
-
-ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/tap-gui-metadata-store-auth.yaml --output-files generated/profiles
+ytt -v access_token="Bearer $METADATA_STORE_ACCESS_TOKEN" -f $VIEW_PROFILE -f profile-overlays/tap-gui-metadata-store-auth.yaml --output-files generated/profiles
 
 $SCRIPTS/apply-view-profile.sh
 
