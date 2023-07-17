@@ -1,5 +1,7 @@
 # Download and Install Cluster Essentials
 
+This is the first step in setting up the TAP Prerequisites.
+
 ## Run the Script
 
 ```shell

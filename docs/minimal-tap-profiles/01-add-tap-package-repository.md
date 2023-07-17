@@ -1,5 +1,7 @@
 # Add TAP Package Repository
 
+This is the first step in setting up the Minimal TAP Profiles which is the smallest and simplest configuration TAP needs to successfully reconcile.
+
 ## Run the Script
 
 ```shell
