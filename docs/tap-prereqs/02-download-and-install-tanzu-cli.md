@@ -8,13 +8,17 @@
 
 ## What Did the Script Do?
 
-This script downloads and installs the Tanzu CLI and related plugins onto the machine your are running the scripts. Only Linux and MacOS machines are supported and configured by the value `jumpbox_os`.
+This script downloads and installs the Tanzu CLI and related plugins onto the machine running the scripts. Only Linux and MacOS machines are supported and configured by the value `jumpbox_os`.
 
 ## Values Used From params.yaml
 
 ```yaml
 jumpbox_os: Linux #! default is Linux; other values: MacOS
 ```
+
+## Congrats
+
+The TAP Prerequisites steps are now complete.
 
 ## Go to Next Step
 

@@ -8,11 +8,11 @@
 
 ## What Did the Script Do?
 
-This script applies the generated Run Profiles to the Run Clusters. It does not wait for a successful reconcilation. You can watch as it reconciles with the following command:
+This script applies the generated Run Profiles to the Run Clusters. It does not wait for a successful reconcilation but can be watched with the following command:
 
 ```shell
 # NOTE: replace [run-cluster-name]
-watch tanzu -n tap-install package installed list --kubeconfig ./generated/kubeconfigs/[run-cluster-name].yaml
+watch tanzu package installed list -n tap-install --kubeconfig ./generated/kubeconfigs/[run-cluster-name].yaml
 ```
 
 ## Values Used From params.yaml

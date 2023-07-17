@@ -4,7 +4,7 @@ This repo has scripts to deploy Tanzu Application Platform (TAP) 1.4 to Azure.
 
 ## Goals and Audience
 
-This repo is for Tanzu field team members to see how various components of TAP come together to build a modern application platform. We will highlight the developer experience improvements with an eye towards operator control of the software supply chain. This could be delivered as a presentation and demo or it could be extended to include having the audience actually deploy the full solution on their own Azure subscription.
+This repo is for Tanzu field team members to see how various components of TAP come together to build a modern application platform. The developer experience improvements will be highlighted with an eye towards operator control of the software supply chain. This could be delivered as a presentation and demo or it could be extended to include having the audience actually deploy the full solution on their own Azure subscription.
 
 ## Deployed Azure Resources
 
@@ -29,7 +29,7 @@ All required Azure infrastructure required for TAP to function will deployed pri
 - [pivnet](https://github.com/pivotal-cf/pivnet-cli)
 - [yq v4.12+](https://github.com/mikefarah/yq) (to install use `brew` for Mac and `apt-get` for Linux)
 
-Additionally, you will need a [Tanzu Network account](https://network.tanzu.vmware.com/). For this account, you will need to accept any TAP EULAs and create a UAA API TOKEN (i.e. refresh token).
+Additionally, a [Tanzu Network account](https://network.tanzu.vmware.com/) is required. For this account, any TAP EULAs will need to be accepted and a UAA API TOKEN (i.e. refresh token) will need to be created.
 
 NOTE: The Tanzu CLI and associated plugins will be installed as part of the deployment process.
 
@@ -47,4 +47,4 @@ pivnet login --api-token='MY-API-TOKEN'
 
 ## Deployment Options
 
-There are two options for deployment. You can [deploy everything all at once](./docs/one-step.md) to get an environment up and running as quickly as possible or you can run through a [step by step guide](./docs/step-by-step.md) in order to learn how the component parts of TAP are constructed.
+There are two options for deployment. [Deploy everything all at once](./docs/one-step.md) to get an environment up and running as quickly as possible or a [step by step guide](./docs/step-by-step.md) can be run through in order to learn how the component parts of TAP are constructed.

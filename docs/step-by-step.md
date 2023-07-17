@@ -1,17 +1,17 @@
 # Step By Step Deployment
 
-This deployment option will build everything for you so you can be up and running with Tanzu Application Platform (TAP). You will execute multiple scripts which are all included in the one-step guide.
+This deployment option will build everything piecemeal order to learn how the component parts of Tanzu Application Platform (TAP) are constructed. Multiple scripts, which comprise the one-step guide, will be executed.
 
 ## Setup Environment Variable for params.yaml
 
-Set the PARAMS_YAML environment variable to the path of your `params.yaml` file. If you followed the recommendation, the value would be `local-config/params.yaml`, however you may choose otherwise. A sample `REDACTED-params.yaml` file is included in this directory, named REDACTED-params.yaml. It is recommended you copy this file and rename it to params.yaml and place it in the `local-config/` directory, and then start making your adjustments. `local-config/` is included in the `.gitignore` so your version won't be included in any future commits you have to the repo.
+Configuration is stored in a file called `params.yaml`. A sample redacted version of this file is included in the root directory and named `REDACTED-params.yaml`. It is recommended a copy of this file, renamed to `params.yaml`, is placed in a directory called `local-config`. Make adjustments to this copy. Set an environment variable called `PARAMS_YAML` to the relative path to `params.yaml`. If following the recommendation, the value would be `local-config/params.yaml`.
 
 ```shell
-# Update the path from the default if you have a different params.yaml file name or location.
+# Update the path from the default if a different params.yaml file name or location is used
 export PARAMS_YAML=local-config/params.yaml
 ```
 
-Ensure that your copy of `params.yaml` indicates your Jumpbox OS: MacOS or Linux
+Ensure that a copy of `params.yaml` indicates the Jumpbox OS. Either `MacOS` or `Linux`.
 
 ## Azure Infrastructure
 
@@ -83,9 +83,11 @@ Ensure that your copy of `params.yaml` indicates your Jumpbox OS: MacOS or Linux
 
 ### 1. [Apply Scan Policies](./supply-chain-testing-and-scanning/01-apply-scan-policies.md)
 
-### 2. [Apply Metadata Store Authentication](./supply-chain-testing-and-scanning/02-apply-metadata-store-auth.md)
+### 2. [Apply Scanner Access to Store Scan Results](./supply-chain-testing-and-scanning/02-apply-scanner-access-to-store-scan-results.md)
 
-### 3. [Apply Supply Chain Testing and Scanning](./supply-chain-testing-and-scanning/03-apply-supply-chain-testing-and-scanning.md)
+### 3. [Apply TAP GUI Access to Scan Results](./supply-chain-testing-and-scanning/03-apply-tap-gui-access-to-scan-results.md)
+
+### 4. [Apply Supply Chain Testing and Scanning](./supply-chain-testing-and-scanning/04-apply-supply-chain-testing-and-scanning.md)
 
 ## Learning Center
 
@@ -99,7 +101,7 @@ Ensure that your copy of `params.yaml` indicates your Jumpbox OS: MacOS or Linux
 
 ## Tear Down
 
-Execute the following script to tear down your environment.
+Execute the following script to tear down the environment. It will delete the Azure resource group but not undo any automatic DNS changes that may have been made.
 
 ```shell
 ./scripts/delete-all.sh

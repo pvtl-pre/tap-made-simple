@@ -8,7 +8,7 @@
 
 ## What Did the Script Do?
 
-This script downloads and installs [Cluster Essentials](https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/index.html) onto each AKS cluster. It uses the CLI for [Tanzu Network](https://network.tanzu.vmware.com/) (i.e. [pivnet](https://github.com/pivotal-cf/pivnet-cli)) to download the software by using your Tanzu Network account. The container images for Cluster Essentials are stored on Tanzu Registry. The credentials for Tanzu Network and Tanzu Registry are the same.
+This script downloads and installs [Cluster Essentials](https://docs.vmware.com/en/Cluster-Essentials-for-VMware-Tanzu/index.html) onto each AKS cluster. It uses the CLI for [Tanzu Network](https://network.tanzu.vmware.com/) (i.e. [pivnet](https://github.com/pivotal-cf/pivnet-cli)) to download the software by using a Tanzu Network account. The container images for Cluster Essentials are stored on Tanzu Registry. The credentials for Tanzu Network and Tanzu Registry are the same.
 
 ## Values Used From params.yaml
 

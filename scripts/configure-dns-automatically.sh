@@ -51,7 +51,7 @@ function wait_for_load_balancer() {
 
   information "Waiting for load balancer on cluster '$CLUSTER_NAME'"
 
-  # Purposefully not displaying any results of the kubectl command in the terminal while we wait
+  # Purposefully not displaying any results of the kubectl command in the terminal while waiting
   while ! kubectl get service -n tanzu-system-ingress envoy -o jsonpath='{.status.loadBalancer.ingress[0].ip}' --kubeconfig $KUBECONFIG >/dev/null 2>&1; do sleep 2; done
 
   # Account for the delay between service creation and ip address getting assigned so wait again

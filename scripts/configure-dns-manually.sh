@@ -15,7 +15,7 @@ VIEW_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.ingress_domain $PARAMS
 ITERATE_CLUSTER_INGRESS_IP=$(kubectl get service -n tanzu-system-ingress envoy --kubeconfig $ITERATE_CLUSTER_KUBECONFIG -o json | jq -r .status.loadBalancer.ingress[0].ip)
 VIEW_CLUSTER_INGRESS_IP=$(kubectl get service -n tanzu-system-ingress envoy -o jsonpath='{.status.loadBalancer.ingress[0].ip}' --kubeconfig $VIEW_CLUSTER_KUBECONFIG)
 
-information "To proceed, you must register the wildcard DNS record with the following details:"
+information "To proceed, register the wildcard DNS record with the following details:"
 
 echo "Domain Name: *.$VIEW_CLUSTER_INGRESS_DOMAIN"
 echo "IP Address: $VIEW_CLUSTER_INGRESS_IP"

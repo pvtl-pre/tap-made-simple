@@ -1,5 +1,7 @@
 # Apply Load Balancer
 
+This is the first step in setting up Ingress to TAP GUI and the eventually deployed workloads.
+
 ## Run the Script
 
 ```shell
@@ -8,13 +10,16 @@
 
 ## What Did the Script Do?
 
-This script adds a load balancer to the Iterate, Run and View Clusters. The ytt overlay [load-balancer.yaml](../../profile-overlays/load-balancer.yaml) is simplistic and uses no values. The profiles for these clusters will be applied and the script will wait for reconcilation.
+This script applies a load balancer to the Iterate, Run and View Clusters. The ytt overlay [load-balancer.yaml](../../profile-overlays/load-balancer.yaml) is simplistic and uses no values. The profiles for these clusters will be applied and the script will wait for reconcilation. Once completed, a service called `envoy` in the namespace `tanzu-system-ingress` will be assigned a public IP.
 
 ```shell
+# NOTE: replace [iterate-cluster-name]
 kubectl -n tanzu-system-ingress get svc envoy --kubeconfig ./generated/kubeconfigs/[iterate-cluster-name].yaml
 
+# NOTE: replace [run-cluster-name]
 kubectl -n tanzu-system-ingress get svc envoy --kubeconfig ./generated/kubeconfigs/[run-cluster-name].yaml
 
+# NOTE: replace [view-cluster-name]
 kubectl -n tanzu-system-ingress get svc envoy --kubeconfig ./generated/kubeconfigs/[view-cluster-name].yaml
 ```
 

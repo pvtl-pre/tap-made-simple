@@ -1,35 +1,35 @@
 # One Step Deployment
 
-This deployment option will build everything for you so you can be up and running with Tanzu Application Platform (TAP). You will execute a single script that calls all the scripts included in the step-by-step guide.
+This deployment option will build everything in order to get up and running with Tanzu Application Platform (TAP). A single script that calls all the scripts included in the step-by-step guide will need to be executed.
 
 ## Setup Environment Variable for params.yaml
 
-Set the PARAMS_YAML environment variable to the path of your `params.yaml` file. If you followed the recommendation, the value would be `local-config/params.yaml`, however you may choose otherwise. A sample `REDACTED-params.yaml` file is included in this directory, named REDACTED-params.yaml. It is recommended you copy this file and rename it to params.yaml and place it in the `local-config/` directory, and then start making your adjustments. `local-config/` is included in the `.gitignore` so your version won't be included in any future commits you have to the repo.
+Configuration is stored in a file called `params.yaml`. A sample redacted version of this file is included in the root directory and named `REDACTED-params.yaml`. It is recommended a copy of this file, renamed to `params.yaml`, is placed in a directory called `local-config`. Make adjustments to this copy. Set an environment variable called `PARAMS_YAML` to the relative path to `params.yaml`. If following the recommendation, the value would be `local-config/params.yaml`.
 
 ```shell
-# Update the path from the default if you have a different params.yaml file name or location.
+# Update the path from the default if a different params.yaml file name or location is used
 export PARAMS_YAML=local-config/params.yaml
 ```
 
-Ensure that your copy of `params.yaml` indicates your Jumpbox OS: MacOS or Linux
+Ensure that a copy of `params.yaml` indicates the Jumpbox OS. Either `MacOS` or `Linux`.
 
 ## Deploy All Script
 
-You can execute the following script to perform all of those tasks:
+After having entered in values in the `params.yaml` file, run:
 
 ```shell
 ./scripts/deploy-all.sh
 ```
 
-The output of the `deploy-all.sh` script will either prompt for manual DNS record creation for the View, Iterate and each Run Cluster or auto configure it for you.
+The output of the `deploy-all.sh` script will either prompt for manual DNS record creation for the View, Iterate and each Run Cluster or auto configure it.
 
 ## Manual DNS Record Creation
 
-After the completion of the `deploy-all.sh` script, you must update your DNS records. An example of the script output is below which contains the DNS records you will need.
+After the completion of the `deploy-all.sh` script, DNS records must be updated. An example of the script output is below, which contains the DNS records that will be needed.
 
 ```shell
 ##############################################################################
-To proceed, you must register the wildcard DNS record with the following details:
+To proceed, register the wildcard DNS record with the following details:
 ##############################################################################
 
 Domain Name: *.subdomain.example.com
@@ -59,7 +59,7 @@ azure:
 
 ## Tear Down
 
-Execute the following script to tear down your environment.
+Execute the following script to tear down the environment. It will delete the Azure resource group but not undo any automatic DNS changes that may have been made.
 
 ```shell
 ./scripts/delete-all.sh

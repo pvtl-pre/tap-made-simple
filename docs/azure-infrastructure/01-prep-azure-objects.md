@@ -1,21 +1,21 @@
 # Prep Azure Objects
 
-This is the first step and there are many to follow and lots of things to discuss.
+This is the first step in setting up the Azure infrastructure but before that can be done, some prep work needs to be completed.
 
 ## Setup Environment Variable for params.yaml
 
-Set the PARAMS_YAML environment variable to the path of your `params.yaml` file. If you followed the recommendation, the value would be `local-config/params.yaml`, however you may choose otherwise. A sample `REDACTED-params.yaml` file is included in this directory, named REDACTED-params.yaml. It is recommended you copy this file and rename it to params.yaml and place it in the `local-config/` directory, and then start making your adjustments. `local-config/` is included in the `.gitignore` so your version won't be included in any future commits you have to the repo.
+Configuration is stored in a file called `params.yaml`. A sample redacted version of this file is included in the root directory and named `REDACTED-params.yaml`. It is recommended a copy of this file, renamed to `params.yaml`, is placed in a directory called `local-config`. Make adjustments to this copy. Set an environment variable called `PARAMS_YAML` to the relative path to `params.yaml`. If following the recommendation, the value would be `local-config/params.yaml`.
 
 ```shell
-# Update the path from the default if you have a different params.yaml file name or location.
+# Update the path from the default if a different params.yaml file name or location is used
 export PARAMS_YAML=local-config/params.yaml
 ```
 
-Ensure that your copy of `params.yaml` indicates your Jumpbox OS: MacOS or Linux
+Ensure that a copy of `params.yaml` indicates the Jumpbox OS. Either `MacOS` or `Linux`.
 
 ## Run the Script
 
-After having entered in values in your `params.yaml` file, we'll run:
+After having entered in values in the `params.yaml` file, run:
 
 ```shell
 ./scripts/01-prep-azure-objects.sh
@@ -23,7 +23,7 @@ After having entered in values in your `params.yaml` file, we'll run:
 
 ## What Did the Script Do?
 
-First a quick note on something that happens before all of the scripts are run, which is `./scripts/set-env.sh` is run first. It adds a function to display steps more vividly but more importantly, it makes a copy of `params.yaml` and puts it into a `generated` directory. Some of the subsequent scripts will need to modify the `params.yaml` file so making a copy of it and editing the `./generated/params.yaml` version keeps your copy clean.
+First a quick note on something that happens before all of the scripts are run, which is `./scripts/set-env.sh` is run first. It adds a function to display steps more vividly but more importantly, it makes a copy of `params.yaml` and puts it into a `generated` directory. Some of the subsequent scripts will need to modify the `params.yaml` file so making a copy of it and editing the `./generated/params.yaml` version keeps it clean.
 
 This script creates an Azure Resource Group.
 
