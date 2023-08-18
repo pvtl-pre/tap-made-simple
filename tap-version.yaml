@@ -1,12 +1,12 @@
 tap:
-  version: "1.4.6"
+  version: "1.6.2"
   tanzu_cli:
     tanzu_net:
-      linux_product_file_id: 1478736
-      macos_product_file_id: 1478735
+      linux_product_file_id: 1539749
+      macos_product_file_id: 1539744
 cluster_essentials:
-  version: "1.4.1"
-  bundle: "registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:2354688e46d4bb4060f74fca069513c9b42ffa17a0a6d5b0dbb81ed52242ea44"
+  version: "1.6.0"
+  bundle: "registry.tanzu.vmware.com/tanzu-cluster-essentials/cluster-essentials-bundle@sha256:54e516b5d088198558d23cababb3f907cd8073892cacfb2496bb9d66886efe15"
   tanzu_net:
-    linux_product_file_id: 1423994
-    macos_product_file_id: 1423996
+    linux_product_file_id: 1526701
+    macos_product_file_id: 1526700

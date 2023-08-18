@@ -13,15 +13,15 @@ TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 information "Downloading and extracting 'tanzu-framework' from Tanzu Network"
 
 if [[ $JUMPBOX_OS == 'MacOS' ]]; then
-  TANZU_CLI_PRODUCT_FILE='tanzu-framework-darwin-amd64-*.tar'
+  TANZU_CLI_PRODUCT_FILE='tanzu-cli-darwin-amd64.tar.gz'
   TANZU_CLI_PRODUCT_FILE_ID=$(yq e .tap.tanzu_cli.tanzu_net.macos_product_file_id $TAP_VERSION_YAML)
 
-  TANZU_CLI='tanzu-core-darwin_amd64'
+  TANZU_CLI='tanzu-cli-darwin_amd64'
 else
-  TANZU_CLI_PRODUCT_FILE='tanzu-framework-linux-amd64-*.tar'
+  TANZU_CLI_PRODUCT_FILE='tanzu-cli-linux-amd64.tar.gz'
   TANZU_CLI_PRODUCT_FILE_ID=$(yq e .tap.tanzu_cli.tanzu_net.linux_product_file_id $TAP_VERSION_YAML)
 
-  TANZU_CLI='tanzu-core-linux_amd64'
+  TANZU_CLI='tanzu-cli-linux_amd64'
 fi
 
 rm -f generated/$TANZU_CLI_PRODUCT_FILE
@@ -39,12 +39,14 @@ tar -xvf generated/$TANZU_CLI_PRODUCT_FILE -C generated/tanzu
 information "Installing Tanzu CLI"
 
 export TANZU_CLI_NO_INIT=true
-sudo install generated/tanzu/cli/core/v*/$TANZU_CLI /usr/local/bin/tanzu
+sudo install generated/tanzu/v*/$TANZU_CLI /usr/local/bin/tanzu
 
 tanzu version
 
+tanzu config eula accept
+
 information "Installing Tanzu CLI plug-ins"
 
-tanzu plugin install --local generated/tanzu/cli all
+tanzu plugin install --group vmware-tap/default:v$TAP_VERSION
 
 tanzu plugin list
