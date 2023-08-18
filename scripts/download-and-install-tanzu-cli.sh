@@ -10,7 +10,7 @@ JUMPBOX_OS=$(yq e .jumpbox_os $PARAMS_YAML)
 TAP_VERSION_YAML="tap-version.yaml"
 TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
-information "Downloading and extracting 'tanzu-framework' from Tanzu Network"
+information "Downloading and extracting 'tanzu-cli' from Tanzu Network"
 
 if [[ $JUMPBOX_OS == 'MacOS' ]]; then
   TANZU_CLI_PRODUCT_FILE='tanzu-cli-darwin-amd64.tar.gz'
@@ -38,7 +38,6 @@ tar -xvf generated/$TANZU_CLI_PRODUCT_FILE -C generated/tanzu
 
 information "Installing Tanzu CLI"
 
-export TANZU_CLI_NO_INIT=true
 sudo install generated/tanzu/v*/$TANZU_CLI /usr/local/bin/tanzu
 
 tanzu version
