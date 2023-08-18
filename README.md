@@ -23,13 +23,14 @@ All required Azure infrastructure required for TAP to function will deployed pri
 
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 - [Carvel](https://carvel.dev/)
+- [GitHub CLI](https://cli.github.com/manual/installation)
 - [helm](https://helm.sh/docs/intro/install/) (to install use `brew` for Mac and `apt-get` for Linux)
 - [jq v1.6+](https://github.com/stedolan/jq) (to install use `brew` for Mac and `apt-get` for Linux)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - [pivnet](https://github.com/pivotal-cf/pivnet-cli)
 - [yq v4.12+](https://github.com/mikefarah/yq) (to install use `brew` for Mac and `apt-get` for Linux)
 
-Additionally, a [Tanzu Network account](https://network.tanzu.vmware.com/) is required. For this account, any TAP EULAs will need to be accepted and a UAA API TOKEN (i.e. refresh token) will need to be created.
+Additionally, a [Tanzu Network account](https://network.tanzu.vmware.com/) and Github Personal Access Token are required. For the former, any TAP EULAs will need to be accepted and a UAA API TOKEN (i.e. refresh token) will need to be created. For the latter, the token must have permissions to read and write to repos.
 
 NOTE: The Tanzu CLI and associated plugins will be installed as part of the deployment process.
 
