@@ -10,6 +10,7 @@ $SCRIPTS/03-deploy-azure-k8s-clusters.sh
 
 $SCRIPTS/download-and-install-cluster-essentials.sh
 $SCRIPTS/download-and-install-tanzu-cli.sh
+$SCRIPTS/download-and-setup-gitops-ri.sh
 
 $SCRIPTS/add-tap-package-repository.sh
 $SCRIPTS/generate-profiles-from-templates.sh

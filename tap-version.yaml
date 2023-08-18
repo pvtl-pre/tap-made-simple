@@ -10,3 +10,7 @@ cluster_essentials:
   tanzu_net:
     linux_product_file_id: 1526701
     macos_product_file_id: 1526700
+gitops_reference_implementation:
+  version: "0.2.6"
+  tanzu_net:
+    product_file_id: 1565341
