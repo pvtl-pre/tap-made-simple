@@ -47,6 +47,6 @@ tar -xvf generated/$RI_PRODUCT_FILE -C generated/$GITOPS_REPO_DIR
 
   git add .
   git status
-  git commit -m "Initialize Tanzu GitOps RI"
+  git diff --staged --quiet || git commit -m "Initialize Tanzu GitOps RI"
   git push
 )
