@@ -10,47 +10,7 @@ TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
 AGE_KEY_PATH=$(yq e .gitops.age_key_path $PARAMS_YAML)
 GITOPS_REPO=$(yq e .gitops.repo $PARAMS_YAML)
-GITOPS_REPO_DIR="gitops-repo"
-
-information "Cloning gitops repo"
-
-rm -rf generated/$GITOPS_REPO_DIR
-git clone $GITOPS_REPO generated/$GITOPS_REPO_DIR
-
-information "Downloading and extracting 'tanzu-gitops-ri' from Tanzu Network"
-
-RI_PRODUCT_FILE='tanzu-gitops-ri-*.tgz'
-RI_PRODUCT_FILE_ID=$(yq e .gitops_reference_implementation.tanzu_net.product_file_id $TAP_VERSION_YAML)
-
-rm -f generated/$RI_PRODUCT_FILE
-
-pivnet download-product-files \
-  --product-slug='tanzu-application-platform' \
-  --release-version=$TAP_VERSION \
-  --product-file-id=$RI_PRODUCT_FILE_ID \
-  --download-dir generated
-
-tar -xvf generated/$RI_PRODUCT_FILE -C generated/$GITOPS_REPO_DIR
-
-(
-  cd generated/$GITOPS_REPO_DIR
-
-  if [[ -n "$(yq e ".gitops.initial_commit_hash" ../../$PARAMS_YAML)" ]]; then
-    information "Skipping initial commit hash retrieval since it is already set"
-  else
-    information "Getting the initial commit hash of the gitops repo"
-
-    export HASH=$(git rev-parse HEAD)
-    yq e -i ".gitops.initial_commit_hash = env(HASH)" ../../$PARAMS_YAML
-  fi
-
-  information "Committing gitops repo"
-
-  git add .
-  git status
-  git diff --staged --quiet || git commit -m "Initialize Tanzu GitOps RI"
-  git push
-)
+GITOPS_REPO_DIR="generated/gitops-repo"
 
 if [[ -n "$AGE_KEY_PATH" ]]; then
   if [[ -f "$AGE_KEY_PATH" ]]; then
@@ -68,3 +28,43 @@ if [[ -n "$AGE_KEY_PATH" ]]; then
 
   yq e -i '.gitops.age_key_path = env(AGE_KEY_PATH)' "$PARAMS_YAML"
 fi
+
+information "Cloning GitOps Repo"
+
+rm -rf $GITOPS_REPO_DIR
+git clone $GITOPS_REPO $GITOPS_REPO_DIR
+
+information "Downloading and extracting 'tanzu-gitops-ri' from Tanzu Network"
+
+RI_PRODUCT_FILE='tanzu-gitops-ri-*.tgz'
+RI_PRODUCT_FILE_ID=$(yq e .gitops_reference_implementation.tanzu_net.product_file_id $TAP_VERSION_YAML)
+
+rm -f generated/$RI_PRODUCT_FILE
+
+pivnet download-product-files \
+  --product-slug='tanzu-application-platform' \
+  --release-version=$TAP_VERSION \
+  --product-file-id=$RI_PRODUCT_FILE_ID \
+  --download-dir generated
+
+tar -xvf generated/$RI_PRODUCT_FILE -C $GITOPS_REPO_DIR
+
+(
+  cd $GITOPS_REPO_DIR
+
+  if [[ -n "$(yq e ".gitops.initial_commit_hash" ../../$PARAMS_YAML)" ]]; then
+    information "Skipping initial commit hash retrieval since it is already set"
+  else
+    information "Getting the initial commit hash of the GitOps Repo"
+
+    export HASH=$(git rev-parse HEAD)
+    yq e -i ".gitops.initial_commit_hash = env(HASH)" ../../$PARAMS_YAML
+  fi
+
+  information "Initializing GitOps Repo"
+
+  git add .
+  git status
+  git diff --staged --quiet || git commit -m "Initialize Tanzu GitOps RI"
+  git push
+)
