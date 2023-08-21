@@ -8,6 +8,7 @@ source "$SCRIPTS/set-env.sh"
 TAP_VERSION_YAML="tap-version.yaml"
 TAP_VERSION=$(yq e .tap.version $TAP_VERSION_YAML)
 
+AGE_KEY_PATH=$(yq e .gitops.age_key_path $PARAMS_YAML)
 GITOPS_REPO=$(yq e .gitops.repo $PARAMS_YAML)
 GITOPS_REPO_DIR="gitops-repo"
 
@@ -50,3 +51,20 @@ tar -xvf generated/$RI_PRODUCT_FILE -C generated/$GITOPS_REPO_DIR
   git diff --staged --quiet || git commit -m "Initialize Tanzu GitOps RI"
   git push
 )
+
+if [[ -n "$AGE_KEY_PATH" ]]; then
+  if [[ -f "$AGE_KEY_PATH" ]]; then
+    information "Skipping age key generation since it exists"
+  else
+    information "Age key does not exist at $AGE_KEY_PATH"
+    exit 1
+  fi
+ else
+  export AGE_KEY_PATH="generated/age-key.txt"
+
+  information "Generating age key at $AGE_KEY_PATH"
+
+  age-keygen -o $AGE_KEY_PATH
+
+  yq e -i '.gitops.age_key_path = env(AGE_KEY_PATH)' "$PARAMS_YAML"
+fi
