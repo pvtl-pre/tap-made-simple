@@ -34,10 +34,14 @@ tar -xvf generated/$RI_PRODUCT_FILE -C generated/$GITOPS_REPO_DIR
 (
   cd generated/$GITOPS_REPO_DIR
 
-  information "Getting the current commit hash of the gitops repo"
+  if [[ -n "$(yq e ".gitops.initial_commit_hash" ../../$PARAMS_YAML)" ]]; then
+    information "Skipping initial commit hash retrieval since it is already set"
+  else
+    information "Getting the initial commit hash of the gitops repo"
 
-  export HASH=$(git rev-parse HEAD)
-  yq e -i ".gitops.initial_commit_hash = env(HASH)" ../../$PARAMS_YAML
+    export HASH=$(git rev-parse HEAD)
+    yq e -i ".gitops.initial_commit_hash = env(HASH)" ../../$PARAMS_YAML
+  fi
 
   information "Committing gitops repo"
 
