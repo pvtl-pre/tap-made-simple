@@ -8,15 +8,22 @@ source "$SCRIPTS/set-env.sh"
 NODE_SIZE=$(yq e .azure.node_size $PARAMS_YAML)
 RESOURCE_GROUP=$(yq e .azure.resource_group $PARAMS_YAML)
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
+SSH_KEY_PATH=$(yq e .clusters.ssh_key_path $PARAMS_YAML)
 
 export KUBECONFIGS_PATH="generated/kubeconfigs"
-export SSH_KEY_PATH="generated/ssh-key"
 
 mkdir -p $KUBECONFIGS_PATH
 
-if [ -f "$SSH_KEY_PATH" ]; then
-  information "Skipping ssh key generation since it exists"
+if [[ -n "$SSH_KEY_PATH" ]]; then
+  if [[ -f "$SSH_KEY_PATH" ]]; then
+    information "Skipping ssh key generation since it exists"
+  else
+    information "SSH key does not exist at $SSH_KEY_PATH"
+    exit 1
+  fi
 else
+  export SSH_KEY_PATH="generated/ssh-key"
+
   information "Generating ssh key at $SSH_KEY_PATH"
 
   ssh-keygen -t rsa -b 4096 -f "$SSH_KEY_PATH" -q -N ""
