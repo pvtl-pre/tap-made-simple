@@ -31,7 +31,9 @@ clusters:
       ingress_domain: #! set to the ingress domain for prod ingress objects (e.g. prod.example.com)
 gitops:
   age_key_path: #! set or it will be automatically set
-  repo: #! set
+  repo_url: #! set
+  username: #! set
+  password: #! set
 tanzu_registry:
   hostname: "registry.tanzu.vmware.com"
   username: #! set

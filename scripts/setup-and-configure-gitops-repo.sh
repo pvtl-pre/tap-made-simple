@@ -15,11 +15,21 @@ TAP_VERSION_YAML="tap-version.yaml"
 # NOTE: this var intentionally has a "Z" to avoid conflicts when running ./setup-repo.sh
 export TAP_VERSIONZ=$(yq e .tap.version $TAP_VERSION_YAML)
 
+function setup() {
+  CLUSTER_NAME=$1
+
+  (
+    cd $GITOPS_REPO_DIR
+
+    ./setup-repo.sh $CLUSTER_NAME sops
+  )
+}
+
 function configure() {
   CLUSTER_NAME=$1
 
   (
-    cd clusters/$CLUSTER_NAME
+    cd $GITOPS_REPO_DIR/clusters/$CLUSTER_NAME
 
     ./tanzu-sync/scripts/configure.sh
 
@@ -28,40 +38,30 @@ function configure() {
   )
 }
 
-(
-  cd $GITOPS_REPO_DIR
+information "Adding clusters to the GitOps Repo"
 
-  information "Adding clusters to the GitOps Repo"
+setup $BUILD_CLUSTER_NAME
+setup $ITERATE_CLUSTER_NAME
+setup $VIEW_CLUSTER_NAME
 
-  ./setup-repo.sh $BUILD_CLUSTER_NAME sops
-  ./setup-repo.sh $ITERATE_CLUSTER_NAME sops
-  ./setup-repo.sh $VIEW_CLUSTER_NAME sops
+for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name $PARAMS_YAML)
 
-  for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
-    RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name ../../$PARAMS_YAML)
+  setup $RUN_CLUSTER_NAME
+done
 
-    ./setup-repo.sh $RUN_CLUSTER_NAME sops
-  done
+$SCRIPTS/commit-gitops-repo.sh "Adding clusters"
 
-  git add .
-  git status
-  git diff --staged --quiet || git commit -m "Adding clusters to the GitOps Repo"
-  git push
-  
-  information "Configuring clusters to the GitOps Repo"
+information "Configuring clusters to the GitOps Repo"
 
-  configure $BUILD_CLUSTER_NAME
-  configure $ITERATE_CLUSTER_NAME
-  configure $VIEW_CLUSTER_NAME
+configure $BUILD_CLUSTER_NAME
+configure $ITERATE_CLUSTER_NAME
+configure $VIEW_CLUSTER_NAME
 
-  for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
-    RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name ../../$PARAMS_YAML)
+for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
+  RUN_CLUSTER_NAME=$(yq e .clusters.run_clusters[$i].name $PARAMS_YAML)
 
-    configure $RUN_CLUSTER_NAME
-  done
+  configure $RUN_CLUSTER_NAME
+done
 
-  git add .
-  git status
-  git diff --staged --quiet || git commit -m "Configuring clusters to the GitOps Repo"
-  git push
-)
+$SCRIPTS/commit-gitops-repo.sh "Configuring clusters"

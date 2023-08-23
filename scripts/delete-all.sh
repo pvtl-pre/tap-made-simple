@@ -9,7 +9,7 @@ GITOPS_REPO_DIR="gitops-repo"
 RESOURCE_GROUP=$(yq e .azure.resource_group $PARAMS_YAML)
 
 if [[ -d "generated/$GITOPS_REPO_DIR" ]]; then
-  information "Reverting gitops repo to initial commit"
+  information "Reverting GitOps Repo to initial commit"
 
   (
     cd generated/$GITOPS_REPO_DIR

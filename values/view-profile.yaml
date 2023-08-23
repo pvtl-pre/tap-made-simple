@@ -1,0 +1,13 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:base64", "base64")
+---
+tap_install:
+  values:
+    profile: view
+    ceip_policy_disclosed: true
+
+    shared:
+      ingress_domain: #@ data.values.clusters.view_cluster.ingress_domain
+
+    tap_gui:
+      service_type: ClusterIP

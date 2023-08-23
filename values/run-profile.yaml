@@ -1,0 +1,10 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:base64", "base64")
+---
+tap_install:
+  values:
+    profile: run
+    ceip_policy_disclosed: true
+
+    shared:
+      ingress_domain: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain

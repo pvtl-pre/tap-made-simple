@@ -1,0 +1,5 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:base64", "base64")
+---
+tap_install:
+  sensitive_values:

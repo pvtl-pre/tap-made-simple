@@ -1,0 +1,13 @@
+#@ load("@ytt:data", "data")
+---
+secrets:
+  sops:
+    age_key: #@ data.values.age_key
+    registry:
+      hostname: #@ data.values.tanzu_registry.hostname
+      username: #@ data.values.tanzu_registry.username
+      password: #@ data.values.tanzu_registry.password
+    git:
+      basic_auth:
+        username: #@ data.values.gitops.username
+        password: #@ data.values.gitops.password

@@ -1,0 +1,12 @@
+#@ load("@ytt:data", "data")
+#@ load("@ytt:base64", "base64")
+---
+tap_install:
+  values:
+    profile: build
+    ceip_policy_disclosed: true
+
+    shared:
+      image_registry:
+        project_path: #@ "{}/{}".format(data.values.registry.fqdn, data.values.azure.acr.repository)
+        username: #@ data.values.registry.username
