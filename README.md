@@ -21,6 +21,7 @@ All required Azure infrastructure required for TAP to function will deployed pri
 
 ## Required CLIs, Plugins and Accounts
 
+- [age](https://github.com/FiloSottile/age)
 - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
 - [Carvel](https://carvel.dev/)
 - [git](https://git-scm.com/download/)
@@ -28,11 +29,12 @@ All required Azure infrastructure required for TAP to function will deployed pri
 - [jq v1.6+](https://github.com/stedolan/jq) (to install use `brew` for Mac and `apt-get` for Linux)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - [pivnet](https://github.com/pivotal-cf/pivnet-cli)
+- [sops](https://github.com/getsops/sops)
 - [yq v4.12+](https://github.com/mikefarah/yq) (to install use `brew` for Mac and `apt-get` for Linux)
 
 A [Tanzu Network account](https://network.tanzu.vmware.com/) is required. Any TAP EULAs will need to be accepted and a UAA API TOKEN (i.e. refresh token) will need to be created.
 
-An git repo with permissions to push is required for the gitops. All commits to the repo will be reset to it's initial state during the delete process. As such, there must be an inital commit to revert to.
+A git repo with permissions to push is required for gitops. All commits to the repo will be reset to it's initial state during the delete process. As such, there must be an inital commit to revert to.
 
 NOTE: The Tanzu CLI and associated plugins will be installed as part of the deployment process.
 
