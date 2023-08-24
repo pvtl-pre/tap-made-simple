@@ -9,7 +9,4 @@ VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.kubeconfig $PARAMS_YAML)
 
 information "Waiting for reconciliation on the View Cluster"
 
-kubectl wait pkgi --for condition=ReconcileSucceeded=True \
-  -n tap-install tap \
-  --kubeconfig $VIEW_CLUSTER_KUBECONFIG \
-  --timeout=15m
+kctrl app kick -a sync -n tanzu-sync -y --kubeconfig $VIEW_CLUSTER_KUBECONFIG $@

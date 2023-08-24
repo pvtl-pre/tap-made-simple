@@ -9,7 +9,4 @@ ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.kubeconfig $PARAMS_Y
 
 information "Waiting for reconciliation on the Iterate Cluster"
 
-kubectl wait pkgi --for condition=ReconcileSucceeded=True \
-  -n tap-install tap \
-  --kubeconfig $ITERATE_CLUSTER_KUBECONFIG \
-  --timeout=15m
+kctrl app kick -a sync -n tanzu-sync -y --kubeconfig $ITERATE_CLUSTER_KUBECONFIG $@

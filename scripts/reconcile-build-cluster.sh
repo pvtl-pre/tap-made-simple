@@ -9,7 +9,4 @@ BUILD_CLUSTER_KUBECONFIG=$(yq e .clusters.build_cluster.kubeconfig $PARAMS_YAML)
 
 information "Waiting for reconciliation on the Build Cluster"
 
-kubectl wait pkgi --for condition=ReconcileSucceeded=True \
-  -n tap-install tap \
-  --kubeconfig $BUILD_CLUSTER_KUBECONFIG \
-  --timeout=15m
+kctrl app kick -a sync -n tanzu-sync -y --kubeconfig $BUILD_CLUSTER_KUBECONFIG $@

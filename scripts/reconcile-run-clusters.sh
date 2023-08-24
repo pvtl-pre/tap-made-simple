@@ -13,8 +13,5 @@ for ((i = 0; i < $RUN_CLUSTER_COUNT; i++)); do
 
   information "Waiting for reconciliation on Run Cluster '$RUN_CLUSTER_NAME'"
 
-  kubectl wait pkgi --for condition=ReconcileSucceeded=True \
-    -n tap-install tap \
-    --kubeconfig $RUN_CLUSTER_KUBECONFIG \
-    --timeout=15m
+  kctrl app kick -a sync -n tanzu-sync -y --kubeconfig $RUN_CLUSTER_KUBECONFIG $@
 done
