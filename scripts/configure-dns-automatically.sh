@@ -27,7 +27,7 @@ function update_a_record() {
   A_RECORD_EXISTS=$(az network dns record-set a list -z $DNS_ZONE_NAME -g $DNS_RESOURCE_GROUP | jq "any(.name == \"$A_RECORD_NAME\")")
 
   if [[ $A_RECORD_EXISTS == true ]]; then
-    OLD_IP_ADDRESSES=$(az network dns record-set a show -n $A_RECORD_NAME -z $DNS_ZONE_NAME -g $DNS_RESOURCE_GROUP | jq -r 'select(.aRecords != null) | .aRecords | map(.ipv4Address)')
+    OLD_IP_ADDRESSES=$(az network dns record-set a show -n $A_RECORD_NAME -z $DNS_ZONE_NAME -g $DNS_RESOURCE_GROUP | jq -r 'select(.ARecords != null) | .ARecords | map(.ipv4Address)')
 
     if [[ ! -z "$OLD_IP_ADDRESSES" ]]; then
       for ((i = 0; i < $(jq length <<<$OLD_IP_ADDRESSES); i++)); do
