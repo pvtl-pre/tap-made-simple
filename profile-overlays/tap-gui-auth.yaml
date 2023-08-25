@@ -5,7 +5,9 @@
 ---
 #@overlay/match missing_ok=True
 #@overlay/match-child-defaults missing_ok=True
-tap_gui:
-  app_config:
-    #@overlay/replace or_add=True
-    auth: #@ data.values.tap_gui.app_config.auth
+tap_install:
+  values:
+    tap_gui:
+      app_config:
+        #@overlay/replace or_add=True
+        auth: #@ data.values.tap_gui.app_config.auth
