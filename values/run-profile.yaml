@@ -8,3 +8,6 @@ tap_install:
 
     shared:
       ingress_domain: #@ data.values.clusters.run_clusters[data.values.index].ingress_domain
+
+    excluded_packages:
+      - eventing.tanzu.vmware.com

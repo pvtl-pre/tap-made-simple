@@ -11,3 +11,6 @@ tap_install:
       image_registry:
         project_path: #@ "{}/{}/iterate".format(data.values.registry.fqdn, data.values.azure.acr.repository)
         username: #@ data.values.registry.username
+
+    excluded_packages:
+      - eventing.tanzu.vmware.com
