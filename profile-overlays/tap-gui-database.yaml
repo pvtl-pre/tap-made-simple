@@ -4,14 +4,16 @@
 ---
 #@overlay/match missing_ok=True
 #@overlay/match-child-defaults missing_ok=True
-tap_gui:
-  app_config:
-    backend:
-      database:
-        client: pg
-        connection:
-          host: tap-gui-db-postgresql.tap-gui-backend.svc.cluster.local
-          port: 5432
-          user: tapuser
-          password: VMware1!
-          ssl: false
+tap_install:
+  values:
+    tap_gui:
+      app_config:
+        backend:
+          database:
+            client: pg
+            connection:
+              host: tap-gui-db-postgresql.tap-gui-backend.svc.cluster.local
+              port: 5432
+              user: tapuser
+              password: VMware1!
+              ssl: false

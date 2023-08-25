@@ -23,8 +23,8 @@ $SCRIPTS/allow-tap-gui-to-view-resources.sh
 $SCRIPTS/apply-load-balancer.sh
 $SCRIPTS/configure-dns.sh
 
-# $SCRIPTS/apply-tap-gui-auth.sh
-# $SCRIPTS/apply-tap-gui-database.sh
+$SCRIPTS/apply-tap-gui-auth.sh
+$SCRIPTS/apply-tap-gui-database.sh
 
 # $SCRIPTS/apply-supply-chain-basic.sh
 # $SCRIPTS/apply-dev-namespace-legacy.sh
