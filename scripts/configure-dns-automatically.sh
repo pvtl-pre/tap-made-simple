@@ -11,7 +11,6 @@ DNS_RESOURCE_GROUP=$(yq e .azure.dns.resource_group $PARAMS_YAML)
 ITERATE_CLUSTER_KUBECONFIG=$(yq e .clusters.iterate_cluster.kubeconfig $PARAMS_YAML)
 ITERATE_CLUSTER_NAME=$(yq e .clusters.iterate_cluster.name $PARAMS_YAML)
 ITERATE_CLUSTER_INGRESS_DOMAIN=$(yq e .clusters.iterate_cluster.ingress_domain $PARAMS_YAML)
-LEARNING_CENTER_INGRESS_DOMAIN=$(yq e .clusters.view_cluster.learning_center_ingress_domain $PARAMS_YAML)
 RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
 VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.name $PARAMS_YAML)
 VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.kubeconfig $PARAMS_YAML)
@@ -69,7 +68,6 @@ information "Autoconfiguring DNS Zone"
 information "Configuring View Cluster"
 
 update_a_record $VIEW_CLUSTER_INGRESS_DOMAIN $VIEW_CLUSTER_INGRESS_IP
-update_a_record $LEARNING_CENTER_INGRESS_DOMAIN $VIEW_CLUSTER_INGRESS_IP
 
 information "Configuring Iterate Cluster"
 
