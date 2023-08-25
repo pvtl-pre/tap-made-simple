@@ -18,13 +18,7 @@ $SCRIPTS/setup-and-configure-gitops-repo.sh
 $SCRIPTS/add-tanzu-sync-values.sh
 $SCRIPTS/add-tap-values.sh
 $SCRIPTS/deploy-tanzu-sync.sh
-
-# $SCRIPTS/add-tap-package-repository.sh
-# $SCRIPTS/apply-view-profile.sh
-# $SCRIPTS/apply-build-profile.sh
-# $SCRIPTS/apply-run-profiles.sh
-# $SCRIPTS/apply-iterate-profile.sh
-# $SCRIPTS/allow-tap-gui-to-view-resources.sh
+$SCRIPTS/allow-tap-gui-to-view-resources.sh
 
 # $SCRIPTS/apply-load-balancer.sh
 # $SCRIPTS/configure-dns.sh

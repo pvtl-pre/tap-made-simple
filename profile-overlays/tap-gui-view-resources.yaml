@@ -5,29 +5,31 @@
 ---
 #@overlay/match missing_ok=True
 #@overlay/match-child-defaults missing_ok=True
-tap_gui:
-  app_config:
-    #@overlay/replace or_add=True
-    kubernetes:
-      serviceLocatorMethod:
-        type: 'multiTenant'
-      clusterLocatorMethods:
-        - type: 'config'
-          clusters:
-            - url: #@ data.values.clusters.iterate_cluster.url
-              name: #@ data.values.clusters.iterate_cluster.name
-              authProvider: serviceAccount
-              serviceAccountToken: #@ data.values.clusters.iterate_cluster.sa_token
-              skipTLSVerify: true
-            - url: #@ data.values.clusters.build_cluster.url
-              name: #@ data.values.clusters.build_cluster.name
-              authProvider: serviceAccount
-              serviceAccountToken: #@ data.values.clusters.build_cluster.sa_token
-              skipTLSVerify: true
-            #@ for i in range(len(data.values.clusters.run_clusters)):
-            - url: #@ data.values.clusters.run_clusters[i].url
-              name: #@ data.values.clusters.run_clusters[i].name
-              authProvider: serviceAccount
-              serviceAccountToken: #@ data.values.clusters.run_clusters[i].sa_token
-              skipTLSVerify: true
-            #@ end 
+tap_install:
+  values:
+    tap_gui:
+      app_config:
+        #@overlay/replace or_add=True
+        kubernetes:
+          serviceLocatorMethod:
+            type: 'multiTenant'
+          clusterLocatorMethods:
+            - type: 'config'
+              clusters:
+                - url: #@ data.values.clusters.iterate_cluster.url
+                  name: #@ data.values.clusters.iterate_cluster.name
+                  authProvider: serviceAccount
+                  serviceAccountToken: #@ data.values.clusters.iterate_cluster.sa_token
+                  skipTLSVerify: true
+                - url: #@ data.values.clusters.build_cluster.url
+                  name: #@ data.values.clusters.build_cluster.name
+                  authProvider: serviceAccount
+                  serviceAccountToken: #@ data.values.clusters.build_cluster.sa_token
+                  skipTLSVerify: true
+                #@ for i in range(len(data.values.clusters.run_clusters)):
+                - url: #@ data.values.clusters.run_clusters[i].url
+                  name: #@ data.values.clusters.run_clusters[i].name
+                  authProvider: serviceAccount
+                  serviceAccountToken: #@ data.values.clusters.run_clusters[i].sa_token
+                  skipTLSVerify: true
+                #@ end 
