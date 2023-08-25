@@ -4,7 +4,9 @@
 ---
 #@overlay/match missing_ok=True
 #@overlay/match-child-defaults missing_ok=True
-contour:
-  envoy:
-    service:
-      type: LoadBalancer
+tap_install:
+  values:
+    contour:
+      envoy:
+        service:
+          type: LoadBalancer
