@@ -16,7 +16,9 @@ RUN_CLUSTER_COUNT=$(yq e '.clusters.run_clusters | length' $PARAMS_YAML)
 VIEW_CLUSTER_KUBECONFIG=$(yq e .clusters.view_cluster.kubeconfig $PARAMS_YAML)
 VIEW_CLUSTER_NAME=$(yq e .clusters.view_cluster.name $PARAMS_YAML)
 
-VIEW_PROFILE="$GITOPS_REPO_DIR/clusters/$VIEW_CLUSTER_NAME/cluster-config/values/tap-values.yaml"
+VIEW_PROFILE_DIR="$GITOPS_REPO_DIR/clusters/$VIEW_CLUSTER_NAME/cluster-config/values/"
+
+VIEW_PROFILE="$VIEW_PROFILE_DIR/tap-values.yaml"
 
 function add_components() {
   CLUSTER_NAME=$1
@@ -77,7 +79,7 @@ done
 
 information "Updating view profile with Iterate, Build and Run Cluster information"
 
-ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/tap-gui-view-resources.yaml --output-files $GITOPS_REPO_DIR/clusters/$VIEW_CLUSTER_NAME/cluster-config/values/
+ytt -f "$PARAMS_YAML" -f $VIEW_PROFILE -f profile-overlays/tap-gui-view-resources.yaml --output-files $VIEW_PROFILE_DIR
 
 $SCRIPTS/commit-gitops-repo.sh "Updating view profile with Iterate, Build and Run Cluster information"
 
